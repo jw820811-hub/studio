@@ -290,6 +290,16 @@
     display:inline-block; margin-top:4px; font-size:9.5px; padding:1px 7px;
     border-radius:20px; background:var(--danger-soft); color:var(--danger); font-weight:700;
   }
+  .schooltag{
+    display:block; margin-top:3px; font-size:9px; line-height:1.3; padding:1px 5px;
+    border-radius:4px; background:var(--info-soft); color:var(--info); font-weight:600;
+  }
+  .schooltag.exam{background:var(--danger-soft); color:var(--danger); font-weight:700;}
+  .schooltag.deadline{background:var(--brass-soft); color:var(--brass); font-weight:700;}
+  .weeknote{
+    font-size:10.5px; color:var(--info); font-weight:600; text-align:center;
+    padding:6px 2px 0; line-height:1.3;
+  }
 
   /* month view */
   .monthgrid{
@@ -317,6 +327,10 @@
   .mcell.holiday .mcell-d{color:var(--danger);}
   .mcell-lunar{font-family:'Noto Serif TC',serif; font-size:10px; color:var(--brass);}
   .mcell-hol{font-size:9.5px; color:var(--danger); font-weight:700; line-height:1.3;}
+  .mcell-school{font-size:9px; color:var(--info); font-weight:600; line-height:1.3;}
+  .mcell-school.exam{color:var(--danger); font-weight:700;}
+  .mcell-school.deadline{color:var(--brass); font-weight:700;}
+  .btn-ghost.on{background:var(--info-soft); color:var(--info); border-color:var(--info);}
   .mpill{
     font-size:10px; padding:2px 6px; border-radius:5px; overflow:hidden;
     text-overflow:ellipsis; white-space:nowrap; text-align:left;
@@ -412,6 +426,62 @@
   .pubcite{flex:1; min-width:0; word-break:break-word;}
   .pubcite em{font-style:italic;}
   .statuspill.published{background:var(--accent-soft); color:var(--accent-ink);}
+
+  /* chain / review clock / rounds / checklist */
+  .pillcol{display:flex; flex-direction:column; align-items:flex-end; gap:5px;}
+  .clockbadge{
+    font-family:var(--font-mono); font-size:10px; font-weight:600; padding:2px 7px;
+    border-radius:20px; background:var(--neutral-soft); color:var(--neutral); white-space:nowrap;
+  }
+  .clockbadge.over{background:var(--danger-soft); color:var(--danger);}
+  .chainbox{
+    margin-top:16px; background:var(--paper-sunken); border:1px solid var(--line);
+    border-left:3px solid var(--info); border-radius:var(--r-sm); padding:12px 14px;
+  }
+  .chainsum{font-family:var(--font-mono); font-size:11px; color:var(--ink-soft);}
+  .chainlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px;}
+  .chainitem{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12.5px;
+    padding:6px 8px; border-radius:var(--r-sm);
+  }
+  .chainitem.current{background:var(--accent-soft);}
+  .chainj{font-family:var(--font-display),serif; font-weight:600; color:var(--ink);}
+  .chaind{font-family:var(--font-mono); font-size:11px; color:var(--muted);}
+  .chainr{font-size:11.5px; color:var(--danger);}
+  .roundcard{
+    border:1px solid var(--line); border-radius:var(--r-md); padding:14px;
+    margin-bottom:12px; background:var(--paper);
+  }
+  .roundhead{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:12px;}
+  .roundlabel{
+    width:70px; font-weight:700; font-size:14px; border:1px solid var(--line-strong);
+    border-radius:var(--r-sm); padding:6px 9px; background:var(--paper-raised); color:var(--ink);
+  }
+  .rounddate{
+    border:1px solid var(--line-strong); border-radius:var(--r-sm); padding:6px 9px;
+    font-size:12px; background:var(--paper-raised); color:var(--ink);
+  }
+  .roundprog{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin-right:auto;}
+  .cmtcard{
+    border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:var(--r-sm);
+    padding:12px 13px; margin-bottom:10px; position:relative; background:var(--paper-raised);
+  }
+  .cmtcard textarea{min-height:70px;}
+  .checkrow{
+    display:flex; align-items:flex-start; gap:11px; padding:11px 10px; margin:0 -10px;
+    border-radius:var(--r-sm); cursor:pointer; border-bottom:1px solid var(--line);
+  }
+  .checkrow:hover{background:var(--paper-sunken);}
+  .checkrow.on .ckl{color:var(--ok); text-decoration:line-through;}
+  .checkbox{
+    width:20px; height:20px; border-radius:6px; border:1.5px solid var(--line-strong);
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:#fff; margin-top:1px;
+  }
+  .checkrow.on .checkbox{background:var(--ok); border-color:var(--ok);}
+  .ckl{font-size:13px; font-weight:600;}
+  .ckd{font-size:11.5px; color:var(--muted); margin-top:2px;}
+
   .modal-hint[hidden]{display:none;}
   .itemrow{display:flex; align-items:flex-start; gap:11px; padding:11px 2px; border-bottom:1px solid var(--line);}
   .itemrow:last-child{border-bottom:none;}
@@ -812,6 +882,21 @@
   .docpreview{
     flex-basis:100%; margin-top:8px; padding-top:8px; border-top:1px dashed var(--line-strong);
     font-size:11.8px; color:var(--ink-soft); line-height:1.7;
+    display:flex; flex-direction:column; align-items:flex-start; gap:8px;
+  }
+  .doctext{
+    margin:0; width:100%; white-space:pre-wrap; word-break:break-word;
+    font-family:var(--font-body); font-size:12px; line-height:1.75; color:var(--ink-soft);
+    background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:11px 13px; max-height:230px; overflow-y:auto;
+  }
+  .docsettings{
+    background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-md);
+    padding:14px 15px 15px; margin-bottom:18px;
+  }
+  .docsettings h3{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.07em;
+    color:var(--muted); margin:0 0 12px; font-weight:700;
   }
   .authorcard{border:1px solid var(--line); border-radius:var(--r-md); padding:13px 14px; margin-bottom:10px; position:relative; background:var(--paper);}
   .rmauthor{position:absolute; top:9px; right:9px; background:none; border:none; color:var(--muted); font-size:12px;}
@@ -824,6 +909,122 @@
   }
   .addauthorbtn:hover{border-color:var(--accent);}
   .stepnav{display:flex; justify-content:space-between; gap:12px; margin-top:26px;}
+
+  /* ============ 名片簿 ============ */
+  .cardbar{display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
+  .cardbar .search{max-width:340px;}
+  .cardgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:14px;}
+  .bcard{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-md);
+    box-shadow:var(--shadow); overflow:hidden; text-align:left; padding:0; display:flex;
+    flex-direction:column; font-family:inherit; color:inherit; cursor:pointer;
+  }
+  .bcard:hover{border-color:var(--accent);}
+  .bcard-photo{
+    height:118px; background:var(--paper-sunken); display:flex; align-items:center;
+    justify-content:center; overflow:hidden; border-bottom:1px solid var(--line);
+  }
+  .bcard-photo img{width:100%; height:100%; object-fit:cover; display:block;}
+  .bcard-photo .nophoto{font-size:11px; color:var(--muted);}
+  .bcard-body{padding:11px 13px 13px; flex:1;}
+  .bcard-name{font-size:15px; font-weight:700; line-height:1.3;}
+  .bcard-name .en{font-size:11.5px; color:var(--muted); font-weight:500; margin-left:6px;}
+  .bcard-title{font-size:11.5px; color:var(--brass); margin-top:3px; font-weight:600;}
+  .bcard-org{font-size:12px; color:var(--ink-soft); margin-top:4px; line-height:1.4;}
+  .bcard-contact{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--muted);
+    margin-top:7px; line-height:1.55; word-break:break-all;
+  }
+  .bcard-tagrow{margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;}
+  .btag{font-size:9.5px; padding:1px 7px; border-radius:20px; background:var(--accent-soft); color:var(--accent-ink);}
+  .cardempty{
+    border:1px dashed var(--line-strong); border-radius:var(--r-lg); padding:40px 20px;
+    text-align:center; color:var(--muted); font-size:13px; line-height:1.8;
+  }
+  .ocrbox{
+    background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-md);
+    padding:11px 13px; font-size:12px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;
+  }
+  .ocrbox b{color:var(--ink);}
+  .ocrbar{height:5px; background:var(--line); border-radius:20px; overflow:hidden; margin-top:8px;}
+  .ocrbar i{display:block; height:100%; background:var(--accent); width:0; transition:width .25s;}
+  .ocrbox.err{border-color:var(--danger); color:var(--danger);}
+  .ocrbox.ok{border-color:var(--ok); color:var(--ok);}
+  .cardpreview{
+    width:100%; max-height:190px; object-fit:contain; background:var(--paper-sunken);
+    border:1px solid var(--line); border-radius:var(--r-md); margin-bottom:14px; display:block;
+  }
+  .rawtoggle{
+    background:none; border:none; color:var(--muted); font-size:11.5px;
+    text-decoration:underline; padding:0; margin-bottom:12px;
+  }
+  .rawtext{
+    font-family:var(--font-mono); font-size:11px; white-space:pre-wrap; color:var(--muted);
+    background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:10px; margin-bottom:14px; max-height:170px; overflow:auto;
+  }
+  .cardqueue{font-size:11.5px; color:var(--muted); margin:0 0 10px;}
+
+  /* ============ 計畫管理 ============ */
+  .projbar{display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
+  .projbar .search{max-width:300px;}
+  .pcard-row{
+    display:grid; grid-template-columns:1fr auto auto 18px; gap:15px;
+    align-items:center; padding:14px 16px; cursor:pointer;
+  }
+  @media (max-width:760px){ .pcard-row{grid-template-columns:1fr auto 18px;} .pcard-row .subdate{display:none;} }
+  .pname{font-family:var(--font-display); font-weight:600; font-size:15px; line-height:1.35;}
+  .pmeta{font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.5;}
+  .pmeta .sep{opacity:.5; margin:0 6px;}
+  .statuspill.p_draft{background:var(--neutral-soft); color:var(--neutral);}
+  .statuspill.p_review{background:var(--info-soft); color:var(--info);}
+  .statuspill.p_active{background:var(--ok-soft); color:var(--ok);}
+  .statuspill.p_closed{background:var(--neutral-soft); color:var(--neutral);}
+  .pbudgetbar{height:6px; background:var(--line); border-radius:20px; overflow:hidden; margin-top:9px; max-width:340px;}
+  .pbudgetbar i{display:block; height:100%; background:var(--accent); border-radius:20px;}
+  .pbudgetbar.over i{background:var(--danger);}
+  .pmoney{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin-top:5px; font-variant-numeric:tabular-nums;}
+  .pmoney b{color:var(--ink-soft);}
+  .pmoney .over{color:var(--danger); font-weight:700;}
+  .psection{margin-bottom:18px;}
+  .psection h3{
+    font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+    margin:0 0 9px; font-weight:700; display:flex; align-items:center; gap:10px;
+  }
+  .psection h3 .btn-ghost{padding:3px 9px; font-size:11px; text-transform:none; letter-spacing:0;}
+  .ptable{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .ptable th{
+    text-align:left; font-size:10.5px; letter-spacing:.05em; color:var(--muted);
+    padding:6px 10px; border-bottom:1px solid var(--line); font-weight:600; white-space:nowrap;
+  }
+  .ptable td{padding:7px 10px; border-bottom:1px solid var(--line); color:var(--ink-soft);}
+  .ptable tr:last-child td{border-bottom:none;}
+  .ptable .num{font-family:var(--font-mono); text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .ptable tfoot td{font-weight:700; color:var(--ink); border-top:1px solid var(--line-strong); border-bottom:none;}
+  .ptable .neg{color:var(--danger); font-weight:700;}
+  .ptable .zero{color:var(--muted);}
+  .ptable .rowact{text-align:right; white-space:nowrap; width:1%;}
+  .expill{font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:20px; white-space:nowrap;}
+  .expill.planned{background:var(--neutral-soft); color:var(--neutral);}
+  .expill.paid{background:var(--info-soft); color:var(--info);}
+  .expill.settled{background:var(--ok-soft); color:var(--ok);}
+  .pfilerow{
+    display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid var(--line);
+    font-size:12.5px;
+  }
+  .pfilerow:last-child{border-bottom:none;}
+  .pfilerow .fn{flex:1; min-width:0; word-break:break-all;}
+  .pfilerow .fs{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); white-space:nowrap;}
+  .pempty{font-size:12px; color:var(--muted); padding:8px 2px;}
+  .msrow{display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid var(--line); font-size:12.5px;}
+  .msrow:last-child{border-bottom:none;}
+  .msrow .md{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); white-space:nowrap;}
+  .msrow .ml{flex:1; min-width:0;}
+  .budgetgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px;}
+  .budgetgrid .field{margin-bottom:0;}
+  .memberrow{display:grid; grid-template-columns:1.1fr .8fr 1fr auto; gap:9px; margin-bottom:9px; align-items:end;}
+  @media (max-width:640px){.memberrow{grid-template-columns:1fr;}}
+  .memberrow .field{margin-bottom:0;}
 </style>
 
 <header class="masthead">
@@ -844,6 +1045,8 @@
   <nav class="nav-primary">
     <button class="navbtn" id="nav-calendar">行事曆</button>
     <button class="navbtn active" id="nav-submission">投稿系統</button>
+    <button class="navbtn" id="nav-projects">計畫管理</button>
+    <button class="navbtn" id="nav-cards">名片簿</button>
   </nav>
   <div class="nav-secondary" id="navSecondary">
     <div class="nav-secondary-inner">
@@ -870,6 +1073,8 @@
         <button class="vtbtn" data-calview="month">月</button>
       </div>
       <div class="cal-actions">
+        <button class="btn-ghost on" id="toggleSchool" title="顯示／隱藏校內行事曆">🎓 校曆</button>
+        <button class="btn-ghost" id="editSchoolBtn" title="編輯校內行事曆">⚙ 編輯校曆</button>
         <button class="btn-ghost" id="exportIcsBtn" hidden>⤓ 匯出行事曆</button>
       </div>
       <div class="exportmsg" id="exportMsg" hidden></div>
@@ -981,6 +1186,52 @@
       <button class="btn-ghost" id="exportReportBtn">⤓ 匯出投稿報表（CSV）</button>
     </div>
     <p class="exporthint" id="reportHint" hidden></p>
+  </section>
+
+  <!-- ============ 計畫管理 ============ -->
+  <section class="view" id="view-projects">
+    <div class="statsrow" id="projStats"></div>
+    <div class="projbar">
+      <button class="btn-primary" id="newProject">＋ 新增計畫</button>
+      <select class="sortsel" id="projStatusFilter">
+        <option value="">全部狀態</option>
+        <option value="draft">撰寫中</option>
+        <option value="review">審查中</option>
+        <option value="active">執行中</option>
+        <option value="closed">已結案</option>
+      </select>
+      <div class="search" style="margin-left:auto;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+        </svg>
+        <input id="projSearch" placeholder="搜尋計畫名稱、編號、單位、主持人…">
+      </div>
+      <button class="btn-ghost" id="projExportCsv">⤓ 計畫報表 CSV</button>
+      <button class="btn-ghost" id="projExportExpenses">⤓ 支出明細 CSV</button>
+    </div>
+    <p class="exporthint" id="projHint" hidden></p>
+    <div id="projList"></div>
+  </section>
+
+  <!-- ============ 名片簿 ============ -->
+  <section class="view" id="view-cards">
+    <div class="cardbar">
+      <label class="btn-primary" for="cardShoot" style="cursor:pointer;">📷 拍照新增</label>
+      <input type="file" id="cardShoot" accept="image/*" capture="environment" multiple hidden>
+      <label class="btn-secondary" for="cardPick" style="cursor:pointer;">🖼️ 從相簿／電腦選圖</label>
+      <input type="file" id="cardPick" accept="image/*" multiple hidden>
+      <button class="btn-ghost" id="cardManual">✎ 手動輸入</button>
+      <div class="search" style="margin-left:auto;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+        </svg>
+        <input id="cardSearch" placeholder="搜尋姓名、公司、職稱、電話…">
+      </div>
+      <button class="btn-ghost" id="cardExportCsv">⤓ CSV</button>
+      <button class="btn-ghost" id="cardExportVcf">⤓ 通訊錄 vCard</button>
+    </div>
+    <p class="exporthint" id="cardHint" hidden></p>
+    <div id="cardGrid"></div>
   </section>
 
   <!-- ============ WIZARD ============ -->
@@ -1156,6 +1407,66 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="roundsBackdrop">
+  <div class="modal modal-wide">
+    <h2>審稿意見與逐點回覆</h2>
+    <p class="stepdesc" id="roundsIntro"></p>
+    <div id="roundsList"></div>
+    <button class="addauthorbtn" id="addRound">＋ 新增一輪修改（R1、R2…）</button>
+    <p class="exporthint" id="roundsHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="roundsClose">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="checkBackdrop">
+  <div class="modal">
+    <h2>投稿前檢查</h2>
+    <p class="stepdesc" id="checkIntro"></p>
+    <div id="checkList"></div>
+    <p class="exporthint" id="checkHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="checkClose" style="width:100%;">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="resubBackdrop">
+  <div class="modal">
+    <h2>改投其他期刊</h2>
+    <p class="stepdesc" id="resubIntro"></p>
+    <div class="field">
+      <label for="rs-reason">這次被拒的原因／編輯意見（選填，會記在原本那筆）</label>
+      <input type="text" id="rs-reason" placeholder="例如：Scope 不符、送外審後拒稿">
+    </div>
+    <div class="field"><label for="rs-journal">改投哪一本期刊</label><select id="rs-journal"></select></div>
+    <div class="field"><label for="rs-date">新的投稿日期</label><input type="date" id="rs-date"></div>
+    <div class="linkbox" style="margin-bottom:4px;">
+      會建立一筆新的投稿紀錄，沿用中英文標題、作者名單與投稿文件設定，並與原本那筆綁成同一篇文章的投稿歷程。原紀錄的狀態會設為「已拒絕」。
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="resubCancel">取消</button>
+      <button class="btn-primary" id="resubGo">建立改投紀錄</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="docsBackdrop">
+  <div class="modal modal-wide">
+    <h2>投稿文件</h2>
+    <p class="stepdesc" id="docsIntro"></p>
+    <div id="docsSettings"></div>
+    <div class="doclist" id="docsList"></div>
+    <p class="exporthint" id="docsHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="docsClose">關閉</button>
+      <button class="btn-ghost" id="docsDownload">⤓ 全部存成 .txt</button>
+      <button class="btn-primary" id="docsCopyAll">⧉ 複製全部</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="pubBackdrop">
   <div class="modal modal-wide">
     <h2>著作清單（APA 7）</h2>
@@ -1188,12 +1499,190 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="schoolBackdrop">
+  <div class="modal modal-wide">
+    <h2>校內行事曆</h2>
+    <p class="stepdesc" style="margin:-8px 0 16px; font-size:12px; color:var(--muted); line-height:1.7;">
+      內建的是美和科技大學 115 學年度。換一間學校就把下面整個換掉——學期用來算「第 N 週」，
+      行程會顯示在週檢視與月檢視上，也會一起匯出到 ICS。國定假日由系統另外處理，這裡不用再列。
+    </p>
+    <div class="field"><label>校曆名稱</label><input id="sc-name" placeholder="例如：○○大學 116 學年度"></div>
+
+    <div class="psection">
+      <h3>學期 <button class="btn-ghost" type="button" id="scAddTerm">＋ 加一個學期</button></h3>
+      <div id="sc-terms"></div>
+    </div>
+
+    <div class="psection">
+      <h3>校內行程
+        <button class="btn-ghost" type="button" id="scAddEvent">＋ 加一筆</button>
+        <button class="btn-ghost" type="button" id="scClear">清空全部</button>
+      </h3>
+      <div id="sc-events"></div>
+    </div>
+
+    <div class="linkbox" style="margin-top:14px;">
+      <b>換學校或分享給同事</b><br>
+      「匯出校曆檔」會存成一個 <code>.json</code>；同事在他的網頁按「匯入校曆檔」選這個檔，就有一樣的校曆了。
+      <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+        <button class="btn-ghost" type="button" id="scExport">⤓ 匯出校曆檔</button>
+        <label class="btn-ghost" for="scImport" style="cursor:pointer;">↥ 匯入校曆檔</label>
+        <input type="file" id="scImport" accept=".json,application/json" hidden>
+        <button class="btn-ghost" type="button" id="scReset">還原成內建校曆</button>
+      </div>
+    </div>
+
+    <p class="modal-hint" id="schoolHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveSchool">儲存校曆</button>
+      <button class="btn-secondary" id="cancelSchool">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="projBackdrop">
+  <div class="modal modal-wide">
+    <h2 id="projModalTitle">新增計畫</h2>
+    <div class="field"><label>計畫名稱</label><input id="pj-name" placeholder="例如：高強度間歇訓練對中高齡者心肺適能之影響"></div>
+    <div class="field2">
+      <div class="field"><label>計畫編號</label><input id="pj-code" placeholder="例如：NSTC 115-2410-H-276-001"></div>
+      <div class="field"><label>委託／補助單位</label><input id="pj-funder" placeholder="例如：國科會、教育部、○○公司"></div>
+    </div>
+    <div class="field2">
+      <div class="field"><label>執行單位</label><input id="pj-org" placeholder="例如：美和科技大學 運動與休閒系"></div>
+      <div class="field"><label>計畫狀態</label>
+        <select id="pj-status">
+          <option value="draft">撰寫中</option>
+          <option value="review">審查中</option>
+          <option value="active">執行中</option>
+          <option value="closed">已結案</option>
+        </select>
+      </div>
+    </div>
+    <div class="field2">
+      <div class="field"><label>執行期間　起</label><input id="pj-start" type="date"></div>
+      <div class="field"><label>執行期間　迄</label><input id="pj-end" type="date"></div>
+    </div>
+    <div class="field2">
+      <div class="field"><label>計畫主持人</label><input id="pj-piName"></div>
+      <div class="field"><label>主持人服務單位</label><input id="pj-piOrg"></div>
+    </div>
+
+    <div class="psection">
+      <h3>其他成員 <button class="btn-ghost" id="pjAddMember" type="button">＋ 加一位</button></h3>
+      <div id="pj-members"></div>
+    </div>
+
+    <div class="psection">
+      <h3>經費編列（新台幣元，留空視為 0）</h3>
+      <div class="budgetgrid" id="pj-budgets"></div>
+    </div>
+
+    <div class="field" style="margin-top:16px;"><label>備註</label><textarea id="pj-note"></textarea></div>
+    <p class="modal-hint" id="projModalHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveProject">儲存計畫</button>
+      <button class="btn-secondary" id="cancelProject">取消</button>
+      <button class="btn-ghost" id="deleteProject" style="margin-left:auto;" hidden>刪除計畫</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="expBackdrop">
+  <div class="modal">
+    <h2 id="expModalTitle">新增支出</h2>
+    <div class="field2">
+      <div class="field"><label>日期</label><input id="ex-date" type="date"></div>
+      <div class="field"><label>經費科目</label><select id="ex-cat"></select></div>
+    </div>
+    <div class="field"><label>項目</label><input id="ex-item" placeholder="例如：受試者交通補助費、血乳酸試紙"></div>
+    <div class="field2">
+      <div class="field"><label>金額（元）</label><input id="ex-amount" type="number" min="0" step="1" inputmode="numeric"></div>
+      <div class="field"><label>狀態</label>
+        <select id="ex-status">
+          <option value="planned">預計支出</option>
+          <option value="paid">已支付</option>
+          <option value="settled">已核銷</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>廠商／對象（可留空）</label><input id="ex-vendor"></div>
+    <p class="modal-hint" id="expHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveExpense">儲存</button>
+      <button class="btn-secondary" id="cancelExpense">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="msBackdrop">
+  <div class="modal">
+    <h2 id="msModalTitle">新增重要期限</h2>
+    <div class="field"><label>名稱</label><input id="ms-label" placeholder="例如：期中報告繳交、結案報告"></div>
+    <div class="field"><label>日期</label><input id="ms-date" type="date"></div>
+    <label class="corrcheck" style="display:flex; align-items:center; gap:8px; font-size:12.5px; margin-bottom:6px;">
+      <input type="checkbox" id="ms-sync"> 同步到行事曆（會在那天建立一筆截止事項）
+    </label>
+    <p class="modal-hint" id="msHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveMilestone">儲存</button>
+      <button class="btn-secondary" id="cancelMilestone">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="cardBackdrop">
+  <div class="modal modal-wide">
+    <h2 id="cardModalTitle">名片</h2>
+    <p class="cardqueue" id="cardQueue" hidden></p>
+    <img class="cardpreview" id="cardPreview" alt="名片照片" hidden>
+    <div class="ocrbox" id="cardOcrBox" hidden>
+      <span id="cardOcrMsg"></span>
+      <div class="ocrbar" id="cardOcrBar" hidden><i id="cardOcrFill"></i></div>
+    </div>
+    <button class="rawtoggle" id="cardRawToggle" hidden>顯示辨識出來的原始文字</button>
+    <div class="rawtext" id="cardRaw" hidden></div>
+
+    <div class="field2">
+      <div class="field"><label>中文姓名</label><input id="cd-name"></div>
+      <div class="field"><label>英文姓名</label><input id="cd-nameEn"></div>
+    </div>
+    <div class="field2">
+      <div class="field"><label>服務單位／公司</label><input id="cd-company"></div>
+      <div class="field"><label>部門／系所</label><input id="cd-dept"></div>
+    </div>
+    <div class="field"><label>職稱</label><input id="cd-title"></div>
+    <div class="field2">
+      <div class="field"><label>手機</label><input id="cd-mobile" inputmode="tel"></div>
+      <div class="field"><label>電話</label><input id="cd-phone" inputmode="tel"></div>
+    </div>
+    <div class="field2">
+      <div class="field"><label>傳真</label><input id="cd-fax" inputmode="tel"></div>
+      <div class="field"><label>Email</label><input id="cd-email" inputmode="email"></div>
+    </div>
+    <div class="field"><label>網站</label><input id="cd-website"></div>
+    <div class="field"><label>地址</label><input id="cd-address"></div>
+    <div class="field2">
+      <div class="field"><label>標籤（用逗號分隔，例如：研討會, 廠商）</label><input id="cd-tags"></div>
+      <div class="field"><label>認識日期</label><input id="cd-met" type="date"></div>
+    </div>
+    <div class="field"><label>備註</label><textarea id="cd-note" placeholder="在哪裡認識的、聊了什麼、之後要做什麼…"></textarea></div>
+    <p class="modal-hint" id="cardModalHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveCard">儲存名片</button>
+      <button class="btn-secondary" id="cancelCard">取消</button>
+      <button class="btn-ghost" id="deleteCard" style="margin-left:auto;" hidden>刪除</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="backupBackdrop">
   <div class="modal">
     <h2>資料備份與還原</h2>
     <p class="stepdesc" style="margin-bottom:16px;">
-      這個網頁的資料（重要事項、課表、投稿紀錄、目標期刊）全部存在<b>這台裝置的這個瀏覽器裡</b>，
-      換電腦、換瀏覽器或清除瀏覽資料就會消失，也不會自動同步。建議定期匯出備份。
+      這個網頁的資料（重要事項、課表、投稿紀錄、目標期刊、計畫管理、名片簿）全部存在
+      <b>這台裝置的這個瀏覽器裡</b>，換電腦、換瀏覽器或清除瀏覽資料就會消失，也不會自動同步。建議定期匯出備份。
+      <br><b>名片照片與計畫檔案不在備份檔裡</b>（它們存在瀏覽器的另一個空間），請另外用各自的下載功能保存。
     </p>
     <div class="settgroup">
       <h3>匯出</h3>
@@ -1210,6 +1699,15 @@
       <p class="modal-hint" id="importHint" hidden></p>
       <button class="btn-secondary" id="doImport" style="width:100%;" disabled>↥ 還原這個備份</button>
       <p class="stepdesc" style="margin:8px 0 0;">還原會<b>覆蓋</b>目前所有資料，請先確認已備份現況。</p>
+    </div>
+    <div class="settgroup">
+      <h3>從頭開始</h3>
+      <p class="stepdesc" style="margin:0 0 10px;">
+        第一次拿到這個網頁時，裡面有幾筆示範資料（課表、重要事項、投稿紀錄），方便先看看長什麼樣子。
+        要當成自己的系統用，按這個把示範資料清掉。
+      </p>
+      <button class="btn-secondary" id="clearDemo" style="width:100%;">✕ 清除示範資料，從空白開始</button>
+      <p class="modal-hint" id="clearDemoHint" hidden></p>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" id="cancelBackup" style="width:100%;">關閉</button>
@@ -1344,19 +1842,26 @@ var nav = { primary:'submission', sub:'history' };
 function applyNav(){
   document.getElementById('nav-calendar').classList.toggle('active', nav.primary==='calendar');
   document.getElementById('nav-submission').classList.toggle('active', nav.primary==='submission');
+  document.getElementById('nav-projects').classList.toggle('active', nav.primary==='projects');
+  document.getElementById('nav-cards').classList.toggle('active', nav.primary==='cards');
   document.getElementById('navSecondary').style.display = nav.primary==='submission' ? '' : 'none';
 
   document.querySelectorAll('.subnavbtn').forEach(function(b){
     b.classList.toggle('active', b.getAttribute('data-sub')===nav.sub);
   });
 
-  var viewId = nav.primary==='calendar' ? 'view-calendar' : ('view-'+nav.sub);
+  var viewId = nav.primary==='calendar' ? 'view-calendar'
+             : nav.primary==='projects' ? 'view-projects'
+             : nav.primary==='cards' ? 'view-cards'
+             : ('view-'+nav.sub);
   document.querySelectorAll('.view').forEach(function(v){
     v.classList.toggle('active', v.id===viewId);
   });
 
   renderMastMeta();
   if(nav.primary==='calendar') renderCalendarAll();
+  if(nav.primary==='projects') renderProjects();
+  if(nav.primary==='cards') renderCards();
   if(nav.primary==='submission' && nav.sub==='journals') renderJournals();
   if(nav.primary==='submission' && nav.sub==='history') renderHistory();
   if(nav.primary==='submission' && nav.sub==='wizard') renderWizard();
@@ -1369,12 +1874,28 @@ function goto(primary, sub){
 }
 document.getElementById('nav-calendar').addEventListener('click', function(){ goto('calendar'); });
 document.getElementById('nav-submission').addEventListener('click', function(){ goto('submission'); });
+document.getElementById('nav-projects').addEventListener('click', function(){ goto('projects'); });
+document.getElementById('nav-cards').addEventListener('click', function(){ goto('cards'); });
 document.querySelectorAll('.subnavbtn').forEach(function(b){
   b.addEventListener('click', function(){ goto('submission', b.getAttribute('data-sub')); });
 });
 
 function renderMastMeta(){
   var el = document.getElementById('mastMeta');
+  if(nav.primary==='projects'){
+    var act = projects.filter(function(p){ return p.status==='active'; }).length;
+    var spent = projects.reduce(function(a,p){ return a + spentTotal(p); }, 0);
+    el.innerHTML = '<span class="stat">計畫 <b>'+projects.length+'</b></span>'+
+                   '<span class="stat">執行中 <b>'+act+'</b></span>'+
+                   '<span class="stat">已支用 <b>'+money(spent)+'</b></span>';
+    return;
+  }
+  if(nav.primary==='cards'){
+    var withPhoto = cards.filter(function(c){ return c.hasPhoto; }).length;
+    el.innerHTML = '<span class="stat">名片 <b>'+cards.length+'</b></span>'+
+                   '<span class="stat">有照片 <b>'+withPhoto+'</b></span>';
+    return;
+  }
   if(nav.primary==='calendar'){
     var upcoming = items.filter(function(it){ return !it.done && nextOccurrenceFrom(it, stripTime(today)); }).length;
     el.innerHTML = '<span class="stat">未完成事項 <b>'+upcoming+'</b></span>'+
@@ -1896,6 +2417,100 @@ var REPEAT_LABEL = {weekly:'每週', biweekly:'每兩週', monthly:'每月'};
 var CAT_LABEL = {deadline:'截止期限', meeting:'會議/約定', personal:'個人事項'};
 var REMIND_LABEL = {line:'LINE', email:'Email', push:'瀏覽器'};
 
+/* ---- 美和科技大學 115 學年度校內行事曆 ----
+   來源：使用者提供的學校行事曆（第 1、第 2 學期）。只收錄學術行程（註冊、加退選、
+   期中期末考、棄選、畢典…）與 11/28 地方公職人員選舉投票日；校曆上的國定假日
+   已逐日比對過，與下面的官方假日表完全一致，因此不重複收錄。*/
+var DEFAULT_SCHOOL_NAME = '美和科技大學 115 學年度';
+var DEFAULT_SCHOOL_TERMS = [
+  {name:'第 1 學期', start:'2026-09-14', end:'2027-01-17'},
+  {name:'第 2 學期', start:'2027-02-22', end:'2027-06-27'}
+];
+var DEFAULT_SCHOOL_EVENTS = [
+  {d:'2026-08-31', to:'2026-09-27', t:'學分抵免申請', k:'admin'},
+  {d:'2026-09-14', t:'開學註冊日', k:'term'},
+  {d:'2026-09-14', to:'2026-09-27', t:'加退選課', k:'admin'},
+  {d:'2026-09-27', t:'學分抵免／選課申請截止', k:'deadline'},
+  {d:'2026-11-07', t:'六十週年校慶', k:'event'},
+  {d:'2026-11-09', to:'2026-11-15', t:'期中考週', k:'exam'},
+  {d:'2026-11-16', to:'2026-12-27', t:'棄選課程作業', k:'admin'},
+  {d:'2026-11-28', t:'地方公職人員選舉投票', k:'holiday'},
+  {d:'2026-12-27', t:'棄選課程截止', k:'deadline'},
+  {d:'2027-01-11', to:'2027-01-17', t:'期末考週', k:'exam'},
+  {d:'2027-01-17', t:'課程結束', k:'term'},
+  {d:'2027-01-18', t:'寒假開始', k:'term'},
+  {d:'2027-02-15', to:'2027-03-07', t:'學分抵免申請', k:'admin'},
+  {d:'2027-02-22', t:'開學註冊日', k:'term'},
+  {d:'2027-02-22', to:'2027-03-07', t:'加退選課', k:'admin'},
+  {d:'2027-03-07', t:'學分抵免／選課申請截止', k:'deadline'},
+  {d:'2027-04-19', to:'2027-04-25', t:'期中考週', k:'exam'},
+  {d:'2027-04-26', to:'2027-05-16', t:'應屆畢業生棄選作業', k:'admin'},
+  {d:'2027-04-26', to:'2027-06-06', t:'在校生棄選作業', k:'admin'},
+  {d:'2027-05-16', t:'應屆畢業生棄選截止', k:'deadline'},
+  {d:'2027-05-31', to:'2027-06-06', t:'應屆畢業班畢業考週', k:'exam'},
+  {d:'2027-06-06', t:'在校生棄選截止', k:'deadline'},
+  {d:'2027-06-19', t:'畢業典禮（暫定）', k:'event'},
+  {d:'2027-06-21', to:'2027-06-27', t:'期末考週', k:'exam'},
+  {d:'2027-06-27', t:'課程結束', k:'term'},
+  {d:'2027-06-28', t:'暑假開始', k:'term'}
+];
+var SCHOOL_KIND_LABEL = {exam:'考試', deadline:'截止', admin:'選課', event:'活動', term:'學期', holiday:'放假'};
+
+/* The dates above are one school's. Anyone else's calendar replaces them
+   wholesale: whatever is in localStorage wins, and the built-in tables are only
+   the starting point you get before you edit anything. */
+var SCHOOL_NAME = DEFAULT_SCHOOL_NAME;
+var SCHOOL_TERMS = DEFAULT_SCHOOL_TERMS.slice();
+var SCHOOL_EVENTS = DEFAULT_SCHOOL_EVENTS.slice();
+function loadSchoolCalendar(){
+  try{
+    var raw = localStorage.getItem('schoolCalendar');
+    if(!raw) return;
+    var v = JSON.parse(raw);
+    if(v && typeof v.name === 'string') SCHOOL_NAME = v.name;
+    if(v && Array.isArray(v.terms)) SCHOOL_TERMS = v.terms;
+    if(v && Array.isArray(v.events)) SCHOOL_EVENTS = v.events;
+  }catch(e){}
+}
+loadSchoolCalendar();
+function saveSchoolCalendar(){
+  try{
+    localStorage.setItem('schoolCalendar',
+      JSON.stringify({name:SCHOOL_NAME, terms:SCHOOL_TERMS, events:SCHOOL_EVENTS}));
+  }catch(e){}
+}
+var showSchool = true;
+try{ showSchool = localStorage.getItem('showSchool') !== '0'; }catch(e){}
+
+/* A multi-day span would otherwise stamp the same words on every one of its days.
+   Only the first and last day carry a label (suffixed 開始／結束); an exam week is
+   the exception — every day of it matters, so it keeps its label throughout. */
+function schoolEventsOn(date){
+  if(!showSchool) return [];
+  var k = ymd(date), out = [];
+  SCHOOL_EVENTS.forEach(function(e){
+    if(e.to){
+      if(k===e.d) out.push({t:e.t+'開始', k:e.k});
+      else if(k===e.to) out.push({t:e.t+'結束', k:e.k});
+      else if(k>e.d && k<e.to && e.k==='exam') out.push({t:e.t, k:e.k});
+    } else if(k===e.d){
+      out.push({t:e.t, k:e.k});
+    }
+  });
+  return out;
+}
+function schoolWeekLabel(date){
+  var k = ymd(date);
+  for(var i=0;i<SCHOOL_TERMS.length;i++){
+    var t = SCHOOL_TERMS[i];
+    if(k>=t.start && k<=t.end){
+      var diff = Math.round((parseISODate(k) - parseISODate(t.start))/86400000);
+      return {term:t.name, week:Math.floor(diff/7)+1};
+    }
+  }
+  return null;
+}
+
 /* ---- 台灣國定假日 ----
    2026／2027 用行政院人事行政總處公布的辦公日曆表逐日列出（含調整放假與補假，
    這些是行政命令，無法用規則推算）。其他年份改用可推算的規則：固定國曆節日
@@ -2038,7 +2653,9 @@ function lunarInfo(date){
 function renderCalLabel(){
   var el = document.getElementById('weekLabel');
   if(calView==='month'){
+    var mt = showSchool ? schoolWeekLabel(new Date(monthAnchor.getFullYear(), monthAnchor.getMonth(), 15)) : null;
     el.textContent = monthAnchor.getFullYear()+' 年 '+(monthAnchor.getMonth()+1)+' 月'+
+      (mt ? '・'+mt.term : '')+
       (isOfficialYear(monthAnchor.getFullYear()) ? '' : '（假日為推算值）');
     return;
   }
@@ -2061,6 +2678,8 @@ function renderGrid(){
   grid.innerHTML = '';
   var corner = document.createElement('div');
   corner.className = 'corner';
+  var wk = showSchool ? schoolWeekLabel(weekStart) : null;
+  if(wk) corner.innerHTML = '<div class="weeknote">'+esc(wk.term)+'<br>第 '+wk.week+' 週</div>';
   grid.appendChild(corner);
 
   var days = [];
@@ -2076,7 +2695,10 @@ function renderGrid(){
       '<div class="solar-date">'+(d.getMonth()+1)+'/'+pad(d.getDate())+'</div>'+
       '<div class="lunar-date">'+esc(lu.text)+'</div>'+
       (hol ? '<div class="holidaytag">'+esc(hol)+'</div>'
-           : (lu.festival?'<div class="festival">'+esc(lu.festival)+'</div>':''));
+           : (lu.festival?'<div class="festival">'+esc(lu.festival)+'</div>':''))+
+      schoolEventsOn(d).map(function(se){
+        return '<div class="schooltag '+se.k+'">'+esc(se.t)+'</div>';
+      }).join('');
     grid.appendChild(head);
   });
 
@@ -2262,6 +2884,9 @@ function renderMonth(){
       '<span class="mcell-lunar">'+esc(lu.text)+'</span></div>',
       hol ? '<div class="mcell-hol">'+esc(hol)+'</div>' : ''
     ];
+    schoolEventsOn(d).forEach(function(se){
+      parts.push('<div class="mcell-school '+se.k+'">'+esc(se.t)+'</div>');
+    });
     var shown = 0, MAXP = 3;
     dayItems.forEach(function(it){
       if(shown>=MAXP) return;
@@ -2285,6 +2910,8 @@ function renderMonth(){
 }
 
 function renderCalendarAll(){
+  var sw = document.getElementById('toggleSchool');
+  if(sw) sw.classList.toggle('on', showSchool);
   var week = calView==='week';
   document.getElementById('weekgrid').hidden = !week;
   document.getElementById('monthgrid').hidden = week;
@@ -2311,6 +2938,12 @@ document.getElementById('gotoToday').addEventListener('click', function(){
   monthAnchor = new Date(today.getFullYear(), today.getMonth(), 1);
   renderCalendarAll();
 });
+document.getElementById('toggleSchool').addEventListener('click', function(){
+  showSchool = !showSchool;
+  this.classList.toggle('on', showSchool);
+  try{ localStorage.setItem('showSchool', showSchool ? '1' : '0'); }catch(e){}
+  renderCalendarAll();
+});
 document.querySelectorAll('[data-calview]').forEach(function(b){
   b.addEventListener('click', function(){
     calView = b.getAttribute('data-calview');
@@ -2322,6 +2955,171 @@ document.querySelectorAll('.chanrow .switch').forEach(function(sw){
   function flip(){ sw.classList.toggle('on'); sw.setAttribute('aria-checked', sw.classList.contains('on')); }
   sw.addEventListener('click', flip);
   sw.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); flip(); } });
+});
+
+
+/* ---- 校曆編輯 ----
+   Every school's calendar differs, so the built-in one is only a default: the
+   whole thing (name, terms, every event) is editable here, and can be exported
+   as JSON so a colleague at another school can load it in one step. */
+var schoolBackdrop = document.getElementById('schoolBackdrop');
+var draftSchool = null;
+
+function schoolDraftFromCurrent(){
+  return {
+    name: SCHOOL_NAME,
+    terms: SCHOOL_TERMS.map(function(t){ return {name:t.name, start:t.start, end:t.end}; }),
+    events: SCHOOL_EVENTS.map(function(e){ return {d:e.d, to:e.to||'', t:e.t, k:e.k||'event'}; })
+  };
+}
+function renderSchoolEditor(){
+  document.getElementById('sc-name').value = draftSchool.name || '';
+
+  document.getElementById('sc-terms').innerHTML = draftSchool.terms.map(function(t, i){
+    return '<div class="memberrow">'+
+      '<div class="field"><label>學期名稱</label><input data-tf="name" data-ti="'+i+'" value="'+esc(t.name||'')+'"></div>'+
+      '<div class="field"><label>開始（第一週的星期一）</label><input type="date" data-tf="start" data-ti="'+i+'" value="'+esc(t.start||'')+'"></div>'+
+      '<div class="field"><label>結束</label><input type="date" data-tf="end" data-ti="'+i+'" value="'+esc(t.end||'')+'"></div>'+
+      '<button class="btn-ghost" type="button" data-rmterm="'+i+'">移除</button>'+
+    '</div>';
+  }).join('') || '<div class="pempty">還沒有學期。沒有學期就不會顯示「第 N 週」。</div>';
+
+  var rows = draftSchool.events.map(function(e, i){
+    return '<tr>'+
+      '<td><input type="date" data-ef="d" data-ei="'+i+'" value="'+esc(e.d||'')+'" style="width:100%;"></td>'+
+      '<td><input type="date" data-ef="to" data-ei="'+i+'" value="'+esc(e.to||'')+'" style="width:100%;"></td>'+
+      '<td><input data-ef="t" data-ei="'+i+'" value="'+esc(e.t||'')+'" style="width:100%;"></td>'+
+      '<td><select data-ef="k" data-ei="'+i+'">'+
+        Object.keys(SCHOOL_KIND_LABEL).map(function(k){
+          return '<option value="'+k+'"'+(e.k===k?' selected':'')+'>'+esc(SCHOOL_KIND_LABEL[k])+'</option>';
+        }).join('')+
+      '</select></td>'+
+      '<td class="rowact"><button class="iconbtn" data-rmev="'+i+'" title="刪除">✕</button></td>'+
+    '</tr>';
+  }).join('');
+  document.getElementById('sc-events').innerHTML = draftSchool.events.length
+    ? '<table class="ptable"><thead><tr><th>日期</th><th>結束日（跨多天才填）</th><th>名稱</th><th>類別</th><th class="rowact"></th></tr></thead><tbody>'+rows+'</tbody></table>'
+    : '<div class="pempty">還沒有任何行程。</div>';
+
+  document.querySelectorAll('#sc-terms [data-tf]').forEach(function(el){
+    el.addEventListener('input', syncSchoolDraft);
+    el.addEventListener('change', syncSchoolDraft);
+  });
+  document.querySelectorAll('#sc-events [data-ef]').forEach(function(el){
+    el.addEventListener('input', syncSchoolDraft);
+    el.addEventListener('change', syncSchoolDraft);
+  });
+  document.querySelectorAll('#sc-terms [data-rmterm]').forEach(function(el){
+    el.addEventListener('click', function(){
+      syncSchoolDraft();
+      draftSchool.terms.splice(parseInt(el.getAttribute('data-rmterm'),10), 1);
+      renderSchoolEditor();
+    });
+  });
+  document.querySelectorAll('#sc-events [data-rmev]').forEach(function(el){
+    el.addEventListener('click', function(){
+      syncSchoolDraft();
+      draftSchool.events.splice(parseInt(el.getAttribute('data-rmev'),10), 1);
+      renderSchoolEditor();
+    });
+  });
+}
+function syncSchoolDraft(){
+  draftSchool.name = document.getElementById('sc-name').value;
+  document.querySelectorAll('#sc-terms [data-tf]').forEach(function(el){
+    var i = parseInt(el.getAttribute('data-ti'), 10);
+    if(draftSchool.terms[i]) draftSchool.terms[i][el.getAttribute('data-tf')] = el.value;
+  });
+  document.querySelectorAll('#sc-events [data-ef]').forEach(function(el){
+    var i = parseInt(el.getAttribute('data-ei'), 10);
+    if(draftSchool.events[i]) draftSchool.events[i][el.getAttribute('data-ef')] = el.value;
+  });
+}
+function openSchoolEditor(){
+  draftSchool = schoolDraftFromCurrent();
+  document.getElementById('schoolHint').hidden = true;
+  renderSchoolEditor();
+  schoolBackdrop.classList.add('open');
+}
+document.getElementById('editSchoolBtn').addEventListener('click', openSchoolEditor);
+document.getElementById('cancelSchool').addEventListener('click', function(){ schoolBackdrop.classList.remove('open'); });
+schoolBackdrop.addEventListener('click', function(e){ if(e.target===schoolBackdrop) schoolBackdrop.classList.remove('open'); });
+document.getElementById('scAddTerm').addEventListener('click', function(){
+  syncSchoolDraft();
+  draftSchool.terms.push({name:'第 '+(draftSchool.terms.length+1)+' 學期', start:'', end:''});
+  renderSchoolEditor();
+});
+document.getElementById('scAddEvent').addEventListener('click', function(){
+  syncSchoolDraft();
+  draftSchool.events.push({d:ymd(new Date()), to:'', t:'', k:'event'});
+  renderSchoolEditor();
+  var last = document.querySelectorAll('#sc-events [data-ef="t"]');
+  if(last.length) last[last.length-1].focus();
+});
+document.getElementById('scClear').addEventListener('click', function(){
+  if(!confirm('確定要清空所有校內行程嗎？（學期設定會保留）')) return;
+  syncSchoolDraft();
+  draftSchool.events = [];
+  renderSchoolEditor();
+});
+document.getElementById('scReset').addEventListener('click', function(){
+  if(!confirm('確定要還原成內建的美和科技大學 115 學年度校曆嗎？你自己的修改會被覆蓋。')) return;
+  draftSchool = {name: DEFAULT_SCHOOL_NAME,
+                 terms: DEFAULT_SCHOOL_TERMS.map(function(t){ return {name:t.name,start:t.start,end:t.end}; }),
+                 events: DEFAULT_SCHOOL_EVENTS.map(function(e){ return {d:e.d,to:e.to||'',t:e.t,k:e.k}; })};
+  renderSchoolEditor();
+});
+function showSchoolHint(msg, isErr){
+  var el = document.getElementById('schoolHint');
+  el.textContent = msg;
+  el.className = 'modal-hint' + (isErr ? '' : ' ok');
+  el.hidden = false;
+}
+document.getElementById('scExport').addEventListener('click', function(){
+  syncSchoolDraft();
+  saveFile('校曆_'+(draftSchool.name||'未命名').replace(/[\/\\:*?"<>|]/g,'_')+'.json',
+    JSON.stringify({format:'wu-di-school-calendar', version:1, name:draftSchool.name,
+                    terms:draftSchool.terms, events:draftSchool.events}, null, 2),
+    function(){ showSchoolHint('已匯出校曆檔，可以傳給同校的人直接匯入。', false); },
+    function(msg){ showSchoolHint(msg, true); });
+});
+document.getElementById('scImport').addEventListener('change', function(){
+  var f = this.files && this.files[0];
+  this.value = '';
+  if(!f) return;
+  var reader = new FileReader();
+  reader.onload = function(){
+    try{
+      var v = JSON.parse(reader.result);
+      if(!v || v.format !== 'wu-di-school-calendar') throw new Error('format');
+      draftSchool = {name: v.name || '',
+                     terms: Array.isArray(v.terms) ? v.terms : [],
+                     events: Array.isArray(v.events) ? v.events : []};
+      renderSchoolEditor();
+      showSchoolHint('已載入 '+draftSchool.events.length+' 筆行程，按「儲存校曆」才會生效。', false);
+    }catch(e){
+      showSchoolHint('這不是校曆檔，或檔案已損壞。', true);
+    }
+  };
+  reader.onerror = function(){ showSchoolHint('讀取檔案失敗。', true); };
+  reader.readAsText(f);
+});
+document.getElementById('saveSchool').addEventListener('click', function(){
+  syncSchoolDraft();
+  var bad = draftSchool.events.filter(function(e){ return !e.d || !String(e.t||'').trim(); });
+  if(bad.length){ showSchoolHint('有 '+bad.length+' 筆行程缺日期或名稱，請補齊或刪除。', true); return; }
+  var badTerm = draftSchool.terms.filter(function(t){ return !t.start || !t.end || t.end < t.start; });
+  if(badTerm.length){ showSchoolHint('有學期的起訖日沒填好（結束不能早於開始）。', true); return; }
+  SCHOOL_NAME = draftSchool.name.trim();
+  SCHOOL_TERMS = draftSchool.terms.map(function(t){ return {name:t.name||'學期', start:t.start, end:t.end}; });
+  SCHOOL_EVENTS = draftSchool.events.map(function(e){
+    var o = {d:e.d, t:String(e.t).trim(), k:e.k||'event'};
+    if(e.to && e.to > e.d) o.to = e.to;
+    return o;
+  });
+  saveSchoolCalendar();
+  schoolBackdrop.classList.remove('open');
+  renderCalendarAll();
 });
 
 /* ---- item modal (create + edit) ---- */
@@ -2536,6 +3334,10 @@ document.addEventListener('keydown', function(e){
   document.getElementById('jeditBackdrop').classList.remove('open');
   document.getElementById('authorBackdrop').classList.remove('open');
   document.getElementById('pubBackdrop').classList.remove('open');
+  document.getElementById('docsBackdrop').classList.remove('open');
+  document.getElementById('roundsBackdrop').classList.remove('open');
+  document.getElementById('checkBackdrop').classList.remove('open');
+  document.getElementById('resubBackdrop').classList.remove('open');
 });
 
 /* ---- .ics export (downloads capability; .ics not on the extension
@@ -2588,6 +3390,21 @@ function buildICS(){
     lines.push('END:VEVENT');
   });
 
+  if(showSchool){
+    SCHOOL_EVENTS.forEach(function(e, idx){
+      lines.push('BEGIN:VEVENT');
+      lines.push('UID:school-'+idx+'-studio@local');
+      lines.push('DTSTAMP:'+stamp);
+      lines.push('DTSTART;VALUE=DATE:'+e.d.replace(/-/g,''));
+      /* DTEND on an all-day VEVENT is exclusive, so a span ends the day after. */
+      lines.push('DTEND;VALUE=DATE:'+ymd(addDays(parseISODate(e.to||e.d),1)).replace(/-/g,''));
+      lines.push('SUMMARY:'+icsEscape('【'+(SCHOOL_KIND_LABEL[e.k]||'校曆')+'】'+e.t));
+      lines.push('DESCRIPTION:'+icsEscape(SCHOOL_NAME+' 校內行事曆'));
+      lines.push('CATEGORIES:'+icsEscape('校內行事曆'));
+      lines.push('END:VEVENT');
+    });
+  }
+
   lines.push('END:VCALENDAR');
   return lines.join('\r\n')+'\r\n';
 }
@@ -2599,14 +3416,20 @@ var downloadsCap = null;
    self-hosted copy of this page that capability doesn't exist, but a plain
    Blob + anchor works — so try the capability first and fall back. */
 function saveFile(filename, text, onOk, onErr){
+  saveBinary(filename, text, 'text/plain;charset=utf-8', onOk, onErr);
+}
+/* `data` may be a string or a Blob — the same two routes serve both, so stored
+   project files and generated text share one download path. */
+function saveBinary(filename, data, mime, onOk, onErr){
   if(downloadsCap){
-    downloadsCap.save({filename:filename, data:text}).then(onOk).catch(function(err){
-      onErr(EXPORT_ERR[err && err.code] || '下載失敗，請稍後再試。');
+    downloadsCap.save({filename:filename, data:data}).then(onOk).catch(function(err){
+      var code = err && err.code;
+      onErr(EXPORT_ERR[code] || '下載失敗，請稍後再試。');
     });
     return;
   }
   try{
-    var blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    var blob = (data instanceof Blob) ? data : new Blob([data], {type:mime||'application/octet-stream'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url; a.download = filename;
@@ -2628,9 +3451,13 @@ function showExportMsg(text, ok){
 var EXPORT_ERR = {
   declined:'已取消下載。',
   rate_limited:'另一個下載視窗還開著，請稍後再試。',
-  too_large:'匯出內容過大，請先減少事項數量。',
+  too_large:'檔案超過 16 MB，這一版下載不了。請改用你自架的網站版。',
   unavailable:'這個環境不支援檔案下載。',
-  not_granted:'這個環境不支援檔案下載。'
+  not_granted:'這個環境不支援檔案下載。',
+  /* the platform allowlist has no zip / xlsx / pptx-adjacent types */
+  rejected_extension:'這一版不允許下載這種副檔名的檔案。請改用你自架的網站版，那邊沒有這個限制。',
+  extension_not_enabled:'這一版不允許下載這種副檔名的檔案。請改用你自架的網站版。',
+  bad_request:'這個檔案內容有問題，無法下載。'
 };
 var inArtifact = !!(window.claude && typeof window.claude.use === 'function');
 if(inArtifact){
@@ -2822,9 +3649,159 @@ try{
   var rawR = localStorage.getItem('submissionRecords');
   records = rawR ? JSON.parse(rawR) : DEFAULT_RECORDS.slice();
 }catch(e){ records = DEFAULT_RECORDS.slice(); }
+/* paperId groups the submissions of ONE manuscript across journals. Records made
+   before this existed get their own id as the paperId, so each stays a chain of one. */
+function migrateRecords(){
+  records.forEach(function(r){
+    if(!r.paperId) r.paperId = r.id;
+    if(!Array.isArray(r.reviewRounds)) r.reviewRounds = [];
+    if(!r.checklist) r.checklist = {};
+  });
+}
+migrateRecords();
 function saveRecords(){ try{ localStorage.setItem('submissionRecords', JSON.stringify(records)); }catch(e){} }
 
+/* ---- 投稿鏈 ---- */
+function chainFor(r){
+  return records.filter(function(x){ return x.paperId === r.paperId; })
+    .sort(function(a,b){ return (a.submittedDate||'').localeCompare(b.submittedDate||''); });
+}
+function chainStats(r){
+  var chain = chainFor(r);
+  var first = chain[0];
+  var rejected = chain.filter(function(x){ return x.status==='rejected'; }).length;
+  var done = chain.filter(function(x){ return PUBLISHED_STATUSES.indexOf(x.status)!==-1; })[0];
+  var startD = first && first.submittedDate ? parseISODate(first.submittedDate) : null;
+  var endD = done && (done.acceptedDate || done.submittedDate)
+    ? parseISODate(done.acceptedDate || done.submittedDate) : new Date();
+  var months = startD ? Math.max(0, Math.round((endD - startD)/86400000/30.44)) : null;
+  return { chain:chain, attempts:chain.length, rejected:rejected, months:months,
+           settled:!!done, index:chain.indexOf(r)+1 };
+}
+
+/* ---- 審查天數 ----
+   The journal's own review time is free text ("10–16 週（示範）"); pull the largest
+   number and its unit so an overdue submission can be flagged. Returns null when
+   the journal never stated one, rather than guessing a default. */
+function expectedReviewDays(j){
+  if(!j) return null;
+  var s = String(j.reviewTime||'');
+  if(!s || /待|依/.test(s) && !/\d/.test(s)) return null;
+  var m = s.match(/(\d+(?:\s*[–\-~]\s*\d+)?)\s*(週|月|天|日)/);
+  if(!m) return null;
+  var nums = m[1].split(/[–\-~]/).map(function(x){ return parseInt(x,10); }).filter(function(n){ return !isNaN(n); });
+  if(!nums.length) return null;
+  var max = Math.max.apply(null, nums);
+  var unit = m[2];
+  var days = unit==='週' ? max*7 : (unit==='月' ? max*30 : max);
+  return { days:days, label:m[0] };
+}
+function daysSince(dateStr){
+  if(!dateStr) return null;
+  return Math.floor((stripTime(new Date()) - stripTime(parseISODate(dateStr)))/86400000);
+}
+function reviewClock(r){
+  if(['submitted','under_review','revision'].indexOf(r.status) === -1) return null;
+  var d = daysSince(r.status==='revision' && r.revisionDate ? r.revisionDate : r.submittedDate);
+  if(d == null) return null;
+  var j = DATA.filter(function(x){ return x.id===r.journalId; })[0];
+  var exp = expectedReviewDays(j);
+  return { days:d, expected:exp, overdue: !!(exp && d > exp.days) };
+}
+
 var FILE_LABEL = {coverletter:'Cover Letter', manuscript:'匿名英文主文', chinese:'中文投稿版本', reviewComments:'審稿意見信', response:'Point-by-point 回覆', other:'其他附件'};
+
+/* ---- 逐點回覆信 ---- */
+function buildResponseLetter(r, round){
+  var journal = r.journalTitle || '【期刊名稱】';
+  var title = r.titleEN || '【英文文章名稱】';
+  var corr = correspondingAuthor(r.authors);
+  var byReviewer = {};
+  (round.comments||[]).forEach(function(c){
+    var k = c.reviewer || 'Reviewer 1';
+    (byReviewer[k] = byReviewer[k] || []).push(c);
+  });
+  var body = Object.keys(byReviewer).map(function(rv){
+    return rv+'\n'+'─'.repeat(40)+'\n\n'+
+      byReviewer[rv].map(function(c, i){
+        return 'Comment '+(i+1)+':\n'+(c.comment||'【審稿意見】')+'\n\n'+
+               'Response:\n'+(c.response||'【我們的回覆】')+'\n';
+      }).join('\n');
+  }).join('\n\n');
+
+  return 'Response to Reviewers\n\n'+
+    'Manuscript title: '+title+'\n'+
+    'Journal: '+journal+'\n'+
+    'Revision round: '+(round.label||'R1')+'\n\n'+
+    'Dear Editor and Reviewers,\n\n'+
+    'We thank you for the constructive comments on our manuscript. We have revised the '+
+    'manuscript accordingly and provide a point-by-point response below. '+
+    'All changes are highlighted in the revised manuscript.\n\n'+
+    (body || '【尚未輸入審稿意見】')+'\n\n'+
+    'We hope the revised manuscript is now suitable for publication in '+journal+'.\n\n'+
+    'Sincerely,\n'+
+    ((corr && (displayNameEN(corr) || corr.nameZH)) || '【通訊作者姓名】')+'\n'+
+    'on behalf of all authors';
+}
+
+/* ---- 投稿前檢查表 ----
+   Built from what the journal record actually states; anything the database
+   doesn't know is shown as "資料庫未載明" instead of a fake requirement. */
+function checklistItems(r){
+  var j = DATA.filter(function(x){ return x.id===r.journalId; })[0];
+  var out = [];
+  function add(key, label, detail){ out.push({key:key, label:label, detail:detail}); }
+  if(!j){
+    add('journal','先在「編輯這筆投稿」選定期刊','選定後才能比對該刊的格式要求');
+    return out;
+  }
+  add('abstract','摘要字數符合上限',
+      j.abstractWordLimit ? ('上限 '+j.abstractWordLimit+' 字') : '資料庫未載明，請查期刊投稿須知');
+  add('maintext','正文字數符合上限',
+      j.mainTextWordLimit ? ('上限 '+j.mainTextWordLimit+' 字') : '資料庫未載明，請查期刊投稿須知');
+  add('refstyle','參考文獻格式已套用',
+      j.referenceStyle ? j.referenceStyle : '資料庫未載明，請查期刊投稿須知');
+  if(j.requiresFundingStatement) add('funding','已附 Funding 聲明','此刊要求');
+  if(j.requiresConflictStatement) add('conflict','已附 Conflicts of Interest 聲明','此刊要求');
+  if(j.requiresDataAvailability) add('data','已附 Data Availability 聲明','此刊要求');
+  if(j.requiresEthicsStatement) add('ethics','已附 Ethical Approval 聲明','此刊要求');
+  add('coverletter','已備妥 Cover Letter','可用「產出投稿文件」產生');
+  add('anon','主文已去識別化（匿名投稿用）','移除作者、單位、致謝與可辨識資訊');
+  add('apc','已確認 APC 與經費來源',
+      j.apc != null ? ('約 $'+j.apc+' 美元') : 'APC 資料庫未載明');
+  return out;
+}
+
+function clockBadge(r){
+  var c = reviewClock(r);
+  if(!c) return '';
+  var title = c.expected
+    ? ('已經過 '+c.days+' 天，該刊預估審查時間 '+c.expected.label+(c.overdue?'（已超過）':''))
+    : ('已經過 '+c.days+' 天');
+  return '<span class="clockbadge'+(c.overdue?' over':'')+'" title="'+esc(title)+'">'+
+    (c.overdue?'⏰ ':'')+c.days+' 天</span>';
+}
+
+function chainBlock(r){
+  var st = chainStats(r);
+  if(st.attempts <= 1) return '';
+  return '<div class="chainbox">'+
+    '<div class="apahead"><span class="apalabel">這篇文章的投稿歷程</span>'+
+      '<span class="chainsum">'+st.attempts+' 次投稿'+
+      (st.rejected?'・被拒 '+st.rejected+' 次':'')+
+      (st.months!=null?'・歷時約 '+st.months+' 個月':'')+'</span></div>'+
+    '<ol class="chainlist">'+st.chain.map(function(c){
+      var cur = c.id===r.id;
+      return '<li class="chainitem'+(cur?' current':'')+'">'+
+        '<span class="statuspill '+esc(c.status)+'">'+esc(STATUS_LABEL[c.status]||c.status)+'</span>'+
+        '<span class="chainj">'+esc(c.journalTitle||'（未選擇）')+'</span>'+
+        '<span class="chaind">'+esc(c.submittedDate||'—')+
+          (c.acceptedDate?' → '+esc(c.acceptedDate):'')+'</span>'+
+        (c.rejectReason?'<span class="chainr">'+esc(c.rejectReason)+'</span>':'')+
+      '</li>';
+    }).join('')+'</ol>'+
+  '</div>';
+}
 
 function apaBlock(r){
   var cite = buildAPA7(r);
@@ -2888,7 +3865,10 @@ function renderHistory(){
           '<div class="zh">'+esc(r.titleZH||'')+'</div>'+
           '<div class="journal">'+esc(r.journalTitle)+'</div>'+
         '</div>'+
-        '<span class="statuspill '+esc(r.status)+'">'+esc(STATUS_LABEL[r.status]||r.status)+'</span>'+
+        '<div class="pillcol">'+
+          '<span class="statuspill '+esc(r.status)+'">'+esc(STATUS_LABEL[r.status]||r.status)+'</span>'+
+          clockBadge(r)+
+        '</div>'+
         '<div class="subdate">投稿 '+esc(r.submittedDate||'—')+'<br>'+(r.acceptedDate?('接受 '+esc(r.acceptedDate)):(r.revisionDate?('修改 '+esc(r.revisionDate)):''))+'</div>'+
         '<button class="iconbtn" data-delrec="'+esc(r.id)+'" aria-label="刪除這筆投稿">✕</button>'+
         '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>'+
@@ -2903,9 +3883,15 @@ function renderHistory(){
         '<table class="authortable"><thead><tr><th>中文姓名</th><th>英文姓名</th><th>服務單位</th><th>職稱</th></tr></thead><tbody>'+authorRows+'</tbody></table>'+
         '<div class="dfield" style="margin-bottom:8px;"><dt>投稿檔案</dt></div>'+
         '<div class="filelist">'+fileChips+'</div>'+
+        chainBlock(r)+
         apaBlock(r)+
         '<div class="subactions">'+
           '<button class="btn-ghost" data-editrec="'+esc(r.id)+'">✎ 編輯這筆投稿</button>'+
+          '<button class="btn-ghost" data-docs="'+esc(r.id)+'">📝 產出投稿文件</button>'+
+          '<button class="btn-ghost" data-rounds="'+esc(r.id)+'">💬 審稿意見與回覆'+
+            ((r.reviewRounds||[]).length ? '（'+r.reviewRounds.length+'）' : '')+'</button>'+
+          '<button class="btn-ghost" data-checklist="'+esc(r.id)+'">✅ 投稿前檢查</button>'+
+          '<button class="btn-ghost" data-resubmit="'+esc(r.id)+'">↪ 改投其他期刊</button>'+
           '<button class="btn-ghost" data-cycle="'+esc(r.id)+'">更新狀態 →</button>'+
           '<button class="btn-ghost" data-addfile="'+esc(r.id)+'">＋ 附加投稿檔案</button>'+
         '</div>'+
@@ -2955,6 +3941,26 @@ function renderHistory(){
       openRecModal(el.getAttribute('data-editrec'));
     });
   });
+  list.querySelectorAll('[data-docs]').forEach(function(el){
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      openDocsModal(el.getAttribute('data-docs'));
+    });
+  });
+  list.querySelectorAll('[data-rounds]').forEach(function(el){
+    el.addEventListener('click', function(ev){ ev.stopPropagation(); openRoundsModal(el.getAttribute('data-rounds')); });
+  });
+  list.querySelectorAll('[data-checklist]').forEach(function(el){
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      checkRecId = el.getAttribute('data-checklist');
+      renderChecklist();
+      checkBackdrop.classList.add('open');
+    });
+  });
+  list.querySelectorAll('[data-resubmit]').forEach(function(el){
+    el.addEventListener('click', function(ev){ ev.stopPropagation(); openResubModal(el.getAttribute('data-resubmit')); });
+  });
   list.querySelectorAll('[data-cycle]').forEach(function(el){
     el.addEventListener('click', function(ev){
       ev.stopPropagation();
@@ -2990,6 +3996,308 @@ function renderHistory(){
 var hstate = { open:{} };
 document.getElementById('openWizardBtn').addEventListener('click', function(){ resetWizard(); goto('submission','wizard'); });
 document.getElementById('openAuthorBook').addEventListener('click', openAuthorBook);
+
+/* ---- 審稿意見與逐點回覆 ---- */
+var roundsBackdrop = document.getElementById('roundsBackdrop');
+var roundsRecId = null;
+function roundsRec(){ return records.filter(function(x){ return x.id===roundsRecId; })[0]; }
+function renderRounds(){
+  var r = roundsRec();
+  if(!r) return;
+  document.getElementById('roundsIntro').textContent =
+    '《'+(r.titleEN||r.titleZH||'未命名')+'》・'+(r.journalTitle||'（未選擇期刊）')+
+    '。每一輪把審稿人的意見貼進來、逐條寫回覆，就能產出格式正確的 point-by-point 回覆信。';
+  var el = document.getElementById('roundsList');
+  if((r.reviewRounds||[]).length === 0){
+    el.innerHTML = '<div class="empty-state" style="padding:26px 10px;"><p class="big">還沒有修改輪次</p>'+
+      '<p>收到審稿意見後，按下方按鈕新增一輪。</p></div>';
+    return;
+  }
+  el.innerHTML = r.reviewRounds.map(function(rd, ri){
+    var comments = (rd.comments||[]).map(function(c, ci){
+      return '<div class="cmtcard">'+
+        '<button class="rmauthor" data-rmcmt="'+ri+'-'+ci+'">✕ 移除</button>'+
+        '<div class="field2">'+
+          '<div class="field"><label>審稿人</label>'+
+            '<input data-rd="reviewer" data-ri="'+ri+'" data-ci="'+ci+'" value="'+esc(c.reviewer||'')+'" placeholder="Reviewer 1"></div>'+
+          '<div class="field"><label>狀態</label>'+
+            '<select data-rd="done" data-ri="'+ri+'" data-ci="'+ci+'">'+
+              '<option value=""'+(!c.done?' selected':'')+'>尚未回覆</option>'+
+              '<option value="1"'+(c.done?' selected':'')+'>已回覆</option>'+
+            '</select></div>'+
+        '</div>'+
+        '<div class="field"><label>審稿意見</label>'+
+          '<textarea data-rd="comment" data-ri="'+ri+'" data-ci="'+ci+'" placeholder="貼上審稿人的意見">'+esc(c.comment||'')+'</textarea></div>'+
+        '<div class="field" style="margin-bottom:0;"><label>我們的回覆</label>'+
+          '<textarea data-rd="response" data-ri="'+ri+'" data-ci="'+ci+'" placeholder="說明如何修改，並註明改在哪一頁/行">'+esc(c.response||'')+'</textarea></div>'+
+      '</div>';
+    }).join('');
+    var total = (rd.comments||[]).length;
+    var done = (rd.comments||[]).filter(function(c){ return c.done; }).length;
+    return '<div class="roundcard">'+
+      '<div class="roundhead">'+
+        '<input class="roundlabel" data-rd="label" data-ri="'+ri+'" value="'+esc(rd.label||'')+'">'+
+        '<input type="date" class="rounddate" data-rd="receivedDate" data-ri="'+ri+'" value="'+esc(rd.receivedDate||'')+'" title="收到意見日期">'+
+        '<span class="roundprog">'+done+' / '+total+' 條已回覆</span>'+
+        '<button class="btn-ghost" data-copyresp="'+ri+'">⧉ 複製回覆信</button>'+
+        '<button class="delbtn" data-rmround="'+ri+'" aria-label="刪除這輪">✕</button>'+
+      '</div>'+
+      comments+
+      '<button class="addauthorbtn" data-addcmt="'+ri+'">＋ 新增一條意見</button>'+
+    '</div>';
+  }).join('');
+
+  el.querySelectorAll('[data-rd]').forEach(function(inp){
+    inp.addEventListener('input', function(){
+      var rr = roundsRec(); if(!rr) return;
+      var ri = parseInt(inp.getAttribute('data-ri'),10);
+      var ci = inp.getAttribute('data-ci');
+      var key = inp.getAttribute('data-rd');
+      if(ci === null) rr.reviewRounds[ri][key] = inp.value;
+      else rr.reviewRounds[ri].comments[parseInt(ci,10)][key] =
+             (key==='done') ? !!inp.value : inp.value;
+      saveRecords();
+    });
+    inp.addEventListener('change', function(){
+      var rr = roundsRec(); if(!rr) return;
+      var ri = parseInt(inp.getAttribute('data-ri'),10);
+      var ci = inp.getAttribute('data-ci');
+      var key = inp.getAttribute('data-rd');
+      if(ci === null) rr.reviewRounds[ri][key] = inp.value;
+      else rr.reviewRounds[ri].comments[parseInt(ci,10)][key] =
+             (key==='done') ? !!inp.value : inp.value;
+      saveRecords();
+      if(key==='done') renderRounds();
+    });
+  });
+  el.querySelectorAll('[data-addcmt]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var rr = roundsRec();
+      var ri = parseInt(btn.getAttribute('data-addcmt'),10);
+      rr.reviewRounds[ri].comments = rr.reviewRounds[ri].comments || [];
+      rr.reviewRounds[ri].comments.push({reviewer:'Reviewer '+(rr.reviewRounds[ri].comments.length+1), comment:'', response:'', done:false});
+      saveRecords(); renderRounds();
+    });
+  });
+  el.querySelectorAll('[data-rmcmt]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var p = btn.getAttribute('data-rmcmt').split('-').map(Number);
+      var rr = roundsRec();
+      rr.reviewRounds[p[0]].comments.splice(p[1],1);
+      saveRecords(); renderRounds();
+    });
+  });
+  el.querySelectorAll('[data-rmround]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ri = parseInt(btn.getAttribute('data-rmround'),10);
+      var rr = roundsRec();
+      if(!confirm('確定要刪除「'+(rr.reviewRounds[ri].label||'這一輪')+'」及其所有意見與回覆嗎？')) return;
+      rr.reviewRounds.splice(ri,1);
+      saveRecords(); renderRounds(); renderHistory();
+    });
+  });
+  el.querySelectorAll('[data-copyresp]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ri = parseInt(btn.getAttribute('data-copyresp'),10);
+      var rr = roundsRec();
+      copyToClipboard(buildResponseLetter(rr, rr.reviewRounds[ri])).then(function(){
+        btn.textContent = '✓ 已複製';
+        setTimeout(function(){ btn.textContent = '⧉ 複製回覆信'; }, 1800);
+      }).catch(function(){
+        btn.textContent = '請手動選取';
+        setTimeout(function(){ btn.textContent = '⧉ 複製回覆信'; }, 2200);
+      });
+    });
+  });
+}
+function openRoundsModal(id){
+  roundsRecId = id;
+  document.getElementById('roundsHint').hidden = true;
+  renderRounds();
+  roundsBackdrop.classList.add('open');
+}
+document.getElementById('roundsClose').addEventListener('click', function(){
+  roundsBackdrop.classList.remove('open'); renderHistory();
+});
+roundsBackdrop.addEventListener('click', function(ev){
+  if(ev.target===roundsBackdrop){ roundsBackdrop.classList.remove('open'); renderHistory(); }
+});
+document.getElementById('addRound').addEventListener('click', function(){
+  var r = roundsRec(); if(!r) return;
+  r.reviewRounds = r.reviewRounds || [];
+  r.reviewRounds.push({
+    label:'R'+(r.reviewRounds.length+1), receivedDate: ymd(new Date()),
+    comments:[{reviewer:'Reviewer 1', comment:'', response:'', done:false}]
+  });
+  saveRecords(); renderRounds();
+});
+
+/* ---- 投稿前檢查 ---- */
+var checkBackdrop = document.getElementById('checkBackdrop');
+var checkRecId = null;
+function renderChecklist(){
+  var r = records.filter(function(x){ return x.id===checkRecId; })[0];
+  if(!r) return;
+  var items = checklistItems(r);
+  var doneN = items.filter(function(i){ return r.checklist && r.checklist[i.key]; }).length;
+  document.getElementById('checkIntro').textContent =
+    (r.journalTitle||'（未選擇期刊）')+' 的投稿要求，已完成 '+doneN+' / '+items.length+' 項。勾選狀態會存在這筆投稿。';
+  document.getElementById('checkList').innerHTML = items.map(function(i){
+    var on = !!(r.checklist && r.checklist[i.key]);
+    return '<div class="checkrow'+(on?' on':'')+'" data-check="'+esc(i.key)+'" tabindex="0" role="checkbox" aria-checked="'+on+'">'+
+      '<span class="checkbox">'+(on?'✓':'')+'</span>'+
+      '<div class="checkbody"><div class="ckl">'+esc(i.label)+'</div>'+
+      '<div class="ckd">'+esc(i.detail)+'</div></div>'+
+    '</div>';
+  }).join('');
+  document.querySelectorAll('#checkList [data-check]').forEach(function(el){
+    function toggle(){
+      if(!r.checklist) r.checklist = {};
+      var k = el.getAttribute('data-check');
+      r.checklist[k] = !r.checklist[k];
+      saveRecords(); renderChecklist();
+    }
+    el.addEventListener('click', toggle);
+    el.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); toggle(); } });
+  });
+}
+document.getElementById('checkClose').addEventListener('click', function(){ checkBackdrop.classList.remove('open'); });
+checkBackdrop.addEventListener('click', function(ev){ if(ev.target===checkBackdrop) checkBackdrop.classList.remove('open'); });
+
+/* ---- 改投其他期刊 ---- */
+var resubBackdrop = document.getElementById('resubBackdrop');
+var resubRecId = null;
+function openResubModal(id){
+  var r = records.filter(function(x){ return x.id===id; })[0];
+  if(!r) return;
+  resubRecId = id;
+  document.getElementById('resubIntro').textContent =
+    '《'+(r.titleEN||r.titleZH||'未命名')+'》原投稿於 '+(r.journalTitle||'（未選擇）')+'。';
+  document.getElementById('rs-reason').value = r.rejectReason || '';
+  var sel = document.getElementById('rs-journal');
+  sel.innerHTML = '<option value="">（未選擇期刊）</option>'+
+    DATA.slice().sort(function(a,b){ return a.title.localeCompare(b.title); })
+      .map(function(j){ return '<option value="'+esc(j.id)+'">'+esc(j.title)+'</option>'; }).join('');
+  document.getElementById('rs-date').value = ymd(new Date());
+  resubBackdrop.classList.add('open');
+}
+document.getElementById('resubCancel').addEventListener('click', function(){ resubBackdrop.classList.remove('open'); });
+resubBackdrop.addEventListener('click', function(ev){ if(ev.target===resubBackdrop) resubBackdrop.classList.remove('open'); });
+document.getElementById('resubGo').addEventListener('click', function(){
+  var old = records.filter(function(x){ return x.id===resubRecId; })[0];
+  if(!old) return;
+  var jid = document.getElementById('rs-journal').value;
+  var journal = DATA.filter(function(j){ return j.id===jid; })[0];
+  old.rejectReason = document.getElementById('rs-reason').value.trim();
+  if(old.status !== 'rejected') old.status = 'rejected';
+  records.push({
+    id:'u'+Date.now(),
+    paperId: old.paperId || old.id,     // same manuscript, new attempt
+    journalId: jid,
+    journalTitle: journal ? journal.title : '（未選擇）',
+    titleEN: old.titleEN, titleZH: old.titleZH,
+    authors: JSON.parse(JSON.stringify(old.authors||[])),
+    docMeta: JSON.parse(JSON.stringify(old.docMeta || docMetaDefaults())),
+    submittedDate: document.getElementById('rs-date').value || ymd(new Date()),
+    revisionDate:'', acceptedDate:'', deadlineDate:'', deadlineNote:'',
+    status:'submitted', files:[], reviewRounds:[], checklist:{},
+    pubYear:'', volume:'', issue:'', pages:'', articleNumber:'', doi:'', citationOverride:'',
+    notes:'由「'+(old.journalTitle||'前一本期刊')+'」改投'
+  });
+  saveRecords();
+  resubBackdrop.classList.remove('open');
+  renderHistory();
+});
+
+/* ---- 投稿文件（既有紀錄） ---- */
+var docsBackdrop = document.getElementById('docsBackdrop');
+var docsForRecId = null;
+function docsCtx(){
+  var r = records.filter(function(x){ return x.id===docsForRecId; })[0];
+  if(!r) return null;
+  return { journalTitle: r.journalTitle, titleEN: r.titleEN, authors: r.authors,
+           meta: r.docMeta || docMetaDefaults() };
+}
+/* Re-renders only the generated documents. The settings block is deliberately
+   left alone: replacing it while one of its own selects is blurring destroys the
+   node mid-event, which the browser reports as an innerHTML failure. */
+function renderDocsList(){
+  var ctx = docsCtx();
+  if(!ctx) return;
+  document.getElementById('docsList').innerHTML = DOC_TYPES.map(function(d){
+    return '<div class="docrow generated">'+
+      '<div class="docname">'+d.name+'<div class="docsub">'+d.sub+'</div></div>'+
+      '<button class="docgenbtn" data-copyrecdoc="'+d.key+'">⧉ 複製</button>'+
+      '<div class="docpreview"><pre class="doctext">'+esc(generateDoc(d.key, ctx))+'</pre></div>'+
+    '</div>';
+  }).join('');
+
+  document.querySelectorAll('[data-copyrecdoc]').forEach(function(el){
+    el.addEventListener('click', function(){
+      copyToClipboard(generateDoc(el.getAttribute('data-copyrecdoc'), docsCtx())).then(function(){
+        el.textContent = '✓ 已複製';
+        setTimeout(function(){ el.textContent = '⧉ 複製'; }, 1800);
+      }).catch(function(){
+        el.textContent = '請手動選取';
+        setTimeout(function(){ el.textContent = '⧉ 複製'; }, 2200);
+      });
+    });
+  });
+}
+function renderDocsModal(){
+  var r = records.filter(function(x){ return x.id===docsForRecId; })[0];
+  if(!r) return;
+  document.getElementById('docsIntro').textContent =
+    '《'+(r.titleEN || r.titleZH || '未命名')+'》投稿至 '+(r.journalTitle||'（未選擇期刊）')+
+    '。以下依這筆紀錄的資料套版產出，【】處請自行補上。';
+  document.getElementById('docsSettings').innerHTML =
+    docSettingsHTML(r.docMeta || docMetaDefaults(), 'dm');
+  document.querySelectorAll('#docsSettings [data-docmeta]').forEach(function(el){
+    function apply(){
+      if(!r.docMeta) r.docMeta = docMetaDefaults();
+      r.docMeta[el.getAttribute('data-docmeta')] = el.value;
+      saveRecords();
+      renderDocsList();
+    }
+    el.addEventListener('input', apply);
+    el.addEventListener('change', apply);
+  });
+  renderDocsList();
+}
+
+function allDocsText(){
+  var ctx = docsCtx();
+  if(!ctx) return '';
+  return DOC_TYPES.map(function(d){
+    return '=== '+d.name+' ===\n\n'+generateDoc(d.key, ctx);
+  }).join('\n\n\n');
+}
+function openDocsModal(id){
+  docsForRecId = id;
+  document.getElementById('docsHint').hidden = true;
+  renderDocsModal();
+  docsBackdrop.classList.add('open');
+}
+document.getElementById('docsClose').addEventListener('click', function(){ docsBackdrop.classList.remove('open'); });
+docsBackdrop.addEventListener('click', function(ev){ if(ev.target===docsBackdrop) docsBackdrop.classList.remove('open'); });
+document.getElementById('docsCopyAll').addEventListener('click', function(){
+  var h = document.getElementById('docsHint');
+  copyToClipboard(allDocsText()).then(function(){
+    h.textContent = '已複製全部 '+DOC_TYPES.length+' 份文件。';
+    h.className = 'exporthint ok'; h.hidden = false;
+  }).catch(function(){
+    h.textContent = '瀏覽器擋下了複製，請逐份用各自的「複製」按鈕。';
+    h.className = 'exporthint err'; h.hidden = false;
+  });
+});
+document.getElementById('docsDownload').addEventListener('click', function(){
+  var r = records.filter(function(x){ return x.id===docsForRecId; })[0];
+  var h = document.getElementById('docsHint');
+  saveFile('投稿文件_'+((r && (r.titleEN||r.titleZH)) || '未命名').slice(0,40).replace(/[\\/:*?"<>|]/g,'')+'.txt',
+    allDocsText(),
+    function(){ h.textContent='已存成 .txt。'; h.className='exporthint ok'; h.hidden=false; },
+    function(msg){ h.textContent=msg; h.className='exporthint err'; h.hidden=false; });
+});
 
 /* ---- 著作清單 ---- */
 var pubBackdrop = document.getElementById('pubBackdrop');
@@ -3301,7 +4609,9 @@ function collectBackup(){
     journalTargets: targets,
     journalEdits: journalEdits,
     customJournals: customJournals,
-    authorBook: authorBook
+    authorBook: authorBook,
+    businessCards: cards,
+    researchProjects: projects
   };
 }
 function describeBackup(b){
@@ -3311,11 +4621,14 @@ function describeBackup(b){
          '目標期刊 '+Object.keys(b.journalTargets||{}).filter(function(k){return b.journalTargets[k];}).length+' 本、'+
          '期刊修正 '+Object.keys(b.journalEdits||{}).length+' 筆、'+
          '自建期刊 '+(b.customJournals||[]).length+' 本、'+
-         '作者簿 '+(b.authorBook||[]).length+' 位';
+         '作者簿 '+(b.authorBook||[]).length+' 位、'+
+         '名片 '+(b.businessCards||[]).length+' 張、'+
+         '計畫 '+(b.researchProjects||[]).length+' 個';
 }
 function openBackupModal(){
   document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
   document.getElementById('exportBackupHint').hidden = true;
+  document.getElementById('clearDemoHint').hidden = true;
   document.getElementById('importHint').hidden = true;
   document.getElementById('importPick').value = '';
   document.getElementById('doImport').disabled = true;
@@ -3323,6 +4636,38 @@ function openBackupModal(){
   backupBackdrop.classList.add('open');
 }
 document.getElementById('backupBtn').addEventListener('click', openBackupModal);
+
+/* The demo rows exist so a first-time visitor sees a populated interface rather
+   than five empty panels. They are somebody else's data, so anyone adopting the
+   page needs one button that removes exactly those and nothing they typed. */
+function isDemoItem(it){ return DEFAULT_ITEMS.some(function(d){ return d.id === it.id; }); }
+document.getElementById('clearDemo').addEventListener('click', function(){
+  var demoItems = items.filter(isDemoItem).length;
+  var demoClasses = CLASS_SCHEDULE.filter(function(c){
+    return DEFAULT_CLASSES.some(function(d){ return d.id === c.id; });
+  }).length;
+  var demoRecs = records.filter(function(r){
+    return DEFAULT_RECORDS.some(function(d){ return d.id === r.id; });
+  }).length;
+  if(!demoItems && !demoClasses && !demoRecs){
+    showBackupHint('clearDemoHint', '目前已經沒有示範資料了，你的資料都是自己建立的。', false);
+    return;
+  }
+  if(!confirm('會清除 '+demoClasses+' 堂示範課程、'+demoItems+' 筆示範事項、'+demoRecs+
+              ' 筆示範投稿紀錄。你自己新增的資料完全不受影響。確定嗎？')) return;
+  items = items.filter(function(it){ return !isDemoItem(it); });
+  CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(c){
+    return !DEFAULT_CLASSES.some(function(d){ return d.id === c.id; });
+  });
+  records = records.filter(function(r){
+    return !DEFAULT_RECORDS.some(function(d){ return d.id === r.id; });
+  });
+  saveItems(); saveClasses(); saveRecords();
+  hstate.open = {};
+  showBackupHint('clearDemoHint', '示範資料已清除，可以開始建立你自己的資料了。', false);
+  document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
+  applyNav();
+});
 document.getElementById('cancelBackup').addEventListener('click', function(){ backupBackdrop.classList.remove('open'); });
 backupBackdrop.addEventListener('click', function(e){ if(e.target===backupBackdrop) backupBackdrop.classList.remove('open'); });
 
@@ -3363,7 +4708,7 @@ document.getElementById('importPick').addEventListener('change', function(){
 
 document.getElementById('doImport').addEventListener('click', function(){
   if(!pendingImport) return;
-  if(!confirm('還原會覆蓋目前所有資料（重要事項、課表、投稿紀錄、目標期刊），確定要繼續嗎？')) return;
+  if(!confirm('還原會覆蓋目前所有資料（重要事項、課表、投稿紀錄、目標期刊、計畫管理、名片簿），確定要繼續嗎？')) return;
   if(Array.isArray(pendingImport.calendarItems)){
     items = pendingImport.calendarItems;
     items.forEach(function(it){ if(it.repeat==null) it.repeat='none'; if(it.repeatEnd==null) it.repeatEnd=''; });
@@ -3393,6 +4738,30 @@ document.getElementById('doImport').addEventListener('click', function(){
   if(Array.isArray(pendingImport.authorBook)){
     authorBook = pendingImport.authorBook;
     saveAuthorBook();
+  }
+  if(Array.isArray(pendingImport.researchProjects)){
+    /* Project files live in IndexedDB and are not in the JSON, so a restore onto
+       a fresh browser brings back the records with an empty file list. */
+    projects = pendingImport.researchProjects.map(function(p){
+      var copy = {};
+      for(var k in p) if(Object.prototype.hasOwnProperty.call(p,k)) copy[k] = p[k];
+      return copy;
+    });
+    migrateProjects();
+    saveProjects();
+  }
+  if(Array.isArray(pendingImport.businessCards)){
+    /* Photos live in IndexedDB and are not in the JSON, so a restored card on a
+       fresh browser has fields but no picture — say so instead of showing a
+       permanently "loading" tile. */
+    cards = pendingImport.businessCards.map(function(c){
+      var copy = {};
+      for(var k in c) if(Object.prototype.hasOwnProperty.call(c,k)) copy[k] = c[k];
+      if(!Array.isArray(copy.tags)) copy.tags = [];
+      return copy;
+    });
+    thumbCache = {};
+    saveCards();
   }
   backupBackdrop.classList.remove('open');
   pendingImport = null;
@@ -3714,7 +5083,7 @@ function resetWizard(){
   wz = {
     step:0, fileName:'', researchField:'', journalId:null,
     translateOptions:{natural:true, apa7:true, noCut:true, matchJournalFormat:true},
-    translated:false, generatedDocs:{},
+    translated:false, generatedDocs:{}, docMeta: docMetaDefaults(),
     titleEN:'', titleZH:'',
     authors:[{nameZH:'',nameEN:'',affZH:'',affEN:'',titleZH:'',corresponding:true}],
     submittedDate:ymd(new Date())
@@ -3864,19 +5233,182 @@ function stepTranslate(){
     '<div class="stepnav"><button class="btn-secondary" id="back2">上一步</button><button class="btn-primary" id="next2"'+(wz.translated?'':' disabled')+'>下一步：產出投稿文件</button></div>';
 }
 
+/* ========================================================================
+   投稿文件產出
+   Real drafts built from the record's own data. Anything the user hasn't
+   supplied appears as a 【bracketed】 placeholder rather than being invented,
+   so a missing grant number stays obvious instead of silently plausible.
+   ======================================================================== */
+var STUDY_TYPES = [
+  {key:'rct',   label:'隨機對照試驗',        guideline:'CONSORT 2010 statement'},
+  {key:'sr',    label:'系統性回顧／統合分析', guideline:'PRISMA 2020 statement'},
+  {key:'obs',   label:'觀察性研究',          guideline:'STROBE statement'},
+  {key:'case',  label:'個案報告',            guideline:'CARE guidelines'},
+  {key:'qual',  label:'質性研究',            guideline:'COREQ checklist'},
+  {key:'other', label:'其他／不適用',        guideline:''}
+];
+var DATA_POLICIES = [
+  {key:'onrequest', label:'依合理要求向通訊作者索取',
+   text:'The datasets generated and analysed during the current study are available from the corresponding author upon reasonable request.'},
+  {key:'repository', label:'已公開於資料庫',
+   text:'The data supporting the findings of this study are openly available at 【資料庫名稱與網址／DOI】.'},
+  {key:'inarticle', label:'全部資料已含於文章中',
+   text:'All data generated or analysed during this study are included in this published article.'},
+  {key:'restricted', label:'因倫理／隱私限制不公開',
+   text:'The data are not publicly available because they contain information that could compromise the privacy of research participants. De-identified data may be made available from the corresponding author upon reasonable request and with permission of the institutional review board.'}
+];
+function docMetaDefaults(){
+  return {studyType:'obs', funding:'', irb:'', irbOrg:'', dataPolicy:'onrequest', highlights:''};
+}
+function ph(v, label){ return (v && String(v).trim()) ? String(v).trim() : '【'+label+'】'; }
+function displayNameEN(a){
+  var n = (a && a.nameEN || '').trim();
+  if(!n) return '';
+  if(n.indexOf(',') === -1) return n;
+  var p = n.split(',');
+  return (p.slice(1).join(' ').trim()+' '+p[0].trim()).trim();
+}
+function authorListEN(authors){
+  var names = (authors||[]).map(displayNameEN).filter(Boolean);
+  if(names.length === 0) return '【作者英文姓名】';
+  if(names.length === 1) return names[0];
+  return names.slice(0,-1).join(', ')+' and '+names[names.length-1];
+}
+function correspondingAuthor(authors){
+  return (authors||[]).filter(function(a){ return a.corresponding; })[0] || (authors||[])[0] || null;
+}
+
+function generateDoc(key, ctx){
+  var journal = ph(ctx.journalTitle, '期刊名稱');
+  var title   = ph(ctx.titleEN, '英文文章名稱');
+  var authors = ctx.authors || [];
+  var m = ctx.meta || docMetaDefaults();
+  var corr = correspondingAuthor(authors);
+  var corrName = corr ? (displayNameEN(corr) || corr.nameZH || '') : '';
+  var corrAff  = corr ? (corr.affEN || corr.affZH || '') : '';
+  var st = STUDY_TYPES.filter(function(s){ return s.key===m.studyType; })[0] || STUDY_TYPES[2];
+  var dp = DATA_POLICIES.filter(function(d){ return d.key===m.dataPolicy; })[0] || DATA_POLICIES[0];
+  var many = (authors||[]).length !== 1;
+
+  switch(key){
+    case 'coverletter':
+      return 'Dear Editor,\n\n'+
+        'On behalf of my co-authors, I am pleased to submit our manuscript entitled "'+title+'" '+
+        'for consideration for publication in '+journal+'.\n\n'+
+        ((m.highlights||'').trim()
+          ? (m.highlights||'').trim()+'\n\n'
+          : '【用一段話說明本研究做了什麼、主要發現是什麼，以及為何適合這本期刊的讀者】\n\n')+
+        'We believe this work is well suited to '+journal+' because it addresses a question of direct relevance to the journal’s readership.\n\n'+
+        'We confirm that this manuscript is original, has not been published previously, and is not under consideration for publication elsewhere. '+
+        'All authors have read and approved the final version of the manuscript and agree to its submission to '+journal+'. '+
+        'The authors have no conflicts of interest to declare.\n\n'+
+        'Thank you for your time and consideration. We look forward to hearing from you.\n\n'+
+        'Sincerely,\n'+
+        (corrName || '【通訊作者姓名】')+'\n'+
+        (corrAff || '【服務單位】')+'\n'+
+        '【電子郵件】';
+
+    case 'conflict':
+      return 'Conflicts of Interest\n\n'+
+        'The authors declare that they have no known competing financial interests or personal relationships '+
+        'that could have appeared to influence the work reported in this paper.';
+
+    case 'authorContrib':
+      var lines = authors.map(function(a, i){
+        var nm = displayNameEN(a) || a.nameZH || ('Author '+(i+1));
+        var roles = (i === 0)
+          ? 'Conceptualization, Methodology, Formal analysis, Writing – original draft'
+          : (a.corresponding
+              ? 'Conceptualization, Supervision, Writing – review & editing, Funding acquisition'
+              : 'Investigation, Data curation, Writing – review & editing');
+        return nm+': '+roles+'.';
+      });
+      return 'Author Contributions (CRediT)\n\n'+
+        (lines.length ? lines.join('\n') : '【請先填入作者資訊】')+'\n\n'+
+        'All authors have read and agreed to the submitted version of the manuscript.\n\n'+
+        '（以上是依作者順序推測的預設分工，請務必依實際貢獻修改。）';
+
+    case 'originality':
+      return 'Originality and Exclusive Submission\n\n'+
+        'We confirm that the manuscript entitled "'+title+'" is original work, has not been published previously '+
+        'in whole or in part, and is not under consideration for publication elsewhere. '+
+        'No part of this manuscript has been submitted to another journal concurrently with its submission to '+journal+'.';
+
+    case 'funding':
+      return 'Funding\n\n'+
+        ((m.funding||'').trim()
+          ? 'This work was supported by '+(m.funding||'').trim()+'.'
+          : 'This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.\n\n（若本研究有經費補助，請到上方「投稿文件設定」填入補助單位與計畫編號。）');
+
+    case 'ethics':
+      return 'Ethical Approval and Informed Consent\n\n'+
+        'This study was conducted in accordance with the Declaration of Helsinki and was approved by the '+
+        'Institutional Review Board of '+ph(m.irbOrg || corrAff, '審查機構名稱')+' (Approval No. '+ph(m.irb, 'IRB 核准字號')+'). '+
+        'Written informed consent was obtained from all participants prior to their inclusion in the study.';
+
+    case 'reporting':
+      return 'Reporting Guidelines\n\n'+
+        (st.guideline
+          ? 'This study is reported in accordance with the '+st.guideline+'. '+
+            'The completed checklist is provided as supplementary material.'
+          : '【請到「投稿文件設定」選擇研究類型，或自行說明本研究依循的報告規範】');
+
+    case 'dataAvail':
+      return 'Data Availability Statement\n\n'+dp.text;
+
+    case 'copyright':
+      return 'Copyright and Publishing Agreement\n\n'+
+        'Upon acceptance of the manuscript entitled "'+title+'" for publication in '+journal+', '+
+        'the authors agree to comply with the journal’s copyright and publishing policy, including any licensing '+
+        'and open-access terms specified by the publisher. All authors have agreed to the terms of submission and publication.';
+
+    case 'approval':
+      return 'Approval\n\n'+
+        authorListEN(authors)+' '+(many ? 'have' : 'has')+
+        ' reviewed and approved the final version of the manuscript entitled "'+title+'" '+
+        'and agree'+(many ? '' : 's')+' to its submission to '+journal+'. '+
+        'All authors accept responsibility for the content of the manuscript.';
+  }
+  return '';
+}
 function genPreview(key){
-  return ({
-    coverletter:'Dear Editor, We are pleased to submit our manuscript entitled "…" for consideration in your journal. This work addresses a significant gap in…',
-    conflict:'The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.',
-    authorContrib:'Conceptualization: A.W.; Methodology: A.W., B.C.; Formal analysis: B.C.; Writing — original draft: A.W.; Writing — review & editing: all authors.',
-    originality:'This manuscript is original, has not been published previously, and is not under consideration for publication elsewhere.',
-    funding:'This work was supported by the National Science and Technology Council, Taiwan (Grant No. …).',
-    ethics:'This study was approved by the Institutional Review Board of … (Approval No. …). Written informed consent was obtained from all participants.',
-    reporting:'This study is reported in accordance with the PRISMA 2020 statement; the completed checklist is provided as supplementary material.',
-    dataAvail:'The datasets generated and analysed during the current study are available from the corresponding author upon reasonable request.',
-    copyright:'The authors confirm agreement to the journal\u2019s copyright and publishing policy upon acceptance of this manuscript.',
-    approval:'All authors have reviewed and approved the final version of this manuscript and agree to its submission to this journal.'
-  })[key] || '';
+  return generateDoc(key, {
+    journalTitle: (DATA.filter(function(j){ return j.id===wz.journalId; })[0]||{}).title,
+    titleEN: wz.titleEN,
+    authors: wz.authors,
+    meta: wz.docMeta || docMetaDefaults()
+  });
+}
+
+/* One settings block, reused by the wizard and by the per-record document modal.
+   `scope` namespaces the ids so both can exist without colliding. */
+function docSettingsHTML(m, scope){
+  var stOpts = STUDY_TYPES.map(function(s){
+    return '<option value="'+s.key+'"'+(m.studyType===s.key?' selected':'')+'>'+esc(s.label)+
+      (s.guideline?'（'+esc(s.guideline)+'）':'')+'</option>';
+  }).join('');
+  var dpOpts = DATA_POLICIES.map(function(d){
+    return '<option value="'+d.key+'"'+(m.dataPolicy===d.key?' selected':'')+'>'+esc(d.label)+'</option>';
+  }).join('');
+  return '<div class="docsettings">'+
+    '<h3>投稿文件設定</h3>'+
+    '<div class="field2">'+
+      '<div class="field"><label for="'+scope+'-studyType">研究類型（決定報告規範）</label>'+
+        '<select id="'+scope+'-studyType" data-docmeta="studyType">'+stOpts+'</select></div>'+
+      '<div class="field"><label for="'+scope+'-dataPolicy">資料可得性</label>'+
+        '<select id="'+scope+'-dataPolicy" data-docmeta="dataPolicy">'+dpOpts+'</select></div>'+
+    '</div>'+
+    '<div class="field2">'+
+      '<div class="field"><label for="'+scope+'-irbOrg">倫理審查機構</label>'+
+        '<input id="'+scope+'-irbOrg" data-docmeta="irbOrg" value="'+esc(m.irbOrg||'')+'" placeholder="留空則用通訊作者單位"></div>'+
+      '<div class="field"><label for="'+scope+'-irb">IRB 核准字號</label>'+
+        '<input id="'+scope+'-irb" data-docmeta="irb" value="'+esc(m.irb||'')+'" placeholder="例如 OO-2026-045"></div>'+
+    '</div>'+
+    '<div class="field"><label for="'+scope+'-funding">經費來源（留空會產出「無特定經費」版本）</label>'+
+      '<input id="'+scope+'-funding" data-docmeta="funding" value="'+esc(m.funding||'')+'" placeholder="例如 the National Science and Technology Council, Taiwan (NSTC 115-2410-H-000-001)"></div>'+
+    '<div class="field" style="margin-bottom:0;"><label for="'+scope+'-highlights">Cover Letter 重點段落（中英文皆可，留空會給提示）</label>'+
+      '<textarea id="'+scope+'-highlights" data-docmeta="highlights" placeholder="這篇做了什麼、主要發現、為何適合這本期刊">'+esc(m.highlights||'')+'</textarea></div>'+
+  '</div>';
 }
 
 function stepDocs(){
@@ -3884,14 +5416,16 @@ function stepDocs(){
     var gen = wz.generatedDocs[d.key];
     return '<div class="docrow'+(gen?' generated':'')+'">'+
       '<div class="docname">'+d.name+'<div class="docsub">'+d.sub+'</div></div>'+
-      '<button class="docgenbtn" data-gendoc="'+d.key+'">'+(gen?'已產出 ↻':'產生文件')+'</button>'+
-      (gen ? '<div class="docpreview">'+esc(genPreview(d.key))+'</div>' : '')+
+      '<button class="docgenbtn" data-gendoc="'+d.key+'">'+(gen?'重新產生 ↻':'產生文件')+'</button>'+
+      (gen ? '<div class="docpreview"><pre class="doctext">'+esc(genPreview(d.key))+'</pre>'+
+             '<button class="btn-ghost" data-copydoc="'+d.key+'">⧉ 複製</button></div>' : '')+
     '</div>';
   }).join('');
   var count = Object.keys(wz.generatedDocs).length;
   return ''+
     '<h2>Step 4 · 產出投稿文件</h2>'+
-    '<p class="stepdesc">依所選期刊要求產出各項聲明文件。<b>目前為固定示意內容，尚未串接真實 AI 產出。</b></p>'+
+    '<p class="stepdesc">依你填的期刊、標題與作者資料套版產出，可直接複製使用。標成【】的地方是系統沒有的資訊，請自行補上。</p>'+
+    docSettingsHTML(wz.docMeta || docMetaDefaults(), 'wz')+
     '<div class="doclist">'+rows+'</div>'+
     '<p class="stepdesc" style="margin:12px 0 0;">已產出 '+count+' / '+DOC_TYPES.length+' 份</p>'+
     '<div class="stepnav"><button class="btn-secondary" id="back3">上一步</button><button class="btn-primary" id="next3">下一步：填寫作者資訊</button></div>';
@@ -4000,6 +5534,30 @@ function bindStepEvents(){
       renderWizard();
     });
   });
+  document.querySelectorAll('[data-copydoc]').forEach(function(el){
+    el.addEventListener('click', function(){
+      copyToClipboard(genPreview(el.getAttribute('data-copydoc'))).then(function(){
+        el.textContent = '✓ 已複製';
+        setTimeout(function(){ el.textContent = '⧉ 複製'; }, 1800);
+      }).catch(function(){
+        el.textContent = '請手動選取';
+        setTimeout(function(){ el.textContent = '⧉ 複製'; }, 2200);
+      });
+    });
+  });
+  document.querySelectorAll('#stepcard [data-docmeta]').forEach(function(el){
+    el.addEventListener('input', function(){
+      if(!wz.docMeta) wz.docMeta = docMetaDefaults();
+      wz.docMeta[el.getAttribute('data-docmeta')] = el.value;
+    });
+    el.addEventListener('change', function(){
+      if(!wz.docMeta) wz.docMeta = docMetaDefaults();
+      wz.docMeta[el.getAttribute('data-docmeta')] = el.value;
+      // defer: renderWizard() replaces this element, and doing that inside the
+      // blur that produced this change event tears the node out mid-event
+      if(Object.keys(wz.generatedDocs).length) setTimeout(renderWizard, 0);
+    });
+  });
 
   on('back4','click', function(){ syncAuthorFields(); wz.step=3; renderWizard(); });
   on('finishBtn','click', finishWizard);
@@ -4059,12 +5617,1668 @@ function finishWizard(){
       {type:'coverletter', name:'CoverLetter_v1.docx', ver:'v1'},
       {type:'manuscript', name:'Manuscript_anonymous_v1.docx', ver:'v1'}
     ],
+    docMeta: wz.docMeta || docMetaDefaults(),
     notes:'由新增投稿精靈建立'
   });
   saveRecords();
   resetWizard();
   goto('submission','history');
 }
+
+
+/* CARD-PARSER-START */
+/* Turn raw OCR text from a business card into structured fields.
+
+   The dependable part of a card is its ASCII: e-mail, URL and phone numbers
+   survive OCR nearly intact and can be matched exactly. Chinese name, company
+   and title carry no such signature, so they are found by keyword evidence and
+   by elimination — each confident matcher claims its line, and what is left is
+   ranked. Every result lands in an editable form, so a wrong guess costs one
+   correction rather than re-typing the card. */
+
+/* Alternations are sorted longest-first on purpose: JavaScript alternation is
+   leftmost-first, so an unsorted list makes 秘書長 match as 秘書 and strand the
+   長 in the name field. */
+function cardAlt(list){
+  return list.slice().sort(function(a,b){ return b.length - a.length; }).join('|');
+}
+
+var CARD_COMPANY_ZH = ['股份有限公司','有限公司','企業社','企業','集團','公司','工作室','事務所','基金會',
+  '協會','學會','公會','工會','研究院','研究所','研究中心','科技大學','大學','學院','高中','國中','國小',
+  '醫院','診所','藥局','銀行','保險','建設','營造','實業','國際','科技','生技','資訊','傳播','文化',
+  '旅行社','物流','貿易','出版社','電子','機構','中華民國'];
+var CARD_COMPANY_EN = ['Incorporated','Corporation','University','Technologies','Technology','Association',
+  'Foundation','Institute','Hospital','Company','Clinic','College','Limited','Studio','Group','Labs','Lab',
+  'GmbH','Corp','Inc','Ltd','LLC','Co'];
+var CARD_TITLE_ZH = ['副董事長','董事長','董事','執行長','總裁','副總經理','總經理','副總','協理','副理','經理',
+  '廠長','處長','課長','組長','科長','系主任','主任','主管','店長','站長','隊長','總監','督導',
+  '專案經理','專案管理師','專員','顧問','技師','工程師','設計師','規劃師','營養師','物理治療師','治療師',
+  '藥師','醫師','護理師','律師','會計師','建築師','校長','副院長','院長','所長','特聘教授','教授',
+  '副教授','助理教授','講師','助教','研究員','博士後','秘書長','執行秘書','秘書','助理','業務代表',
+  '行政人員','編輯','記者','教練','老師','負責人','創辦人','共同創辦人','發言人',
+  '副理事長','理事長','常務理事','常務監事','理事','監事','副會長','會長','社長','主席','召集人','委員'];
+var CARD_TITLE_EN = ['Vice President','President','Director','Manager','Supervisor','Engineer','Designer',
+  'Consultant','Specialist','Analyst','Assistant','Secretary','Professor','Lecturer','Researcher','Coach',
+  'Founder','Partner','Principal','Head','CEO','CTO','CFO','COO','CMO','VP',
+  'Professor','Prof','Dr','PhD'];
+var CARD_DEPT_HEAD = ['人力資源','事業群','事業處','事業部','事業','營運','研發','業務','行銷','企劃','人資',
+  '財務','會計','總務','資訊','技術','工程','生產','製造','品保','品管','採購','客服','門市','通路',
+  '法務','稽核','公關','設計','教務','學務','總務','體育','推廣'];
+var CARD_DEPT_TAIL = ['學系','學院','系所','部門','中心','系','所','部','處','科','課','組','室','群'];
+
+var CARD_KW = {
+  company: new RegExp('(?:' + cardAlt(CARD_COMPANY_ZH) + ')|(?:\\b(?:' + cardAlt(CARD_COMPANY_EN) + ')\\b\\.?)', 'i'),
+  /* the trailing \\.? lets an abbreviation keep its period: Prof. / Dr. */
+  title:   new RegExp('(?:' + cardAlt(CARD_TITLE_ZH) + ')|(?:\\b(?:' + cardAlt(CARD_TITLE_EN) + ')\\b\\.?)'),
+  dept:    new RegExp('(?:(?:' + cardAlt(CARD_DEPT_HEAD) + ')(?:' + cardAlt(CARD_DEPT_TAIL) + '))|(?:[一-鿿]{2,6}(?:' + cardAlt(CARD_DEPT_TAIL) + '))|(?:\\b(?:Dept\\.?|Department|Division|School|Faculty|Office)\\b(?:\\s+of)?[A-Za-z\\s&,.-]{0,40})'),
+  addrHit: /(?:[一-鿿]{1,6}(?:縣|市))?[一-鿿]{1,8}(?:區|鄉|鎮|村|里)?[\s一-鿿0-9]{1,14}(?:路|街|大道|道)[\s一-鿿0-9]{0,12}(?:段)?\s*[0-9]{1,5}\s*(?:之\s*[0-9]{1,3})?\s*號|\b(?:No\.|Rd\.|Road|St\.|Street|Sec\.|Ave\.|Lane|Alley|Dist\.|Taiwan|R\.O\.C)\b/i,
+  labelTel: /(電\s*話|市話|公司電話|TEL|Tel|Phone|PH|T)\s*[:：.)]?\s*$/,
+  labelMobile: /(手\s*機|行動電話|行動|MOBILE|Mobile|Cell|CELL|M)\s*[:：.)]?\s*$/,
+  labelFax: /(傳\s*真|FAX|Fax|F)\s*[:：.)]?\s*$/,
+  labelAddr: /^\s*(地\s*址|住址|通訊地址|ADD|Add|Address)\s*[:：.)]?\s*/i
+};
+
+/* Surnames rank name candidates; an unlisted surname can still win on other
+   evidence, so this list never has to be complete. */
+var CARD_SURNAMES = ('趙錢孫李周吳鄭王馮陳褚衛蔣沈韓楊朱秦尤許何呂施張孔曹嚴華金魏陶姜戚謝鄒喻柏水竇章雲蘇潘葛奚范彭郎魯韋昌馬苗鳳花方俞任袁柳酆鮑史唐費廉岑薛雷賀倪湯滕殷羅畢郝鄔安常樂于時傅皮卞齊康伍余元卜顧孟平黃和穆蕭尹姚邵湛汪祁毛禹狄米貝明臧計伏成戴談宋茅龐熊紀舒屈項祝董梁杜阮藍閔席季麻強賈路婁危江童顏郭梅盛林刁鍾徐邱駱高夏蔡田樊胡凌霍虞萬支柯管盧莫房繆干解應宗丁宣賁鄧郁單杭洪包諸左石崔吉鈕龔程嵇邢滑裴陸榮翁荀羊惠甄曲家封芮儲靳邴糜松井段富巫烏焦巴弓牧山谷車侯全郗班仰秋仲伊宮寧仇欒甘厲戎祖武符劉景詹束龍葉幸司黎薄印宿白懷蒲從鄂索咸籍賴卓藺屠蒙池喬陰胥能蒼雙聞莘黨翟譚貢勞姬申冉宰雍桑桂濮牛壽通邊扈燕冀浦尚農溫別莊晏柴瞿閻充慕連茹習宦艾魚容向古易慎戈廖庾終暨居衡步都耿滿弘匡國文寇廣祿闕東歐殳沃利蔚越夔隆師聶晁勾敖融冷辛闞那簡饒空曾沙養鞠須豐巢關相查后荊紅游竺權蓋益桓公').split('');
+var CARD_SURNAMES2 = ['歐陽','司馬','上官','夏侯','諸葛','聞人','東方','赫連','皇甫','尉遲','公羊','宗政','濮陽',
+  '淳于','單于','太叔','申屠','公孫','仲孫','軒轅','令狐','鍾離','宇文','長孫','慕容','司徒','司空','南宮','范姜','張簡'];
+
+/* Tesseract sometimes spaces out a phone number digit by digit
+   ("0 2 - 2 3 4 5 6 7 8 9"). Require a run of at least four single digits
+   before rejoining, so "0928 111 222" and a street number in an address —
+   where the groups are longer than one digit — are left exactly as printed. */
+function cardJoinSpacedDigits(line){
+  if(!/(?:[0-9]\s+){3,}[0-9]/.test(line)) return line;
+  return line.replace(/([0-9])\s+(?=[0-9])/g,'$1').replace(/\s*-\s*/g,'-');
+}
+
+function cardNormalize(raw){
+  return String(raw||'')
+    .replace(/\r/g,'')
+    /* Chinese cards come back with full-width digits and punctuation. */
+    .replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); })
+    .replace(/＠/g,'@').replace(/．/g,'.').replace(/[－—–ー]/g,'-')
+    .replace(/[ \t　]+/g,' ')
+    .split('\n').map(function(l){ return cardJoinSpacedDigits(l.trim()); })
+    .filter(function(l){ return l.length>0 && /[0-9A-Za-z一-鿿]/.test(l); });
+}
+
+/* Loose on purpose: the caller decides what kind of number it is from the
+   label in front of it and from the digit pattern. */
+var CARD_NUM_RE = /(?:\+?886[-\s.]?)?\(?0?\d{1,4}\)?[-\s.]?\d{3,4}[-\s.]?\d{3,4}(?:\s*(?:轉|ext\.?|分機|#)\s*\d{1,5})?/gi;
+
+function cardDigits(s){ return String(s).replace(/\D/g,''); }
+function cardTidyNumber(s){ return String(s).replace(/\s+/g,' ').replace(/\s*-\s*/g,'-').trim(); }
+function cardIsMobile(s){
+  var d = cardDigits(s).replace(/^886/,'0');
+  return /^09\d{8}$/.test(d);
+}
+function cardIsLandline(s){
+  var d = cardDigits(s).replace(/^886/,'0');
+  if(/^09\d{8}$/.test(d)) return false;
+  return /^0\d{8,12}$/.test(d) || /^[2-8]\d{6,7}$/.test(d);
+}
+function cardHasCJK(s){ return /[一-鿿]/.test(s); }
+function cardIsNameShape(s){
+  return /^[一-鿿]{2,4}$/.test(s.replace(/\s/g,''));
+}
+
+function parseCard(rawText){
+  var lines = cardNormalize(rawText);
+  var used = new Array(lines.length);
+  var out = {name:'', nameEn:'', company:'', dept:'', title:'',
+             mobile:'', phone:'', fax:'', email:'', website:'', address:''};
+  function claim(i){ used[i] = true; }
+
+  /* ---- e-mail ---- */
+  lines.forEach(function(l, i){
+    if(out.email) return;
+    var m = l.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
+    if(m){
+      out.email = m[0];
+      if(l.replace(m[0],'').replace(/^\s*(E-?mail|信箱|電子信箱)\s*[:：]?\s*/i,'').trim().length <= 1) claim(i);
+    }
+  });
+
+  /* ---- website (never the e-mail's own domain) ---- */
+  lines.forEach(function(l, i){
+    if(out.website || used[i]) return;
+    var stripped = l.replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g,'');
+    var m = stripped.match(/(?:https?:\/\/)?www\.[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:\/[^\s]*)?|https?:\/\/[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:\/[^\s]*)?/i);
+    if(m){
+      out.website = m[0];
+      if(stripped.replace(m[0],'').replace(/^\s*(網\s*址|網站|Web|URL)\s*[:：]?\s*/i,'').trim().length <= 1) claim(i);
+    }
+  });
+
+  /* ---- phone / mobile / fax ---- */
+  lines.forEach(function(l, i){
+    if(used[i]) return;
+    CARD_NUM_RE.lastIndex = 0;
+    var nums = l.match(CARD_NUM_RE);
+    if(!nums) return;
+    nums = nums.map(cardTidyNumber).filter(function(n){ return cardDigits(n).length >= 7; });
+    if(!nums.length) return;
+
+    /* One line often carries several labelled numbers ("TEL 07-1234567 FAX
+       07-1234568"), so read the text immediately before each number. */
+    var rest = l, consumed = false;
+    nums.forEach(function(n){
+      var at = rest.indexOf(n);
+      var before = at >= 0 ? rest.slice(0, at) : '';
+      rest = at >= 0 ? rest.slice(at + n.length) : rest;
+      var slot = '';
+      if(CARD_KW.labelFax.test(before)) slot = 'fax';
+      else if(CARD_KW.labelMobile.test(before)) slot = 'mobile';
+      else if(CARD_KW.labelTel.test(before)) slot = 'phone';
+      if(!slot || (slot === 'phone' && cardIsMobile(n))){
+        slot = cardIsMobile(n) ? 'mobile' : (cardIsLandline(n) ? 'phone' : slot);
+      }
+      if(slot && !out[slot]){ out[slot] = n; consumed = true; }
+    });
+    /* Only swallow the line when nothing but numbers and labels is left — a
+       name printed beside a phone number has to survive. */
+    if(consumed){
+      CARD_NUM_RE.lastIndex = 0;
+      var residue = l.replace(CARD_NUM_RE,' ')
+        .replace(/(電\s*話|市話|公司電話|手\s*機|行動電話|行動|傳\s*真|分機|轉|ext\.?|TEL|Tel|Phone|MOBILE|Mobile|Cell|FAX|Fax)/gi,' ')
+        .replace(/[^0-9A-Za-z一-鿿]/g,'').trim();
+      if(residue.length <= 1) claim(i);
+    }
+  });
+
+  /* ---- address ---- */
+  lines.forEach(function(l, i){
+    if(used[i] || out.address) return;
+    if(CARD_KW.labelAddr.test(l) || CARD_KW.addrHit.test(l)){
+      out.address = l.replace(CARD_KW.labelAddr,'').trim();
+      claim(i);
+    }
+  });
+
+  /* ---- company ---- */
+  lines.forEach(function(l, i){
+    if(used[i] || out.company) return;
+    if(CARD_KW.company.test(l)){ out.company = l; claim(i); }
+  });
+
+  /* ---- English name (before the title pass, which needs to know it) ---- */
+  lines.forEach(function(l, i){
+    if(used[i] || out.nameEn) return;
+    if(/^[A-Z][a-zA-Z'’.-]+(?:\s+[A-Z][a-zA-Z'’.-]*){1,3}$/.test(l) && l.length <= 40 &&
+       !CARD_KW.company.test(l) && !CARD_KW.title.test(l)){
+      out.nameEn = l; claim(i);
+    }
+  });
+
+  /* A Chinese line usually prints department, title and name together, so keep
+     only the matched words and hand the remainder back to the later passes. A
+     Latin title is a phrase ("Senior Marketing Manager") — keep the whole line. */
+  function extractKeyword(field, re, maxLen){
+    lines.forEach(function(l, i){
+      if(used[i] || out[field]) return;
+      if(l.replace(/\s/g,'').length > maxLen) return;
+      var m = l.match(re);
+      if(!m) return;
+      var leftover = (l.slice(0, m.index) + ' ' + l.slice(m.index + m[0].length)).replace(/\s+/g,' ').trim();
+      if(!leftover || !cardHasCJK(l)){ out[field] = l; claim(i); }
+      else { out[field] = m[0]; lines[i] = leftover; }
+    });
+  }
+  extractKeyword('dept', CARD_KW.dept, 44);
+  extractKeyword('title', CARD_KW.title, 26);
+
+  /* Bilingual cards print both names on one line ("Wei-Cheng Lin 林偉成").
+     Split it so each name reaches its own field. */
+  lines.forEach(function(l, i){
+    if(used[i]) return;
+    var m = l.match(/^([A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*){0,3})\s*[·・,|]?\s*([一-鿿]{2,4})$/) ||
+            l.match(/^([一-鿿]{2,4})\s*[·・,|]?\s*([A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*){0,3})$/);
+    if(!m) return;
+    var latin = /[A-Za-z]/.test(m[1]) ? m[1] : m[2];
+    var han   = /[A-Za-z]/.test(m[1]) ? m[2] : m[1];
+    if(!out.nameEn) out.nameEn = latin.trim();
+    if(!out.name)   out.name = han.trim();
+    claim(i);
+  });
+
+  /* Stripping a title may have left a bare English name behind. */
+  lines.forEach(function(l, i){
+    if(used[i] || out.nameEn) return;
+    if(/^[A-Z][a-zA-Z'’.\-]+(?:\s+[A-Z][a-zA-Z'’.\-]*){1,3}$/.test(l) && l.length <= 40 &&
+       !CARD_KW.company.test(l) && !CARD_KW.title.test(l)){
+      out.nameEn = l; claim(i);
+    }
+  });
+
+  /* ---- Chinese name: score whatever is left ---- */
+  var best = null;
+  lines.forEach(function(l, i){
+    if(used[i]) return;
+    var t = l.replace(/\s/g,'');
+    if(!cardIsNameShape(t)) return;
+    var score = 0;
+    if(CARD_SURNAMES2.indexOf(t.slice(0,2)) !== -1) score += 6;
+    else if(CARD_SURNAMES.indexOf(t.charAt(0)) !== -1) score += 5;
+    if(t.length === 3) score += 3; else if(t.length === 2) score += 1;
+    score += Math.max(0, 4 - i);          // a name sits near the top of a card
+    if(best === null || score > best.score) best = {score:score, text:t, i:i};
+  });
+  if(best){ out.name = best.text; claim(best.i); }
+
+  /* Nothing matched the name shape — pre-fill with the first short unclaimed
+     line so there is something plausible to correct rather than a blank. */
+  if(!out.name && !out.nameEn){
+    for(var i=0;i<lines.length;i++){
+      if(used[i]) continue;
+      var t = lines[i].replace(/\s/g,'');
+      if(t.length >= 2 && t.length <= 12){ out.name = lines[i]; claim(i); break; }
+    }
+  }
+  if(!out.company){
+    for(var k=0;k<lines.length;k++){
+      if(used[k]) continue;
+      if(lines[k].replace(/\s/g,'').length >= 3){ out.company = lines[k]; claim(k); break; }
+    }
+  }
+
+  out.website = out.website.replace(/^https?:\/\//i,'');
+  return out;
+}
+/* CARD-PARSER-END */
+
+
+/* ZIP-WRITER-START */
+/* A minimal store-only ZIP writer.
+
+   Everything that goes in here — PDF, docx, JPEG — is already compressed, so
+   DEFLATE would buy almost nothing; writing entries uncompressed keeps this to
+   one small, testable function instead of a CDN dependency that the published
+   artifact's CSP would block at runtime anyway. */
+var CRC_TABLE = (function(){
+  var t = new Uint32Array(256);
+  for(var n = 0; n < 256; n++){
+    var c = n;
+    for(var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes){
+  var c = 0xFFFFFFFF;
+  for(var i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+/* ZIP stores names as raw bytes; UTF-8 plus the language-encoding flag (bit 11)
+   is what makes 中文檔名 survive in Windows Explorer and macOS alike. */
+function utf8Bytes(str){
+  if(typeof TextEncoder !== 'undefined') return new TextEncoder().encode(str);
+  var out = [], i, c;
+  for(i = 0; i < str.length; i++){
+    c = str.charCodeAt(i);
+    if(c < 0x80) out.push(c);
+    else if(c < 0x800){ out.push(0xC0 | (c >> 6), 0x80 | (c & 63)); }
+    else if(c < 0xD800 || c >= 0xE000){ out.push(0xE0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63)); }
+    else {
+      i++;
+      c = 0x10000 + (((c & 0x3FF) << 10) | (str.charCodeAt(i) & 0x3FF));
+      out.push(0xF0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    }
+  }
+  return new Uint8Array(out);
+}
+function dosDateTime(d){
+  d = d || new Date();
+  var y = Math.max(1980, d.getFullYear());
+  return {
+    time: ((d.getHours() & 31) << 11) | ((d.getMinutes() & 63) << 5) | ((d.getSeconds() / 2) & 31),
+    date: (((y - 1980) & 127) << 9) | (((d.getMonth() + 1) & 15) << 5) | (d.getDate() & 31)
+  };
+}
+/* entries: [{name, data: Uint8Array, date?}] -> Blob */
+function buildZip(entries){
+  var chunks = [], central = [], offset = 0;
+  entries.forEach(function(e){
+    var nameB = utf8Bytes(e.name);
+    var data = e.data;
+    var crc = crc32(data);
+    var dt = dosDateTime(e.date);
+
+    var local = new Uint8Array(30 + nameB.length);
+    var lv = new DataView(local.buffer);
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true);        // version needed
+    lv.setUint16(6, 0x0800, true);    // bit 11: names are UTF-8
+    lv.setUint16(8, 0, true);         // method 0 = stored
+    lv.setUint16(10, dt.time, true);
+    lv.setUint16(12, dt.date, true);
+    lv.setUint32(14, crc, true);
+    lv.setUint32(18, data.length, true);
+    lv.setUint32(22, data.length, true);
+    lv.setUint16(26, nameB.length, true);
+    lv.setUint16(28, 0, true);
+    local.set(nameB, 30);
+    chunks.push(local, data);
+
+    var cd = new Uint8Array(46 + nameB.length);
+    var cv = new DataView(cd.buffer);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0x0800, true);
+    cv.setUint16(10, 0, true);
+    cv.setUint16(12, dt.time, true);
+    cv.setUint16(14, dt.date, true);
+    cv.setUint32(16, crc, true);
+    cv.setUint32(20, data.length, true);
+    cv.setUint32(24, data.length, true);
+    cv.setUint16(28, nameB.length, true);
+    cv.setUint32(42, offset, true);
+    cd.set(nameB, 46);
+    central.push(cd);
+
+    offset += local.length + data.length;
+  });
+
+  var centralSize = central.reduce(function(a, b){ return a + b.length; }, 0);
+  var end = new Uint8Array(22);
+  var ev = new DataView(end.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, entries.length, true);
+  ev.setUint16(10, entries.length, true);
+  ev.setUint32(12, centralSize, true);
+  ev.setUint32(16, offset, true);
+  return new Blob(chunks.concat(central, [end]), {type:'application/zip'});
+}
+/* Names inside a zip must be unique and free of path separators. */
+function zipSafeName(name, taken){
+  var base = String(name || 'file').replace(/[\/\\:*?"<>|]/g, '_').replace(/^\.+/, '_');
+  var name2 = base, i = 2;
+  var dot = base.lastIndexOf('.');
+  var stem = dot > 0 ? base.slice(0, dot) : base;
+  var ext = dot > 0 ? base.slice(dot) : '';
+  while(taken[name2]){ name2 = stem + '(' + i + ')' + ext; i++; }
+  taken[name2] = true;
+  return name2;
+}
+/* ZIP-WRITER-END */
+
+
+/* ========================================================================
+   計畫管理
+   ======================================================================== */
+var BUDGET_CATS = [
+  {k:'personnel',  n:'人事費'},
+  {k:'business',   n:'業務費'},
+  {k:'consumable', n:'耗材與雜項'},
+  {k:'domestic',   n:'國內差旅費'},
+  {k:'overseas',   n:'國外差旅費'},
+  {k:'equipment',  n:'設備費'},
+  {k:'overhead',   n:'管理費'},
+  {k:'other',      n:'其他'}
+];
+var BUDGET_NAME = {};
+BUDGET_CATS.forEach(function(c){ BUDGET_NAME[c.k] = c.n; });
+var PROJ_STATUS = {draft:'撰寫中', review:'審查中', active:'執行中', closed:'已結案'};
+var EXP_STATUS = {planned:'預計支出', paid:'已支付', settled:'已核銷'};
+var MEMBER_ROLES = ['共同主持人','協同主持人','研究助理','兼任助理','其他'];
+
+var projects = [];
+try{ projects = JSON.parse(localStorage.getItem('researchProjects') || '[]'); }catch(e){ projects = []; }
+if(!Array.isArray(projects)) projects = [];
+/* Records written by an older build are missing the newer arrays; fill them in
+   on load so a version update never breaks somebody's saved data. */
+function migrateProjects(){
+  projects.forEach(function(p){
+    if(!p.budgets || typeof p.budgets !== 'object') p.budgets = {};
+    if(!Array.isArray(p.expenses)) p.expenses = [];
+    if(!Array.isArray(p.milestones)) p.milestones = [];
+    if(!Array.isArray(p.members)) p.members = [];
+    if(!Array.isArray(p.files)) p.files = [];
+    if(!p.pi) p.pi = {name:'', org:''};
+    if(!p.status) p.status = 'draft';
+  });
+}
+migrateProjects();
+function saveProjects(){ try{ localStorage.setItem('researchProjects', JSON.stringify(projects)); }catch(e){} }
+
+function blankProject(){
+  return {id:'pj'+Date.now()+Math.floor(Math.random()*1000), name:'', code:'', funder:'', org:'',
+          status:'draft', pi:{name:'', org:''}, members:[], start:'', end:'',
+          budgets:{}, expenses:[], milestones:[], files:[], note:'',
+          createdAt:new Date().toISOString()};
+}
+function money(n){
+  n = Number(n) || 0;
+  return n.toLocaleString('en-US');
+}
+function budgetPlanned(p, k){ return Number(p.budgets[k]) || 0; }
+function budgetTotal(p){
+  return BUDGET_CATS.reduce(function(a, c){ return a + budgetPlanned(p, c.k); }, 0);
+}
+/* 已支用 counts money that has actually left — 預計支出 is a plan, not a spend,
+   so it is reported separately instead of eating the remaining balance. */
+function spentByCat(p, k){
+  return p.expenses.reduce(function(a, e){
+    return a + ((e.cat===k && e.status!=='planned') ? (Number(e.amount)||0) : 0);
+  }, 0);
+}
+function plannedSpendByCat(p, k){
+  return p.expenses.reduce(function(a, e){
+    return a + ((e.cat===k && e.status==='planned') ? (Number(e.amount)||0) : 0);
+  }, 0);
+}
+function spentTotal(p){
+  return p.expenses.reduce(function(a, e){ return a + (e.status!=='planned' ? (Number(e.amount)||0) : 0); }, 0);
+}
+
+var projSearch = '', projStatusF = '';
+var projOpen = {};
+
+function projMatches(p, q){
+  if(projStatusF && p.status !== projStatusF) return false;
+  if(!q) return true;
+  var hay = [p.name, p.code, p.funder, p.org, p.pi.name, p.pi.org, p.note]
+    .concat(p.members.map(function(m){ return m.name+' '+m.role+' '+(m.org||''); })).join(' ');
+  return hay.toLowerCase().indexOf(q) !== -1;
+}
+
+function renderProjStats(){
+  var active = projects.filter(function(p){ return p.status==='active'; }).length;
+  var total = projects.reduce(function(a,p){ return a + budgetTotal(p); }, 0);
+  var spent = projects.reduce(function(a,p){ return a + spentTotal(p); }, 0);
+  document.getElementById('projStats').innerHTML =
+    '<div class="stattile"><div class="n">'+projects.length+'</div><div class="l">計畫總數</div></div>'+
+    '<div class="stattile"><div class="n">'+active+'</div><div class="l">執行中</div></div>'+
+    '<div class="stattile"><div class="n">'+money(total)+'</div><div class="l">編列經費（元）</div></div>'+
+    '<div class="stattile"><div class="n">'+money(spent)+'</div><div class="l">已支用（元）</div></div>';
+}
+
+function projPeriod(p){
+  if(!p.start && !p.end) return '';
+  return (p.start||'？') + ' – ' + (p.end||'？');
+}
+
+function renderProjects(){
+  renderProjStats();
+  var wrap = document.getElementById('projList');
+  var q = projSearch.trim().toLowerCase();
+  var list = projects.filter(function(p){ return projMatches(p, q); });
+
+  if(!projects.length){
+    wrap.innerHTML = '<div class="cardempty">還沒有計畫。<br>' +
+      '按 <b>＋ 新增計畫</b> 建立第一個計畫，之後可以在計畫裡編列經費、逐筆記支出、' +
+      '設定期中／期末報告期限（可同步到行事曆），並把計畫書、報告等檔案直接存進來。</div>';
+    return;
+  }
+  if(!list.length){
+    wrap.innerHTML = '<div class="cardempty">沒有符合條件的計畫。</div>';
+    return;
+  }
+
+  wrap.innerHTML = list.map(function(p){
+    var total = budgetTotal(p), spent = spentTotal(p);
+    var pct = total > 0 ? Math.min(100, Math.round(spent/total*100)) : 0;
+    var over = total > 0 && spent > total;
+    var meta = [p.code, p.funder, p.pi.name ? '主持人：'+p.pi.name : '', projPeriod(p)]
+      .filter(Boolean).map(esc).join('<span class="sep">·</span>');
+    return '<div class="subcard'+(projOpen[p.id]?' open':'')+'" data-proj="'+esc(p.id)+'">'+
+      '<div class="pcard-row" data-projtoggle="'+esc(p.id)+'">'+
+        '<div>'+
+          '<div class="pname">'+esc(p.name||'（未命名計畫）')+'</div>'+
+          (meta ? '<div class="pmeta">'+meta+'</div>' : '')+
+          (total>0 ?
+            '<div class="pbudgetbar'+(over?' over':'')+'"><i style="width:'+pct+'%"></i></div>'+
+            '<div class="pmoney">已支用 <b>'+money(spent)+'</b> / 編列 <b>'+money(total)+'</b> 元'+
+              (over ? '　<span class="over">超支 '+money(spent-total)+'</span>' : '　餘 '+money(total-spent))+
+            '</div>'
+            : '<div class="pmoney">尚未編列經費</div>')+
+        '</div>'+
+        '<span class="statuspill p_'+esc(p.status)+'">'+esc(PROJ_STATUS[p.status]||p.status)+'</span>'+
+        '<span class="subdate">'+esc(p.files.length ? p.files.length+' 個檔案' : '無檔案')+'</span>'+
+        '<span class="chev">›</span>'+
+      '</div>'+
+      '<div class="subdetail">'+projDetail(p)+'</div>'+
+    '</div>';
+  }).join('');
+
+  wrap.querySelectorAll('[data-projtoggle]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.getAttribute('data-projtoggle');
+      projOpen[id] = !projOpen[id];
+      el.parentNode.classList.toggle('open', !!projOpen[id]);
+    });
+  });
+  bindProjDetail();
+}
+
+function projDetail(p){
+  var out = [];
+
+  /* 基本資料 */
+  var basics = [
+    ['執行單位', p.org], ['委託／補助單位', p.funder], ['計畫編號', p.code],
+    ['主持人', p.pi.name + (p.pi.org ? '（'+p.pi.org+'）' : '')],
+    ['執行期間', projPeriod(p)], ['狀態', PROJ_STATUS[p.status]||p.status]
+  ].filter(function(r){ return r[1] && String(r[1]).trim(); });
+  if(basics.length){
+    out.push('<div class="dgrid">'+basics.map(function(r){
+      return '<div><label style="display:block;font-size:10.5px;color:var(--muted);font-weight:600;margin-bottom:3px;">'+
+        esc(r[0])+'</label><div style="font-size:13px;">'+esc(r[1])+'</div></div>';
+    }).join('')+'</div>');
+  }
+
+  /* 成員 */
+  if(p.members.length){
+    out.push('<div class="psection"><h3>計畫成員</h3><table class="ptable">'+
+      '<thead><tr><th>姓名</th><th>角色</th><th>服務單位</th></tr></thead><tbody>'+
+      p.members.map(function(m){
+        return '<tr><td>'+esc(m.name)+'</td><td>'+esc(m.role||'')+'</td><td>'+esc(m.org||'')+'</td></tr>';
+      }).join('')+'</tbody></table></div>');
+  }
+
+  /* 經費 */
+  var rows = BUDGET_CATS.filter(function(c){
+    return budgetPlanned(p, c.k) || spentByCat(p, c.k) || plannedSpendByCat(p, c.k);
+  });
+  if(rows.length){
+    var tp = 0, ts = 0, tq = 0;
+    var body = rows.map(function(c){
+      var pl = budgetPlanned(p, c.k), sp = spentByCat(p, c.k), q = plannedSpendByCat(p, c.k);
+      tp += pl; ts += sp; tq += q;
+      var left = pl - sp;
+      var rate = pl > 0 ? Math.round(sp/pl*100)+'%' : '—';
+      return '<tr><td>'+esc(c.n)+'</td>'+
+        '<td class="num">'+money(pl)+'</td>'+
+        '<td class="num">'+money(sp)+'</td>'+
+        '<td class="num'+(left<0?' neg':'')+'">'+money(left)+'</td>'+
+        '<td class="num'+(pl>0?'':' zero')+'">'+rate+'</td>'+
+        '<td class="num'+(q?'':' zero')+'">'+(q?money(q):'—')+'</td></tr>';
+    }).join('');
+    out.push('<div class="psection"><h3>經費</h3><table class="ptable">'+
+      '<thead><tr><th>科目</th><th class="num">編列</th><th class="num">已支用</th>'+
+      '<th class="num">餘額</th><th class="num">執行率</th><th class="num">預計支出</th></tr></thead>'+
+      '<tbody>'+body+'</tbody>'+
+      '<tfoot><tr><td>合計</td><td class="num">'+money(tp)+'</td><td class="num">'+money(ts)+
+      '</td><td class="num'+((tp-ts)<0?' neg':'')+'">'+money(tp-ts)+'</td>'+
+      '<td class="num">'+(tp>0?Math.round(ts/tp*100)+'%':'—')+'</td>'+
+      '<td class="num'+(tq?'':' zero')+'">'+(tq?money(tq):'—')+'</td></tr></tfoot></table>'+
+      '<p class="pmoney" style="margin-top:8px;">「已支用」只計已支付與已核銷；「預計支出」是還沒付的規劃金額，不列入餘額計算。</p></div>');
+  }
+
+  /* 支出明細 */
+  out.push('<div class="psection"><h3>支出明細'+
+    '<button class="btn-ghost" data-addexp="'+esc(p.id)+'">＋ 新增支出</button></h3>'+
+    (p.expenses.length
+      ? '<table class="ptable"><thead><tr><th>日期</th><th>科目</th><th>項目</th><th>對象</th>'+
+        '<th class="num">金額</th><th>狀態</th><th class="rowact"></th></tr></thead><tbody>'+
+        p.expenses.slice().sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); })
+        .map(function(e){
+          return '<tr><td class="num" style="text-align:left;">'+esc(e.date||'')+'</td>'+
+            '<td>'+esc(BUDGET_NAME[e.cat]||e.cat||'')+'</td>'+
+            '<td>'+esc(e.item||'')+'</td>'+
+            '<td>'+esc(e.vendor||'')+'</td>'+
+            '<td class="num">'+money(e.amount)+'</td>'+
+            '<td><span class="expill '+esc(e.status)+'">'+esc(EXP_STATUS[e.status]||e.status)+'</span></td>'+
+            '<td class="rowact">'+
+              '<button class="editbtn" data-editexp="'+esc(p.id)+'|'+esc(e.id)+'">編輯</button>'+
+              '<button class="iconbtn" data-delexp="'+esc(p.id)+'|'+esc(e.id)+'" title="刪除">✕</button>'+
+            '</td></tr>';
+        }).join('')+'</tbody></table>'
+      : '<div class="pempty">還沒有支出紀錄。</div>')+'</div>');
+
+  /* 重要期限 */
+  out.push('<div class="psection"><h3>重要期限'+
+    '<button class="btn-ghost" data-addms="'+esc(p.id)+'">＋ 新增期限</button></h3>'+
+    (p.milestones.length
+      ? p.milestones.slice().sort(function(a,b){ return String(a.date||'').localeCompare(String(b.date||'')); })
+        .map(function(m){
+          return '<div class="msrow"><span class="md">'+esc(m.date||'未定')+'</span>'+
+            '<span class="ml">'+esc(m.label||'')+
+              (m.sync?'<span class="ubadge ok" style="margin-left:7px;">已同步行事曆</span>':'')+'</span>'+
+            '<button class="editbtn" data-editms="'+esc(p.id)+'|'+esc(m.id)+'">編輯</button>'+
+            '<button class="iconbtn" data-delms="'+esc(p.id)+'|'+esc(m.id)+'" title="刪除">✕</button></div>';
+        }).join('')
+      : '<div class="pempty">還沒有設定期限。</div>')+'</div>');
+
+  /* 檔案 */
+  out.push('<div class="psection"><h3>計畫檔案'+
+    '<label class="btn-ghost" for="pf-'+esc(p.id)+'" style="cursor:pointer;">＋ 上傳檔案</label>'+
+    (p.files.length ? '<button class="btn-ghost" data-zip="'+esc(p.id)+'">⤓ 全部打包下載</button>' : '')+
+    '</h3>'+
+    '<input type="file" id="pf-'+esc(p.id)+'" data-projfile="'+esc(p.id)+'" multiple hidden>'+
+    (p.files.length
+      ? p.files.map(function(f){
+          return '<div class="pfilerow"><span class="fn">'+esc(f.name)+'</span>'+
+            '<span class="fs">'+esc(fileSizeText(f.size))+'</span>'+
+            '<button class="editbtn" data-getfile="'+esc(p.id)+'|'+esc(f.id)+'">下載</button>'+
+            '<button class="iconbtn" data-delfile="'+esc(p.id)+'|'+esc(f.id)+'" title="刪除">✕</button></div>';
+        }).join('')
+      : '<div class="pempty">還沒有檔案。計畫書、期中報告、核銷單據照片都可以直接存進來。</div>')+
+    '<p class="pmoney" style="margin-top:8px;">檔案存在這台裝置的瀏覽器裡，<b>不會</b>跟著 JSON 備份走。' +
+    '換電腦前請先用「全部打包下載」存成 ZIP。</p></div>');
+
+  if(p.note) out.push('<div class="psection"><h3>備註</h3><div style="font-size:12.5px;color:var(--ink-soft);white-space:pre-wrap;">'+esc(p.note)+'</div></div>');
+
+  out.push('<div class="subactions">'+
+    '<button class="btn-secondary" data-editproj="'+esc(p.id)+'">編輯計畫</button>'+
+    '</div>');
+  return out.join('');
+}
+
+function fileSizeText(n){
+  n = Number(n)||0;
+  if(n < 1024) return n+' B';
+  if(n < 1024*1024) return (n/1024).toFixed(0)+' KB';
+  return (n/1024/1024).toFixed(1)+' MB';
+}
+function projById(id){ return projects.filter(function(p){ return p.id===id; })[0]; }
+function splitPair(v){ var i = v.indexOf('|'); return [v.slice(0,i), v.slice(i+1)]; }
+
+function bindProjDetail(){
+  var wrap = document.getElementById('projList');
+  wrap.querySelectorAll('[data-editproj]').forEach(function(el){
+    el.addEventListener('click', function(){ openProjModal(el.getAttribute('data-editproj')); });
+  });
+  wrap.querySelectorAll('[data-addexp]').forEach(function(el){
+    el.addEventListener('click', function(){ openExpModal(el.getAttribute('data-addexp'), null); });
+  });
+  wrap.querySelectorAll('[data-editexp]').forEach(function(el){
+    el.addEventListener('click', function(){ var q = splitPair(el.getAttribute('data-editexp')); openExpModal(q[0], q[1]); });
+  });
+  wrap.querySelectorAll('[data-delexp]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var q = splitPair(el.getAttribute('data-delexp'));
+      var p = projById(q[0]); if(!p) return;
+      var e = p.expenses.filter(function(x){ return x.id===q[1]; })[0];
+      if(!confirm('確定刪除這筆支出（'+(e&&e.item||'')+' '+money(e&&e.amount)+' 元）嗎？')) return;
+      p.expenses = p.expenses.filter(function(x){ return x.id!==q[1]; });
+      saveProjects(); renderProjects();
+    });
+  });
+  wrap.querySelectorAll('[data-addms]').forEach(function(el){
+    el.addEventListener('click', function(){ openMsModal(el.getAttribute('data-addms'), null); });
+  });
+  wrap.querySelectorAll('[data-editms]').forEach(function(el){
+    el.addEventListener('click', function(){ var q = splitPair(el.getAttribute('data-editms')); openMsModal(q[0], q[1]); });
+  });
+  wrap.querySelectorAll('[data-delms]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var q = splitPair(el.getAttribute('data-delms'));
+      var p = projById(q[0]); if(!p) return;
+      if(!confirm('確定刪除這個期限嗎？行事曆上同步的事項也會一起移除。')) return;
+      p.milestones = p.milestones.filter(function(x){ return x.id!==q[1]; });
+      items = items.filter(function(it){ return it.linkedMilestone !== q[1]; });
+      saveItems(); saveProjects(); renderProjects();
+    });
+  });
+  wrap.querySelectorAll('[data-projfile]').forEach(function(el){
+    el.addEventListener('change', function(){
+      if(this.files && this.files.length) addProjectFiles(el.getAttribute('data-projfile'), this.files);
+      this.value = '';
+    });
+  });
+  wrap.querySelectorAll('[data-getfile]').forEach(function(el){
+    el.addEventListener('click', function(){ var q = splitPair(el.getAttribute('data-getfile')); downloadProjectFile(q[0], q[1]); });
+  });
+  wrap.querySelectorAll('[data-delfile]').forEach(function(el){
+    el.addEventListener('click', function(){ var q = splitPair(el.getAttribute('data-delfile')); deleteProjectFile(q[0], q[1]); });
+  });
+  wrap.querySelectorAll('[data-zip]').forEach(function(el){
+    el.addEventListener('click', function(){ zipProjectFiles(el.getAttribute('data-zip')); });
+  });
+}
+
+/* ---- 計畫編輯視窗 ---- */
+var projBackdrop = document.getElementById('projBackdrop');
+var editingProjId = null;
+var draftMembers = [];
+
+function renderDraftMembers(){
+  document.getElementById('pj-members').innerHTML = draftMembers.map(function(m, i){
+    return '<div class="memberrow">'+
+      '<div class="field"><label>姓名</label><input data-mf="name" data-mi="'+i+'" value="'+esc(m.name||'')+'"></div>'+
+      '<div class="field"><label>角色</label><select data-mf="role" data-mi="'+i+'">'+
+        MEMBER_ROLES.map(function(r){ return '<option'+(m.role===r?' selected':'')+'>'+esc(r)+'</option>'; }).join('')+
+      '</select></div>'+
+      '<div class="field"><label>服務單位</label><input data-mf="org" data-mi="'+i+'" value="'+esc(m.org||'')+'"></div>'+
+      '<button class="btn-ghost" type="button" data-rmmember="'+i+'">移除</button>'+
+    '</div>';
+  }).join('') || '<div class="pempty">還沒有其他成員。</div>';
+
+  document.querySelectorAll('#pj-members [data-mf]').forEach(function(el){
+    el.addEventListener('input', syncDraftMembers);
+    el.addEventListener('change', syncDraftMembers);
+  });
+  document.querySelectorAll('#pj-members [data-rmmember]').forEach(function(el){
+    el.addEventListener('click', function(){
+      syncDraftMembers();
+      draftMembers.splice(parseInt(el.getAttribute('data-rmmember'),10), 1);
+      renderDraftMembers();
+    });
+  });
+}
+function syncDraftMembers(){
+  document.querySelectorAll('#pj-members [data-mf]').forEach(function(el){
+    var i = parseInt(el.getAttribute('data-mi'), 10);
+    if(draftMembers[i]) draftMembers[i][el.getAttribute('data-mf')] = el.value;
+  });
+}
+function renderBudgetInputs(p){
+  document.getElementById('pj-budgets').innerHTML = BUDGET_CATS.map(function(c){
+    return '<div class="field"><label>'+esc(c.n)+'</label>'+
+      '<input type="number" min="0" step="1" inputmode="numeric" data-bk="'+esc(c.k)+'" value="'+
+      (p && p.budgets[c.k] ? esc(p.budgets[c.k]) : '')+'"></div>';
+  }).join('');
+}
+function openProjModal(id){
+  editingProjId = id || null;
+  var p = id ? projById(id) : null;
+  document.getElementById('projModalTitle').textContent = p ? '編輯計畫' : '新增計畫';
+  document.getElementById('deleteProject').hidden = !p;
+  document.getElementById('projModalHint').hidden = true;
+  var src = p || blankProject();
+  document.getElementById('pj-name').value = src.name || '';
+  document.getElementById('pj-code').value = src.code || '';
+  document.getElementById('pj-funder').value = src.funder || '';
+  document.getElementById('pj-org').value = src.org || '';
+  document.getElementById('pj-status').value = src.status || 'draft';
+  document.getElementById('pj-start').value = src.start || '';
+  document.getElementById('pj-end').value = src.end || '';
+  document.getElementById('pj-piName').value = src.pi.name || '';
+  document.getElementById('pj-piOrg').value = src.pi.org || '';
+  document.getElementById('pj-note').value = src.note || '';
+  draftMembers = (src.members || []).map(function(m){ return {name:m.name, role:m.role, org:m.org}; });
+  renderDraftMembers();
+  renderBudgetInputs(src);
+  projBackdrop.classList.add('open');
+  document.getElementById('pj-name').focus();
+}
+document.getElementById('newProject').addEventListener('click', function(){ openProjModal(null); });
+document.getElementById('pjAddMember').addEventListener('click', function(){
+  syncDraftMembers();
+  draftMembers.push({name:'', role:MEMBER_ROLES[0], org:''});
+  renderDraftMembers();
+});
+document.getElementById('cancelProject').addEventListener('click', function(){ projBackdrop.classList.remove('open'); });
+projBackdrop.addEventListener('click', function(e){ if(e.target===projBackdrop) projBackdrop.classList.remove('open'); });
+
+document.getElementById('saveProject').addEventListener('click', function(){
+  var nameEl = document.getElementById('pj-name');
+  if(!nameEl.value.trim()){
+    var h = document.getElementById('projModalHint');
+    h.textContent = '計畫名稱是必填的。';
+    h.hidden = false;
+    nameEl.focus();
+    return;
+  }
+  syncDraftMembers();
+  var creating = !editingProjId;
+  var p = creating ? blankProject() : projById(editingProjId);
+  if(!p) return;
+  p.name = nameEl.value.trim();
+  p.code = document.getElementById('pj-code').value.trim();
+  p.funder = document.getElementById('pj-funder').value.trim();
+  p.org = document.getElementById('pj-org').value.trim();
+  p.status = document.getElementById('pj-status').value;
+  p.start = document.getElementById('pj-start').value;
+  p.end = document.getElementById('pj-end').value;
+  p.pi = {name: document.getElementById('pj-piName').value.trim(),
+          org: document.getElementById('pj-piOrg').value.trim()};
+  p.note = document.getElementById('pj-note').value.trim();
+  p.members = draftMembers.filter(function(m){ return (m.name||'').trim(); })
+    .map(function(m){ return {name:m.name.trim(), role:m.role, org:(m.org||'').trim()}; });
+  p.budgets = {};
+  document.querySelectorAll('#pj-budgets [data-bk]').forEach(function(el){
+    var v = Number(el.value);
+    if(v) p.budgets[el.getAttribute('data-bk')] = v;
+  });
+  if(creating){ projects.unshift(p); projOpen[p.id] = true; }
+  saveProjects();
+  projBackdrop.classList.remove('open');
+  editingProjId = null;
+  renderProjects();
+  renderMastMeta();
+});
+document.getElementById('deleteProject').addEventListener('click', function(){
+  var p = projById(editingProjId);
+  if(!p) return;
+  if(!confirm('確定要刪除「'+p.name+'」嗎？經費、支出、期限與所有存進來的檔案都會一起刪除，無法復原。')) return;
+  var ids = p.files.map(function(f){ return f.id; });
+  var msIds = p.milestones.map(function(m){ return m.id; });
+  projects = projects.filter(function(x){ return x.id!==p.id; });
+  items = items.filter(function(it){ return msIds.indexOf(it.linkedMilestone) === -1; });
+  saveItems(); saveProjects();
+  ids.forEach(function(fid){ projFileDel(fid).catch(function(){}); });
+  projBackdrop.classList.remove('open');
+  editingProjId = null;
+  renderProjects();
+  renderMastMeta();
+});
+
+/* ---- 支出視窗 ---- */
+var expBackdrop = document.getElementById('expBackdrop');
+var expCtx = {projId:null, expId:null};
+(function fillExpCats(){
+  document.getElementById('ex-cat').innerHTML = BUDGET_CATS.map(function(c){
+    return '<option value="'+esc(c.k)+'">'+esc(c.n)+'</option>';
+  }).join('');
+})();
+function openExpModal(projId, expId){
+  var p = projById(projId); if(!p) return;
+  expCtx = {projId:projId, expId:expId};
+  var e = expId ? p.expenses.filter(function(x){ return x.id===expId; })[0] : null;
+  document.getElementById('expModalTitle').textContent = e ? '編輯支出' : '新增支出';
+  document.getElementById('ex-date').value = e ? (e.date||'') : ymd(new Date());
+  document.getElementById('ex-cat').value = e ? (e.cat||'business') : 'business';
+  document.getElementById('ex-item').value = e ? (e.item||'') : '';
+  document.getElementById('ex-amount').value = e ? (e.amount||'') : '';
+  document.getElementById('ex-status').value = e ? (e.status||'paid') : 'paid';
+  document.getElementById('ex-vendor').value = e ? (e.vendor||'') : '';
+  document.getElementById('expHint').hidden = true;
+  expBackdrop.classList.add('open');
+  document.getElementById('ex-item').focus();
+}
+document.getElementById('cancelExpense').addEventListener('click', function(){ expBackdrop.classList.remove('open'); });
+expBackdrop.addEventListener('click', function(e){ if(e.target===expBackdrop) expBackdrop.classList.remove('open'); });
+document.getElementById('saveExpense').addEventListener('click', function(){
+  var p = projById(expCtx.projId); if(!p) return;
+  var amount = Number(document.getElementById('ex-amount').value);
+  var item = document.getElementById('ex-item').value.trim();
+  if(!item || !(amount > 0)){
+    var h = document.getElementById('expHint');
+    h.textContent = '項目與金額都要填，金額須大於 0。';
+    h.hidden = false;
+    return;
+  }
+  var e = expCtx.expId ? p.expenses.filter(function(x){ return x.id===expCtx.expId; })[0] : null;
+  if(!e){ e = {id:'ex'+Date.now()+Math.floor(Math.random()*1000)}; p.expenses.push(e); }
+  e.date = document.getElementById('ex-date').value;
+  e.cat = document.getElementById('ex-cat').value;
+  e.item = item;
+  e.amount = amount;
+  e.status = document.getElementById('ex-status').value;
+  e.vendor = document.getElementById('ex-vendor').value.trim();
+  saveProjects();
+  expBackdrop.classList.remove('open');
+  renderProjects();
+});
+
+/* ---- 期限視窗 ---- */
+var msBackdrop = document.getElementById('msBackdrop');
+var msCtx = {projId:null, msId:null};
+function openMsModal(projId, msId){
+  var p = projById(projId); if(!p) return;
+  msCtx = {projId:projId, msId:msId};
+  var m = msId ? p.milestones.filter(function(x){ return x.id===msId; })[0] : null;
+  document.getElementById('msModalTitle').textContent = m ? '編輯期限' : '新增重要期限';
+  document.getElementById('ms-label').value = m ? (m.label||'') : '';
+  document.getElementById('ms-date').value = m ? (m.date||'') : '';
+  document.getElementById('ms-sync').checked = m ? !!m.sync : true;
+  document.getElementById('msHint').hidden = true;
+  msBackdrop.classList.add('open');
+  document.getElementById('ms-label').focus();
+}
+document.getElementById('cancelMilestone').addEventListener('click', function(){ msBackdrop.classList.remove('open'); });
+msBackdrop.addEventListener('click', function(e){ if(e.target===msBackdrop) msBackdrop.classList.remove('open'); });
+document.getElementById('saveMilestone').addEventListener('click', function(){
+  var p = projById(msCtx.projId); if(!p) return;
+  var label = document.getElementById('ms-label').value.trim();
+  var date = document.getElementById('ms-date').value;
+  if(!label || !date){
+    var h = document.getElementById('msHint');
+    h.textContent = '名稱與日期都要填。';
+    h.hidden = false;
+    return;
+  }
+  var m = msCtx.msId ? p.milestones.filter(function(x){ return x.id===msCtx.msId; })[0] : null;
+  if(!m){ m = {id:'ms'+Date.now()+Math.floor(Math.random()*1000)}; p.milestones.push(m); }
+  m.label = label; m.date = date; m.sync = document.getElementById('ms-sync').checked;
+  syncMilestoneToCalendar(p, m);
+  saveProjects();
+  msBackdrop.classList.remove('open');
+  renderProjects();
+});
+
+/* One milestone maps to at most one calendar item, bound by linkedMilestone, so
+   re-saving updates that item instead of piling up duplicates. */
+function syncMilestoneToCalendar(p, m){
+  items = items.filter(function(it){ return it.linkedMilestone !== m.id || m.sync; });
+  if(!m.sync){ saveItems(); return; }
+  var label = m.label + '：' + p.name;
+  var existing = items.filter(function(it){ return it.linkedMilestone===m.id; })[0];
+  if(existing){ existing.title = label; existing.date = m.date; }
+  else {
+    items.push({
+      id:'pms'+m.id, linkedMilestone:m.id,
+      title:label, date:m.date, time:'', cat:'deadline',
+      remind:['line','email'], done:false,
+      notes:'由計畫管理自動同步：'+(p.code||p.name),
+      repeat:'none', repeatEnd:''
+    });
+  }
+  saveItems();
+}
+
+/* ---- 計畫檔案（IndexedDB） ---- */
+var PROJ_FILE_STORE = 'projectFiles';
+function projFileTx(mode, fn){
+  return cardDb().then(function(db){
+    if(!db.objectStoreNames.contains(PROJ_FILE_STORE)) throw new Error('no-store');
+    return new Promise(function(res, rej){
+      var tx = db.transaction(PROJ_FILE_STORE, mode);
+      var out = fn(tx.objectStore(PROJ_FILE_STORE));
+      tx.oncomplete = function(){ res(out && out.result !== undefined ? out.result : out); };
+      tx.onerror = function(){ rej(tx.error); };
+      tx.onabort = function(){ rej(tx.error || new Error('idb-abort')); };
+    });
+  });
+}
+function projFilePut(rec){ return projFileTx('readwrite', function(st){ return st.put(rec); }); }
+function projFileGet(id){ return projFileTx('readonly', function(st){ return st.get(id); }); }
+function projFileDel(id){ return projFileTx('readwrite', function(st){ return st.delete(id); }); }
+
+var PROJ_FILE_MAX = 60 * 1024 * 1024;
+function addProjectFiles(projId, fileList){
+  var p = projById(projId); if(!p) return;
+  var files = Array.prototype.slice.call(fileList);
+  var tooBig = files.filter(function(f){ return f.size > PROJ_FILE_MAX; });
+  files = files.filter(function(f){ return f.size <= PROJ_FILE_MAX; });
+  if(tooBig.length){
+    alert('這些檔案超過 60 MB，沒有存入：\n' + tooBig.map(function(f){ return f.name; }).join('\n'));
+  }
+  if(!files.length) return;
+  showProjHint('儲存檔案中…', 'ok');
+  var chain = Promise.resolve();
+  files.forEach(function(f){
+    chain = chain.then(function(){
+      var id = 'pf'+Date.now()+Math.floor(Math.random()*100000);
+      return projFilePut({id:id, projId:projId, name:f.name, type:f.type||'', size:f.size, blob:f})
+        .then(function(){
+          p.files.push({id:id, name:f.name, type:f.type||'', size:f.size, addedAt:new Date().toISOString()});
+        });
+    });
+  });
+  chain.then(function(){
+    saveProjects();
+    renderProjects();
+    showProjHint('已存入 '+files.length+' 個檔案。', 'ok');
+  }).catch(function(){
+    saveProjects();
+    renderProjects();
+    showProjHint('這台裝置的瀏覽器不讓網頁儲存檔案，部分檔案沒有存進去。', 'err');
+  });
+}
+function downloadProjectFile(projId, fileId){
+  var p = projById(projId); if(!p) return;
+  var meta = p.files.filter(function(f){ return f.id===fileId; })[0];
+  if(!meta) return;
+  projFileGet(fileId).then(function(rec){
+    if(!rec || !rec.blob){ showProjHint('找不到這個檔案的內容，可能已被瀏覽器清除。', 'err'); return; }
+    saveBinary(meta.name, rec.blob, meta.type || 'application/octet-stream',
+      function(){ showProjHint('已下載 '+meta.name+'。', 'ok'); },
+      function(msg){ showProjHint(msg, 'err'); });
+  }).catch(function(){ showProjHint('讀取檔案失敗。', 'err'); });
+}
+function deleteProjectFile(projId, fileId){
+  var p = projById(projId); if(!p) return;
+  var meta = p.files.filter(function(f){ return f.id===fileId; })[0];
+  if(!meta) return;
+  if(!confirm('確定要刪除「'+meta.name+'」嗎？這個檔案會從瀏覽器裡永久移除。')) return;
+  p.files = p.files.filter(function(f){ return f.id!==fileId; });
+  saveProjects();
+  projFileDel(fileId).catch(function(){});
+  renderProjects();
+}
+function zipProjectFiles(projId){
+  var p = projById(projId); if(!p || !p.files.length) return;
+  showProjHint('打包中…', 'ok');
+  var taken = {}, entries = [];
+  var chain = Promise.resolve();
+  p.files.forEach(function(meta){
+    chain = chain.then(function(){
+      return projFileGet(meta.id).then(function(rec){
+        if(!rec || !rec.blob) return null;
+        return rec.blob.arrayBuffer().then(function(ab){
+          entries.push({name: zipSafeName(meta.name, taken), data: new Uint8Array(ab),
+                        date: meta.addedAt ? new Date(meta.addedAt) : new Date()});
+        });
+      }).catch(function(){ return null; });
+    });
+  });
+  chain.then(function(){
+    if(!entries.length){ showProjHint('沒有可以打包的檔案內容。', 'err'); return; }
+    /* A manifest makes the archive readable on its own — file names alone do not
+       say which project, which budget line, or when anything was added. */
+    entries.push({name:'_計畫資料.txt', data: utf8Bytes(projectManifest(p))});
+    var blob = buildZip(entries);
+    var safe = (p.name || '計畫').replace(/[\/\\:*?"<>|]/g, '_').slice(0, 40);
+    saveBinary(safe+'_檔案_'+ymd(new Date())+'.zip', blob, 'application/zip',
+      function(){ showProjHint('已打包 '+entries.length+' 個項目下載。', 'ok'); },
+      function(msg){ showProjHint(msg, 'err'); });
+  });
+}
+function projectManifest(p){
+  var L = [];
+  L.push('計畫名稱：'+p.name);
+  if(p.code) L.push('計畫編號：'+p.code);
+  if(p.funder) L.push('委託／補助單位：'+p.funder);
+  if(p.org) L.push('執行單位：'+p.org);
+  if(p.pi.name) L.push('計畫主持人：'+p.pi.name+(p.pi.org?'（'+p.pi.org+'）':''));
+  p.members.forEach(function(m){ L.push(m.role+'：'+m.name+(m.org?'（'+m.org+'）':'')); });
+  if(projPeriod(p)) L.push('執行期間：'+projPeriod(p));
+  L.push('狀態：'+(PROJ_STATUS[p.status]||p.status));
+  L.push('');
+  L.push('【經費】');
+  BUDGET_CATS.forEach(function(c){
+    var pl = budgetPlanned(p, c.k), sp = spentByCat(p, c.k);
+    if(pl || sp) L.push('  '+c.n+'：編列 '+money(pl)+'　已支用 '+money(sp)+'　餘 '+money(pl-sp));
+  });
+  L.push('  合計：編列 '+money(budgetTotal(p))+'　已支用 '+money(spentTotal(p)));
+  if(p.milestones.length){
+    L.push('');
+    L.push('【重要期限】');
+    p.milestones.forEach(function(m){ L.push('  '+(m.date||'未定')+'　'+m.label); });
+  }
+  L.push('');
+  L.push('【檔案】');
+  p.files.forEach(function(f){ L.push('  '+f.name+'　'+fileSizeText(f.size)); });
+  if(p.note){ L.push(''); L.push('【備註】'); L.push(p.note); }
+  L.push('');
+  L.push('匯出時間：'+new Date().toLocaleString('zh-TW'));
+  return L.join('\r\n');
+}
+
+/* ---- 匯出 ---- */
+function showProjHint(msg, kind){
+  var el = document.getElementById('projHint');
+  el.textContent = msg;
+  el.className = 'exporthint ' + (kind||'ok');
+  el.hidden = false;
+}
+document.getElementById('projSearch').addEventListener('input', function(){
+  projSearch = this.value; renderProjects();
+});
+document.getElementById('projStatusFilter').addEventListener('change', function(){
+  projStatusF = this.value; renderProjects();
+});
+document.getElementById('projExportCsv').addEventListener('click', function(){
+  if(!projects.length){ showProjHint('目前沒有計畫可以匯出。', 'err'); return; }
+  var head = ['計畫名稱','計畫編號','委託單位','執行單位','主持人','其他成員','起','迄','狀態',
+              '編列總額','已支用','餘額','執行率','檔案數','備註'];
+  var rows = projects.map(function(p){
+    var t = budgetTotal(p), s = spentTotal(p);
+    return [p.name, p.code, p.funder, p.org, p.pi.name,
+            p.members.map(function(m){ return m.role+'：'+m.name; }).join(' / '),
+            p.start, p.end, PROJ_STATUS[p.status]||p.status,
+            t, s, t-s, (t>0?Math.round(s/t*100)+'%':''), p.files.length, p.note].map(csvCell).join(',');
+  });
+  saveFile('很無敵的工作室_計畫報表_'+ymd(new Date())+'.csv',
+    '﻿'+head.join(',')+'\r\n'+rows.join('\r\n')+'\r\n',
+    function(){ showProjHint('已匯出 '+projects.length+' 個計畫的報表。', 'ok'); },
+    function(msg){ showProjHint(msg, 'err'); });
+});
+document.getElementById('projExportExpenses').addEventListener('click', function(){
+  var any = projects.reduce(function(a,p){ return a + p.expenses.length; }, 0);
+  if(!any){ showProjHint('目前沒有支出紀錄可以匯出。', 'err'); return; }
+  var head = ['計畫名稱','計畫編號','日期','經費科目','項目','對象','金額','狀態'];
+  var rows = [];
+  projects.forEach(function(p){
+    p.expenses.slice().sort(function(a,b){ return String(a.date||'').localeCompare(String(b.date||'')); })
+      .forEach(function(e){
+        rows.push([p.name, p.code, e.date, BUDGET_NAME[e.cat]||e.cat, e.item, e.vendor,
+                   e.amount, EXP_STATUS[e.status]||e.status].map(csvCell).join(','));
+      });
+  });
+  saveFile('很無敵的工作室_支出明細_'+ymd(new Date())+'.csv',
+    '﻿'+head.join(',')+'\r\n'+rows.join('\r\n')+'\r\n',
+    function(){ showProjHint('已匯出 '+rows.length+' 筆支出明細。', 'ok'); },
+    function(msg){ showProjHint(msg, 'err'); });
+});
+
+/* ========================================================================
+   名片簿 — 影像儲存
+   ======================================================================== */
+/* Card photos are far too big for localStorage (a 5 MB quota shared with the
+   whole app), so the pictures live in IndexedDB and only the typed fields go in
+   localStorage. If IndexedDB is unavailable the card still saves — without its
+   photo — rather than failing outright. */
+/* One database serves both card photos and project files. Version 2 adds the
+   projectFiles store; a browser holding the version-1 database upgrades in place
+   and keeps every card photo already in it. */
+var CARD_DB_NAME = 'wudi-cards', CARD_DB_STORE = 'images';
+var cardDbPromise = null;
+function cardDb(){
+  if(cardDbPromise) return cardDbPromise;
+  cardDbPromise = new Promise(function(res, rej){
+    if(!window.indexedDB){ rej(new Error('no-idb')); return; }
+    var req;
+    try{ req = indexedDB.open(CARD_DB_NAME, 2); }
+    catch(e){ rej(e); return; }
+    req.onupgradeneeded = function(){
+      var db = req.result;
+      if(!db.objectStoreNames.contains(CARD_DB_STORE)) db.createObjectStore(CARD_DB_STORE, {keyPath:'id'});
+      if(!db.objectStoreNames.contains('projectFiles')) db.createObjectStore('projectFiles', {keyPath:'id'});
+    };
+    req.onsuccess = function(){ res(req.result); };
+    req.onerror = function(){ rej(req.error || new Error('idb-open')); };
+    req.onblocked = function(){ rej(new Error('idb-blocked')); };
+  }).catch(function(e){ cardDbPromise = null; throw e; });
+  return cardDbPromise;
+}
+function cardImgTx(mode, fn){
+  return cardDb().then(function(db){
+    return new Promise(function(res, rej){
+      var tx = db.transaction(CARD_DB_STORE, mode);
+      var store = tx.objectStore(CARD_DB_STORE);
+      var out = fn(store);
+      tx.oncomplete = function(){ res(out && out.result !== undefined ? out.result : out); };
+      tx.onerror = function(){ rej(tx.error); };
+      tx.onabort = function(){ rej(tx.error || new Error('idb-abort')); };
+    });
+  });
+}
+function cardImgPut(id, full, thumb){ return cardImgTx('readwrite', function(st){ return st.put({id:id, full:full, thumb:thumb}); }); }
+function cardImgGet(id){ return cardImgTx('readonly', function(st){ return st.get(id); }); }
+function cardImgDel(id){ return cardImgTx('readwrite', function(st){ return st.delete(id); }); }
+
+/* ---- 影像處理 ---- */
+function cardLoadImage(file){
+  return new Promise(function(res, rej){
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){ URL.revokeObjectURL(url); res(img); };
+    img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('這個檔案不是可以開啟的圖片。')); };
+    img.src = url;
+  });
+}
+function cardDrawScaled(img, maxSide){
+  var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  var k = Math.min(1, maxSide / Math.max(w, h));
+  var c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w * k));
+  c.height = Math.max(1, Math.round(h * k));
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
+/* Tesseract reads dark-on-light text best. Greyscale, then stretch the
+   histogram between the 5th and 95th percentile so a dim phone photo of a
+   glossy card gets real black and real white instead of a grey smear. */
+function cardPrepForOcr(img){
+  var c = cardDrawScaled(img, 1700);
+  var ctx = c.getContext('2d');
+  var d = ctx.getImageData(0, 0, c.width, c.height);
+  var px = d.data, hist = new Array(256).fill(0), i;
+  for(i = 0; i < px.length; i += 4){
+    var g = (px[i]*0.299 + px[i+1]*0.587 + px[i+2]*0.114) | 0;
+    px[i] = px[i+1] = px[i+2] = g;
+    hist[g]++;
+  }
+  var total = c.width * c.height, lo = 0, hi = 255, acc = 0;
+  for(i = 0; i < 256; i++){ acc += hist[i]; if(acc > total*0.05){ lo = i; break; } }
+  acc = 0;
+  for(i = 255; i >= 0; i--){ acc += hist[i]; if(acc > total*0.05){ hi = i; break; } }
+  if(hi - lo > 20){
+    var span = hi - lo;
+    for(i = 0; i < px.length; i += 4){
+      var v = Math.max(0, Math.min(255, Math.round((px[i]-lo) * 255 / span)));
+      px[i] = px[i+1] = px[i+2] = v;
+    }
+  }
+  ctx.putImageData(d, 0, 0);
+  return c.toDataURL('image/png');
+}
+
+/* ---- OCR 引擎 ---- */
+/* tesseract.js is loaded on demand, not at page load: it is a large download
+   and most visits never open the card book. */
+/* Two builds are tried in turn. The API used here — Tesseract.createWorker(langs,
+   oem, options) and result.data.text — has been stable since v4, but the newest
+   release is not something this page can verify at build time, so a working
+   older build stands behind it. Only cdnjs is used: it is the one script host
+   the published-artifact CSP allows. */
+var TESS_BUILDS = [
+  {js:'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/7.0.0/tesseract.min.js',
+   worker:'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/7.0.0/worker.min.js'},
+  {js:'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js',
+   worker:'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/worker.min.js'}
+];
+var tessWorker = null, tessBuild = null;
+
+function loadScriptOnce(src){
+  return new Promise(function(res, rej){
+    var done = false;
+    var el = document.createElement('script');
+    el.src = src;
+    el.async = true;
+    el.onload = function(){
+      done = true;
+      window.Tesseract ? res(window.Tesseract) : rej(new Error('loaded-but-empty'));
+    };
+    el.onerror = function(){ done = true; el.parentNode && el.parentNode.removeChild(el); rej(new Error('blocked')); };
+    document.head.appendChild(el);
+    setTimeout(function(){ if(!done) rej(new Error('timeout')); }, 45000);
+  });
+}
+
+/* Try each build, and within a build try the explicit workerPath first and the
+   library's own default second — a wrong worker URL is the likeliest way for a
+   pinned CDN version to break. */
+function makeWorker(build, onProgress){
+  var logger = function(m){
+    if(!m || typeof m.progress !== 'number') return;
+    onProgress(m.status, m.progress);
+  };
+  return loadScriptOnce(build.js).then(function(T){
+    return T.createWorker(['chi_tra','eng'], 1, {workerPath: build.worker, logger: logger})
+      .catch(function(){ return T.createWorker(['chi_tra','eng'], 1, {logger: logger}); });
+  });
+}
+function getTessWorker(onProgress){
+  if(tessWorker) return Promise.resolve(tessWorker);
+  var lastErr = new Error('blocked');
+  function attempt(i){
+    if(i >= TESS_BUILDS.length) return Promise.reject(lastErr);
+    return makeWorker(TESS_BUILDS[i], onProgress).then(function(w){
+      tessWorker = w; tessBuild = TESS_BUILDS[i]; return w;
+    }).catch(function(e){
+      lastErr = e;
+      /* A half-initialised global would make the next build's script tag a
+         no-op, so clear it before falling back. */
+      try{ delete window.Tesseract; }catch(e2){ window.Tesseract = undefined; }
+      return attempt(i+1);
+    });
+  }
+  return attempt(0);
+}
+function runOcr(dataUrl, onProgress){
+  return getTessWorker(onProgress).then(function(w){
+    return w.recognize(dataUrl);
+  }).then(function(r){
+    return (r && r.data && r.data.text) || '';
+  });
+}
+var OCR_STAGE_ZH = {
+  'loading tesseract core':'載入辨識核心',
+  'initializing tesseract':'啟動辨識引擎',
+  'loading language traineddata':'下載中文語言檔',
+  'loading language traineddata (from cache)':'讀取語言檔',
+  'initializing api':'準備辨識',
+  'initialized api':'準備辨識',
+  'recognizing text':'辨識文字中'
+};
+
+/* ========================================================================
+   名片簿 — 資料與畫面
+   ======================================================================== */
+var cards = [];
+try{ cards = JSON.parse(localStorage.getItem('businessCards') || '[]'); }catch(e){ cards = []; }
+if(!Array.isArray(cards)) cards = [];
+function saveCards(){ try{ localStorage.setItem('businessCards', JSON.stringify(cards)); }catch(e){} }
+
+var CARD_FIELDS = ['name','nameEn','company','dept','title','mobile','phone','fax','email','website','address'];
+function blankCard(){
+  var c = {id:'bc'+Date.now()+Math.floor(Math.random()*1000), tags:[], note:'',
+           met: ymd(new Date()), hasPhoto:false, ocrText:'', createdAt:new Date().toISOString()};
+  CARD_FIELDS.forEach(function(f){ c[f] = ''; });
+  return c;
+}
+
+var cardSearch = '';
+var thumbCache = {};
+
+function cardMatches(c, q){
+  if(!q) return true;
+  var hay = CARD_FIELDS.map(function(f){ return c[f]||''; }).join(' ') + ' ' +
+            (c.tags||[]).join(' ') + ' ' + (c.note||'');
+  return hay.toLowerCase().indexOf(q) !== -1;
+}
+function cardDisplayName(c){
+  return c.name || c.nameEn || c.company || '（未命名名片）';
+}
+
+function renderCards(){
+  var wrap = document.getElementById('cardGrid');
+  var q = cardSearch.trim().toLowerCase();
+  var list = cards.filter(function(c){ return cardMatches(c, q); });
+
+  if(!cards.length){
+    wrap.innerHTML = '<div class="cardempty">還沒有名片。<br>' +
+      '按 <b>📷 拍照新增</b> 直接拍一張，或 <b>🖼️ 從相簿／電腦選圖</b> 上傳，' +
+      '系統會自動辨識姓名、公司、電話與 Email，你只要確認一下就好。</div>';
+    return;
+  }
+  if(!list.length){
+    wrap.innerHTML = '<div class="cardempty">找不到符合「'+esc(cardSearch)+'」的名片。</div>';
+    return;
+  }
+
+  wrap.innerHTML = '<div class="cardgrid">' + list.map(function(c){
+    var contact = [c.mobile, c.phone, c.email].filter(Boolean).join('　');
+    var org = [c.company, c.dept].filter(Boolean).join('・');
+    return '<button class="bcard" data-card="'+esc(c.id)+'">'+
+      '<div class="bcard-photo" data-photo="'+esc(c.id)+'">'+
+        (c.hasPhoto ? '<span class="nophoto">照片載入中…</span>' : '<span class="nophoto">沒有照片</span>')+
+      '</div>'+
+      '<div class="bcard-body">'+
+        '<div class="bcard-name">'+esc(cardDisplayName(c))+
+          (c.nameEn && c.name ? '<span class="en">'+esc(c.nameEn)+'</span>' : '')+'</div>'+
+        (c.title ? '<div class="bcard-title">'+esc(c.title)+'</div>' : '')+
+        (org ? '<div class="bcard-org">'+esc(org)+'</div>' : '')+
+        (contact ? '<div class="bcard-contact">'+esc(contact)+'</div>' : '')+
+        ((c.tags&&c.tags.length) ? '<div class="bcard-tagrow">'+c.tags.map(function(t){
+            return '<span class="btag">'+esc(t)+'</span>'; }).join('')+'</div>' : '')+
+      '</div></button>';
+  }).join('') + '</div>';
+
+  wrap.querySelectorAll('[data-card]').forEach(function(el){
+    el.addEventListener('click', function(){ openCardModal(el.getAttribute('data-card')); });
+  });
+  list.forEach(function(c){ if(c.hasPhoto) paintThumb(c.id); });
+}
+function paintThumb(id){
+  var slot = document.querySelector('[data-photo="'+id+'"]');
+  if(!slot) return;
+  function put(src){
+    var cur = document.querySelector('[data-photo="'+id+'"]');
+    if(!cur) return;
+    cur.innerHTML = src ? '<img alt="名片照片" src="'+src+'">' : '<span class="nophoto">照片讀不到了</span>';
+  }
+  if(thumbCache[id]){ put(thumbCache[id]); return; }
+  cardImgGet(id).then(function(rec){
+    if(rec && rec.thumb){ thumbCache[id] = rec.thumb; put(rec.thumb); }
+    else put(null);
+  }).catch(function(){ put(null); });
+}
+
+/* ---- 新增／編輯視窗 ---- */
+var cardBackdrop = document.getElementById('cardBackdrop');
+var editingCardId = null;
+var draftPhoto = null;          // {full, thumb} waiting to be written on save
+var cardQueue = [];             // files still to be processed this batch
+
+function setOcrBox(msg, kind, pct){
+  var box = document.getElementById('cardOcrBox');
+  document.getElementById('cardOcrMsg').innerHTML = msg;
+  box.className = 'ocrbox' + (kind ? ' '+kind : '');
+  box.hidden = false;
+  var bar = document.getElementById('cardOcrBar');
+  if(typeof pct === 'number'){
+    bar.hidden = false;
+    document.getElementById('cardOcrFill').style.width = Math.round(pct*100)+'%';
+  } else bar.hidden = true;
+}
+function fillCardForm(c){
+  CARD_FIELDS.forEach(function(f){ document.getElementById('cd-'+f).value = c[f] || ''; });
+  document.getElementById('cd-tags').value = (c.tags||[]).join(', ');
+  document.getElementById('cd-met').value = c.met || '';
+  document.getElementById('cd-note').value = c.note || '';
+}
+function readCardForm(c){
+  CARD_FIELDS.forEach(function(f){ c[f] = document.getElementById('cd-'+f).value.trim(); });
+  c.tags = document.getElementById('cd-tags').value.split(/[,，]/)
+    .map(function(t){ return t.trim(); }).filter(Boolean);
+  c.met = document.getElementById('cd-met').value;
+  c.note = document.getElementById('cd-note').value.trim();
+  return c;
+}
+function resetCardModal(){
+  document.getElementById('cardOcrBox').hidden = true;
+  document.getElementById('cardOcrBar').hidden = true;
+  document.getElementById('cardRaw').hidden = true;
+  document.getElementById('cardRawToggle').hidden = true;
+  document.getElementById('cardModalHint').hidden = true;
+  document.getElementById('cardPreview').hidden = true;
+  document.getElementById('cardPreview').removeAttribute('src');
+  document.getElementById('cardQueue').hidden = true;
+  document.getElementById('deleteCard').hidden = true;
+  draftPhoto = null;
+}
+function showCardPhoto(src){
+  var el = document.getElementById('cardPreview');
+  if(!src){ el.hidden = true; return; }
+  el.src = src; el.hidden = false;
+}
+function openCardModal(id){
+  resetCardModal();
+  editingCardId = id;
+  var c = cards.filter(function(x){ return x.id===id; })[0];
+  if(!c) return;
+  document.getElementById('cardModalTitle').textContent = '編輯名片';
+  document.getElementById('deleteCard').hidden = false;
+  fillCardForm(c);
+  if(c.ocrText){
+    document.getElementById('cardRaw').textContent = c.ocrText;
+    document.getElementById('cardRawToggle').hidden = false;
+    document.getElementById('cardRawToggle').textContent = '顯示辨識出來的原始文字';
+  }
+  cardBackdrop.classList.add('open');
+  if(c.hasPhoto){
+    showCardPhoto(thumbCache[c.id] || '');
+    cardImgGet(c.id).then(function(rec){ if(rec && (rec.full||rec.thumb)) showCardPhoto(rec.full||rec.thumb); })
+      .catch(function(){});
+  }
+}
+function openNewCard(){
+  resetCardModal();
+  editingCardId = null;
+  document.getElementById('cardModalTitle').textContent = '新增名片';
+  fillCardForm(blankCard());
+  cardBackdrop.classList.add('open');
+  document.getElementById('cd-name').focus();
+}
+function closeCardModal(){
+  cardBackdrop.classList.remove('open');
+  editingCardId = null;
+  draftPhoto = null;
+}
+
+/* ---- 拍照／上傳 → 辨識 ---- */
+function startCardBatch(files){
+  cardQueue = Array.prototype.slice.call(files);
+  nextInBatch();
+}
+function nextInBatch(){
+  if(!cardQueue.length) return;
+  var file = cardQueue.shift();
+  resetCardModal();
+  editingCardId = null;
+  document.getElementById('cardModalTitle').textContent = '新增名片';
+  fillCardForm(blankCard());
+  if(cardQueue.length){
+    var q = document.getElementById('cardQueue');
+    q.textContent = '這批還有 '+cardQueue.length+' 張要處理，存好這張就會接著跳出下一張。';
+    q.hidden = false;
+  }
+  cardBackdrop.classList.add('open');
+  setOcrBox('讀取圖片中…', '', 0);
+
+  cardLoadImage(file).then(function(img){
+    var fullC = cardDrawScaled(img, 1400);
+    var thumbC = cardDrawScaled(img, 300);
+    draftPhoto = {full: fullC.toDataURL('image/jpeg', 0.82), thumb: thumbC.toDataURL('image/jpeg', 0.72)};
+    showCardPhoto(draftPhoto.full);
+    setOcrBox('準備辨識…', '', 0.02);
+    var prepped = cardPrepForOcr(img);
+    return runOcr(prepped, function(stage, pct){
+      setOcrBox((OCR_STAGE_ZH[stage] || stage) + '…', '', pct);
+    });
+  }).then(function(text){
+    var parsed = parseCard(text);
+    var filled = CARD_FIELDS.filter(function(f){ return parsed[f]; });
+    filled.forEach(function(f){ document.getElementById('cd-'+f).value = parsed[f]; });
+    document.getElementById('cardRaw').textContent = text || '（沒有讀到任何文字）';
+    document.getElementById('cardRawToggle').hidden = false;
+    if(filled.length){
+      setOcrBox('辨識完成，自動填了 <b>'+filled.length+'</b> 個欄位。'+
+        'OCR 不會百分之百正確，<b>請對照上面的照片檢查一遍</b>再儲存。', 'ok');
+    } else {
+      setOcrBox('辨識完成，但沒有抓到可用的欄位。請對照照片手動輸入。', 'err');
+    }
+  }).catch(function(err){
+    var why = String(err && err.message || err);
+    var msg;
+    if(why === 'blocked' || why === 'timeout' || why === 'loaded-but-empty'){
+      msg = '<b>這一版載不到辨識引擎。</b>Claude 上的預覽版基於安全限制，' +
+            '不能向外部網站取用辨識程式與語言檔。<br>' +
+            '請改用你自己架的網站版（GitHub Pages）就能自動辨識；' +
+            '在這裡名片仍可以照常手動輸入並儲存，照片也會一起存起來。';
+    } else if(why.indexOf('不是可以開啟的圖片') !== -1){
+      msg = why;
+    } else {
+      msg = '辨識過程出錯了（'+esc(why)+'）。照片已經留著，請手動輸入欄位。';
+    }
+    setOcrBox(msg, 'err');
+  });
+}
+
+document.getElementById('cardShoot').addEventListener('change', function(){
+  if(this.files && this.files.length) startCardBatch(this.files);
+  this.value = '';
+});
+document.getElementById('cardPick').addEventListener('change', function(){
+  if(this.files && this.files.length) startCardBatch(this.files);
+  this.value = '';
+});
+document.getElementById('cardManual').addEventListener('click', function(){ cardQueue = []; openNewCard(); });
+document.getElementById('cancelCard').addEventListener('click', function(){
+  var remaining = cardQueue.length;
+  closeCardModal();
+  if(remaining && confirm('這批還有 '+remaining+' 張沒處理，要繼續下一張嗎？')) nextInBatch();
+  else cardQueue = [];
+});
+cardBackdrop.addEventListener('click', function(e){ if(e.target===cardBackdrop) closeCardModal(); });
+document.getElementById('cardRawToggle').addEventListener('click', function(){
+  var raw = document.getElementById('cardRaw');
+  raw.hidden = !raw.hidden;
+  this.textContent = raw.hidden ? '顯示辨識出來的原始文字' : '收起原始文字';
+});
+document.getElementById('cardSearch').addEventListener('input', function(){
+  cardSearch = this.value;
+  renderCards();
+});
+
+document.getElementById('saveCard').addEventListener('click', function(){
+  var creating = !editingCardId;
+  var c = creating ? blankCard() : cards.filter(function(x){ return x.id===editingCardId; })[0];
+  if(!c) return;
+  readCardForm(c);
+  if(!CARD_FIELDS.some(function(f){ return c[f]; }) && !c.note){
+    var h = document.getElementById('cardModalHint');
+    h.textContent = '至少要填一個欄位才能儲存。';
+    h.hidden = false;
+    return;
+  }
+  if(creating){
+    c.ocrText = document.getElementById('cardRaw').textContent || '';
+    cards.unshift(c);
+  }
+  var photo = draftPhoto;
+  if(photo) c.hasPhoto = true;
+  saveCards();
+
+  var after = function(){
+    var remaining = cardQueue.length;
+    closeCardModal();
+    renderCards();
+    renderMastMeta();
+    if(remaining) nextInBatch();
+  };
+  if(photo){
+    thumbCache[c.id] = photo.thumb;
+    cardImgPut(c.id, photo.full, photo.thumb).then(after).catch(function(){
+      c.hasPhoto = false;
+      delete thumbCache[c.id];
+      saveCards();
+      alert('欄位已存好，但這台裝置的瀏覽器不讓網頁儲存照片，所以照片沒有保留。');
+      after();
+    });
+  } else after();
+});
+
+document.getElementById('deleteCard').addEventListener('click', function(){
+  if(!editingCardId) return;
+  var c = cards.filter(function(x){ return x.id===editingCardId; })[0];
+  if(!confirm('確定要刪除「'+cardDisplayName(c)+'」這張名片嗎？照片也會一起刪掉。')) return;
+  var id = editingCardId;
+  cards = cards.filter(function(x){ return x.id!==id; });
+  delete thumbCache[id];
+  saveCards();
+  cardImgDel(id).catch(function(){});
+  closeCardModal();
+  renderCards();
+  renderMastMeta();
+});
+
+/* ---- 匯出 ---- */
+function showCardHint(msg, kind){
+  var el = document.getElementById('cardHint');
+  el.textContent = msg;
+  el.className = 'exporthint ' + (kind||'ok');
+  el.hidden = false;
+}
+function csvCell(v){
+  v = (v==null?'':String(v));
+  return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v;
+}
+function buildCardCsv(){
+  var head = ['中文姓名','英文姓名','服務單位','部門','職稱','手機','電話','傳真','Email','網站','地址','標籤','認識日期','備註'];
+  var rows = cards.map(function(c){
+    return [c.name,c.nameEn,c.company,c.dept,c.title,c.mobile,c.phone,c.fax,c.email,c.website,
+            c.address,(c.tags||[]).join(' / '),c.met,c.note].map(csvCell).join(',');
+  });
+  /* Excel on Windows opens a UTF-8 CSV as mojibake without a BOM. */
+  return '\ufeff' + head.join(',') + '\r\n' + rows.join('\r\n') + '\r\n';
+}
+/* RFC 6350: backslash first, then the separators it has to protect. */
+function vcfEscape(s){
+  return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+}
+function buildVcf(){
+  var out = [];
+  cards.forEach(function(c){
+    var full = c.name || c.nameEn || c.company || '未命名';
+    out.push('BEGIN:VCARD');
+    out.push('VERSION:3.0');
+    out.push('N:'+vcfEscape(full)+';;;;');
+    out.push('FN:'+vcfEscape(full));
+    if(c.nameEn && c.name) out.push('NICKNAME:'+vcfEscape(c.nameEn));
+    if(c.company || c.dept) out.push('ORG:'+vcfEscape(c.company)+';'+vcfEscape(c.dept));
+    if(c.title) out.push('TITLE:'+vcfEscape(c.title));
+    if(c.mobile) out.push('TEL;TYPE=CELL:'+vcfEscape(c.mobile));
+    if(c.phone) out.push('TEL;TYPE=WORK,VOICE:'+vcfEscape(c.phone));
+    if(c.fax) out.push('TEL;TYPE=WORK,FAX:'+vcfEscape(c.fax));
+    if(c.email) out.push('EMAIL;TYPE=INTERNET,WORK:'+vcfEscape(c.email));
+    if(c.website) out.push('URL:'+vcfEscape(/^https?:/i.test(c.website)?c.website:'https://'+c.website));
+    if(c.address) out.push('ADR;TYPE=WORK:;;'+vcfEscape(c.address)+';;;;');
+    var note = [c.note, (c.tags||[]).length ? '標籤：'+c.tags.join('、') : '', c.met ? '認識日期：'+c.met : '']
+      .filter(Boolean).join('\n');
+    if(note) out.push('NOTE:'+vcfEscape(note));
+    out.push('END:VCARD');
+  });
+  return out.join('\r\n')+'\r\n';
+}
+document.getElementById('cardExportCsv').addEventListener('click', function(){
+  if(!cards.length){ showCardHint('目前沒有名片可以匯出。','err'); return; }
+  saveFile('很無敵的工作室_名片簿_'+ymd(new Date())+'.csv', buildCardCsv(),
+    function(){ showCardHint('已匯出 '+cards.length+' 張名片的 CSV，可以直接用 Excel 開。'); },
+    function(msg){ showCardHint(msg,'err'); });
+});
+document.getElementById('cardExportVcf').addEventListener('click', function(){
+  if(!cards.length){ showCardHint('目前沒有名片可以匯出。','err'); return; }
+  /* The artifact's download allowlist has no .vcf, so inside Claude the file
+     ships as .txt with a rename note; a self-hosted copy saves the real thing. */
+  var real = !downloadsCap;
+  var fname = '很無敵的工作室_名片簿_'+ymd(new Date())+(real ? '.vcf' : '.vcf.txt');
+  saveFile(fname, buildVcf(),
+    function(){
+      showCardHint(real
+        ? '已匯出 '+cards.length+' 張名片的 vCard，用手機打開這個 .vcf 檔就能存進通訊錄。'
+        : '已匯出 '+cards.length+' 張名片。這一版只能存成 .txt，請把檔名結尾的「.txt」刪掉（變成 .vcf）再用手機開啟。');
+    },
+    function(msg){ showCardHint(msg,'err'); });
+});
 
 /* ======================================================================== */
 applyNav();
