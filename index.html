@@ -15,7 +15,7 @@
 <body>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
 <style>
   :root{
@@ -38,6 +38,7 @@
     --danger:#AE3C27;  --danger-soft:#F5E1DB;
     --neutral:#7E837C; --neutral-soft:#E7E9E4;
     --star:#B7811C;
+    --seal:#A8402C;
     --shadow: 0 1px 2px rgba(22,28,27,.05), 0 6px 20px -10px rgba(22,28,27,.18);
     --shadow-lift: 0 2px 6px rgba(22,28,27,.08), 0 14px 34px -14px rgba(22,28,27,.26);
     --font-display:'Fraunces','Noto Serif TC',Georgia,serif;
@@ -58,6 +59,7 @@
       --danger:#DE7C61; --danger-soft:#37201A;
       --neutral:#98A09A;--neutral-soft:#222826;
       --star:#DDAF4B;
+      --seal:#E07A5F;
       --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -10px rgba(0,0,0,.55);
       --shadow-lift: 0 2px 6px rgba(0,0,0,.45), 0 16px 38px -14px rgba(0,0,0,.65);
     }
@@ -74,6 +76,7 @@
     --danger:#DE7C61; --danger-soft:#37201A;
     --neutral:#98A09A;--neutral-soft:#222826;
     --star:#DDAF4B;
+    --seal:#E07A5F;
     --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -10px rgba(0,0,0,.55);
     --shadow-lift: 0 2px 6px rgba(0,0,0,.45), 0 16px 38px -14px rgba(0,0,0,.65);
   }
@@ -99,12 +102,32 @@
   }
   .mast-inner{
     max-width:1340px; margin:0 auto; padding:16px 24px 0;
-    display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap;
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
   }
-  .wordmark{flex-shrink:0;}
+  /* Stacked lockup: a signed "Woody" over the studio name, with a hand-drawn
+     swash tying the two lines together so the mark reads as drawn, not typed. */
+  .wordmark{flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:1px;}
+  .sig{
+    display:block; position:relative; color:var(--seal);
+    line-height:1; padding:0 4px;
+  }
+  .sig-name{
+    font-family:'Caveat','Segoe Script','Bradley Hand',cursive;
+    font-weight:700; font-size:34px; line-height:1;
+    letter-spacing:.5px; display:block;
+  }
+  .sig-swash{
+    display:block; width:100%; height:9px; margin-top:-2px; opacity:.85;
+  }
   .wordmark h1{
-    font-family:var(--font-display); font-weight:600; font-size:23px; margin:0;
-    letter-spacing:.3px; line-height:1.15;
+    font-family:var(--font-display),'Noto Serif TC',serif; font-weight:600;
+    font-size:16.5px; margin:0; letter-spacing:2.5px; line-height:1.2;
+    white-space:nowrap; color:var(--ink); text-indent:2.5px;
+  }
+  @media (max-width:520px){
+    .sig-name{font-size:28px;}
+    .sig-swash{height:8px; margin-top:-4px;}
+    .wordmark h1{font-size:14px; letter-spacing:1.6px;}
   }
   .mast-meta{margin-left:auto; display:flex; gap:20px; flex-wrap:wrap; align-items:center; padding-top:4px;}
   .mast-backup{flex-shrink:0; align-self:center;}
@@ -333,6 +356,62 @@
   .modal-hint{font-size:11.5px; color:var(--danger); margin:0 0 4px; line-height:1.55;}
   .modal-hint.warn{color:var(--warn);}
   .modal-hint.ok{color:var(--ok);}
+  .ubadge{
+    font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:20px;
+    background:var(--neutral-soft); color:var(--neutral); margin-left:7px;
+    vertical-align:middle; white-space:nowrap;
+  }
+  .ubadge.ok{background:var(--ok-soft); color:var(--ok);}
+  .origval{
+    font-family:var(--font-mono); font-size:10px; color:var(--muted);
+    font-weight:400; margin-left:8px; text-transform:none; letter-spacing:0;
+  }
+  .hist-actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .exporthint{font-size:12px; margin:10px 0 0;}
+  .exporthint.ok{color:var(--ok);}
+  .exporthint.err{color:var(--danger);}
+  .exporthint[hidden]{display:none;}
+  .abpick{
+    border:1px solid var(--line-strong); border-radius:var(--r-sm); padding:7px 10px;
+    font-size:12px; background:var(--paper-raised); color:var(--ink); max-width:210px;
+  }
+  .authorbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;}
+
+  /* APA 7 citation blocks */
+  .apabox{
+    margin-top:16px; background:var(--paper-sunken); border:1px solid var(--line);
+    border-left:3px solid var(--seal); border-radius:var(--r-sm); padding:12px 14px;
+  }
+  .apabox.dim{border-left-color:var(--line-strong);}
+  .apahead{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;}
+  .apalabel{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.07em;
+    color:var(--muted); font-weight:700;
+  }
+  .apatext{
+    font-family:var(--font-display),'Noto Serif TC',serif; font-size:13.5px;
+    line-height:1.75; color:var(--ink); word-break:break-word;
+    padding-left:2.2em; text-indent:-2.2em;   /* hanging indent, as APA prints it */
+  }
+  .apatext em{font-style:italic;}
+  .apaempty{color:var(--muted); font-style:normal; font-family:var(--font-body);}
+  .apamiss{font-size:11.5px; color:var(--warn); margin-top:8px; line-height:1.6;}
+
+  .pubtoolbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-bottom:10px; border-bottom:1px solid var(--line); margin-bottom:12px; flex-wrap:wrap;
+  }
+  .pubcount{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+  .publist{max-height:46vh; overflow-y:auto; padding-right:4px;}
+  .pubitem{
+    display:flex; gap:10px; padding:11px 2px; border-bottom:1px solid var(--line);
+    font-family:var(--font-display),'Noto Serif TC',serif; font-size:13.5px; line-height:1.75;
+  }
+  .pubitem:last-child{border-bottom:none;}
+  .pubnum{color:var(--muted); font-family:var(--font-mono); font-size:12px; flex-shrink:0; padding-top:2px;}
+  .pubcite{flex:1; min-width:0; word-break:break-word;}
+  .pubcite em{font-style:italic;}
+  .statuspill.published{background:var(--accent-soft); color:var(--accent-ink);}
   .modal-hint[hidden]{display:none;}
   .itemrow{display:flex; align-items:flex-start; gap:11px; padding:11px 2px; border-bottom:1px solid var(--line);}
   .itemrow:last-child{border-bottom:none;}
@@ -750,6 +829,13 @@
 <header class="masthead">
   <div class="mast-inner">
     <div class="wordmark">
+      <span class="sig" aria-hidden="true">
+        <span class="sig-name">Woody</span>
+        <svg class="sig-swash" viewBox="0 0 132 14" fill="none" preserveAspectRatio="none">
+          <path d="M3 9.5C22 3.8 48 12 72 6.2c14-3.4 22-1.2 27 1.4 4 2 8 1.4 10-1.6"
+                stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </span>
       <h1>很無敵的工作室</h1>
     </div>
     <div class="mast-meta" id="mastMeta"></div>
@@ -872,6 +958,7 @@
         <option value="quartile">依分區</option>
         <option value="confidence">依查證信心</option>
       </select>
+      <button class="btn-ghost" id="addJournalBtn">＋ 新增期刊</button>
     </div>
     <div class="jshell">
       <aside class="jsidebar" id="sidebar"></aside>
@@ -887,7 +974,13 @@
   <section class="view active" id="view-history">
     <div class="statsrow" id="statsrow"></div>
     <div id="historyList"></div>
-    <button class="btn-primary" id="openWizardBtn" style="margin-top:14px;">＋ 新增投稿期刊文章</button>
+    <div class="hist-actions">
+      <button class="btn-primary" id="openWizardBtn">＋ 新增投稿期刊文章</button>
+      <button class="btn-ghost" id="openAuthorBook">👥 作者簿</button>
+      <button class="btn-ghost" id="openPubList">📄 著作清單（APA 7）</button>
+      <button class="btn-ghost" id="exportReportBtn">⤓ 匯出投稿報表（CSV）</button>
+    </div>
+    <p class="exporthint" id="reportHint" hidden></p>
   </section>
 
   <!-- ============ WIZARD ============ -->
@@ -982,7 +1075,8 @@
         <select id="r-status">
           <option value="draft">草稿</option><option value="submitted">已投稿</option>
           <option value="under_review">審查中</option><option value="revision">修改中</option>
-          <option value="accepted">已接受</option><option value="rejected">已拒絕</option>
+          <option value="accepted">已接受</option><option value="published">已出版</option>
+          <option value="rejected">已拒絕</option>
         </select>
       </div>
       <div class="field"><label for="r-submitted">投稿日期</label><input type="date" id="r-submitted"></div>
@@ -1002,12 +1096,94 @@
       <input type="checkbox" id="r-sync"> 把這個截止日同步到行事曆（會自動建立／更新一筆事項）
     </label>
     <div class="field"><label for="r-notes">備註</label><textarea id="r-notes"></textarea></div>
+
+    <div class="settgroup">
+      <h3>出版資訊（用來組成 APA 7 引用）</h3>
+      <div class="field2">
+        <div class="field"><label for="r-pubYear">出版年</label><input type="text" id="r-pubYear" placeholder="2026"></div>
+        <div class="field"><label for="r-volume">卷 Volume</label><input type="text" id="r-volume" placeholder="58"></div>
+      </div>
+      <div class="field2">
+        <div class="field"><label for="r-issue">期 Issue</label><input type="text" id="r-issue" placeholder="3"></div>
+        <div class="field"><label for="r-pages">頁碼</label><input type="text" id="r-pages" placeholder="412–420"></div>
+      </div>
+      <div class="field2">
+        <div class="field"><label for="r-articleNumber">文章編號（電子期刊）</label><input type="text" id="r-articleNumber" placeholder="e0123456"></div>
+        <div class="field"><label for="r-doi">DOI</label><input type="text" id="r-doi" placeholder="10.1136/bjsports-2026-000123"></div>
+      </div>
+      <div class="field">
+        <label for="r-citationOverride">自訂引用（填了就完全以這裡為準）</label>
+        <textarea id="r-citationOverride" placeholder="留空則由上面欄位自動組成"></textarea>
+      </div>
+      <div class="apabox" style="margin-top:2px;">
+        <div class="apahead"><span class="apalabel">即時預覽</span></div>
+        <div class="apatext" id="r-apaPreview"></div>
+      </div>
+    </div>
+
     <div class="field" style="margin-bottom:8px;"><label>作者</label></div>
     <div id="r-authors"></div>
     <button class="addauthorbtn" id="r-addAuthor">＋ 新增作者</button>
     <div class="modal-actions">
       <button class="btn-secondary" id="cancelRec">取消</button>
       <button class="btn-primary" id="saveRec">儲存變更</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="jeditBackdrop">
+  <div class="modal modal-wide">
+    <h2 id="jeditTitle">修正期刊資料</h2>
+    <p class="stepdesc" id="jeditIntro"></p>
+    <div id="jeditFields"></div>
+    <div class="field">
+      <label for="je-predatory">掠奪性期刊初篩</label>
+      <select id="je-predatory">
+        <option value="">維持原判定</option>
+        <option value="A">A · 有收錄證據</option>
+        <option value="D">D · 需另行複核</option>
+      </select>
+    </div>
+    <div class="field"><label for="je-note">我的備註</label><textarea id="je-note" placeholder="例如：2026-08-30 以學校 WoS 帳號查證，IF 為官方值"></textarea></div>
+    <label class="corrcheck" style="margin-bottom:14px;">
+      <input type="checkbox" id="je-confirmed"> 已用機構 Web of Science／JCR 帳號官方確認
+    </label>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="jeditRevert">還原成原始資料</button>
+      <button class="btn-secondary" id="jeditCancel">取消</button>
+      <button class="btn-primary" id="jeditSave">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="pubBackdrop">
+  <div class="modal modal-wide">
+    <h2>著作清單（APA 7）</h2>
+    <p class="stepdesc">依出版年由新到舊排列，可直接貼進履歷或升等表。複製會保留期刊名與卷數的斜體。</p>
+    <div class="pubtoolbar">
+      <label class="corrcheck" style="margin:0;">
+        <input type="checkbox" id="pubOnlyPublished" checked> 只列已接受／已出版
+      </label>
+      <span class="pubcount" id="pubCount"></span>
+    </div>
+    <div class="publist" id="pubList"></div>
+    <p class="exporthint" id="pubHint" hidden></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="pubClose">關閉</button>
+      <button class="btn-ghost" id="pubDownload">⤓ 存成 .txt</button>
+      <button class="btn-primary" id="pubCopyAll">⧉ 複製全部</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="authorBackdrop">
+  <div class="modal modal-wide">
+    <h2>作者簿</h2>
+    <p class="stepdesc">存過的作者可以在「新增投稿」與「編輯投稿紀錄」直接下拉帶入，不用每篇重打。</p>
+    <div id="authorBookList"></div>
+    <button class="addauthorbtn" id="abAdd">＋ 新增一位作者</button>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="abClose" style="width:100%;">關閉</button>
     </div>
   </div>
 </div>
@@ -1077,7 +1253,81 @@
 (function(){
 "use strict";
 
-var DATA = JSON.parse(document.getElementById('journal-data').textContent);
+/* The 238 shipped journals are read-only baseline data. A user's corrections live
+   separately as an override map (id → changed fields) plus any journals they add
+   themselves, and are merged over the baseline at load. Keeping them apart means a
+   future data update can ship new baseline rows without wiping the user's work,
+   and any single correction can be reverted to the shipped value. */
+var BASE_DATA = JSON.parse(document.getElementById('journal-data').textContent);
+var DATA = [];
+
+var journalEdits = {};
+var customJournals = [];
+try{
+  var rawE = localStorage.getItem('journalEdits');
+  if(rawE) journalEdits = JSON.parse(rawE);
+  var rawCJ = localStorage.getItem('customJournals');
+  if(rawCJ) customJournals = JSON.parse(rawCJ);
+}catch(e){}
+function saveJournalEdits(){
+  try{
+    localStorage.setItem('journalEdits', JSON.stringify(journalEdits));
+    localStorage.setItem('customJournals', JSON.stringify(customJournals));
+  }catch(e){}
+}
+
+/* Fields the user may override, mapped to the underlying property the UI reads.
+   Corrections land on the "verified*" fields so they outrank the shipped values
+   everywhere without touching the display logic. */
+var EDITABLE_FIELDS = [
+  {key:'title',              target:'title',                 label:'期刊名稱',        type:'text'},
+  {key:'abbreviation',       target:'abbreviation',          label:'期刊縮寫',        type:'text'},
+  {key:'fieldGroup',         target:'fieldGroup',            label:'學術領域',        type:'field'},
+  {key:'publisher',          target:'publisher',             label:'出版社',          type:'text'},
+  {key:'issn',               target:'issn',                  label:'ISSN',           type:'text'},
+  {key:'eissn',              target:'eissn',                 label:'eISSN',          type:'text'},
+  {key:'indexType',          target:'indexType',             label:'收錄類型',        type:'text',   hint:'例如 SCIE、SSCI、SCIE; SSCI'},
+  {key:'impactFactor',       target:'verifiedImpactFactor',  label:'Impact Factor',  type:'text'},
+  {key:'fiveYearIF',         target:'verifiedFiveYearIF',    label:'五年 IF',         type:'text'},
+  {key:'quartile',           target:'verifiedJcrQuartile',   label:'JCR 分區',        type:'text',   hint:'例如 Q1、Q2'},
+  {key:'jcrCategory',        target:'jcrCategory',           label:'JCR 學門',        type:'text'},
+  {key:'apc',                target:'apc',                   label:'APC（美元）',      type:'number'},
+  {key:'openAccessType',     target:'openAccessType',        label:'開放取用類型',     type:'text'},
+  {key:'reviewTime',         target:'reviewTime',            label:'審查時間',        type:'text'},
+  {key:'referenceStyle',     target:'referenceStyle',        label:'參考文獻格式',     type:'text'},
+  {key:'abstractWordLimit',  target:'abstractWordLimit',     label:'摘要字數上限',     type:'number'},
+  {key:'mainTextWordLimit',  target:'mainTextWordLimit',     label:'正文字數上限',     type:'number'},
+  {key:'journalUrl',         target:'journalUrl',            label:'期刊官網',        type:'text'},
+  {key:'submissionUrl',      target:'submissionUrl',         label:'投稿系統網址',     type:'text'}
+];
+
+function rebuildJournals(){
+  DATA = BASE_DATA.map(function(j){
+    var e = journalEdits[j.id];
+    if(!e) return j;
+    var m = {};
+    for(var k in j) m[k] = j[k];
+    EDITABLE_FIELDS.forEach(function(f){
+      if(e[f.key]!=null && e[f.key]!=='') m[f.target] = e[f.key];
+    });
+    if(e.predatoryScreenLevel) m.predatoryScreenLevel = e.predatoryScreenLevel;
+    m._userEdited = true;
+    m._userConfirmed = !!e.confirmed;
+    m._userNote = e.note || '';
+    m._userEditedAt = e.editedAt || '';
+    return m;
+  }).concat(customJournals.map(function(c){
+    var m = {};
+    for(var k in c) m[k] = c[k];
+    m._isCustom = true;
+    m._userEdited = true;
+    m._userConfirmed = !!c.confirmed;
+    m._userNote = c.note || '';
+    m._userEditedAt = c.editedAt || '';
+    return m;
+  }));
+}
+rebuildJournals();
 
 function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function pad(n){ return n<10?'0'+n:''+n; }
@@ -1209,11 +1459,13 @@ function ifSortVal(j){
    Listing each as its own filter row made the sidebar unreadable, so they are
    folded into one bucket; the individual group still shows on each card. */
 var MISC_FIELDS = {};
-(function(){
+function recomputeMiscFields(){
+  MISC_FIELDS = {};
   var c = {};
   DATA.forEach(function(j){ var f=j.fieldGroup||'未分類'; c[f]=(c[f]||0)+1; });
   Object.keys(c).forEach(function(f){ if(c[f]<=5) MISC_FIELDS[f]=true; });
-})();
+}
+recomputeMiscFields();
 var MISC_KEY = '__misc__';
 var MISC_LABEL = '其他臨床與自然科學';
 function fieldBucket(j){
@@ -1479,7 +1731,11 @@ function journalCardHTML(j){
     '<div class="jcard-row" data-toggle="'+esc(j.id)+'" tabindex="0">'+
       '<button class="starbtn'+(isTarget?' on':'')+'" data-star="'+esc(j.id)+'" title="設為目標期刊" aria-pressed="'+isTarget+'">'+starIcon(isTarget)+'</button>'+
       '<div class="titleblock">'+
-        '<p class="ttl">'+esc(j.title)+'</p>'+
+        '<p class="ttl">'+esc(j.title)+
+          (j._userConfirmed ? '<span class="ubadge ok" title="你已用機構帳號官方確認">✓ 已確認</span>'
+           : (j._isCustom ? '<span class="ubadge">自行新增</span>'
+           : (j._userEdited ? '<span class="ubadge">已修正</span>' : '')))+
+        '</p>'+
         '<div class="meta"><span class="fg">'+esc(j.fieldGroup||'未分類')+'</span>'+
           (j.publisher && j.publisher!=='待確認' ? '<span>'+esc(j.publisher)+'</span>' : '')+
           '<span>'+esc(rawIndexType(j))+'</span></div>'+
@@ -1507,9 +1763,11 @@ function journalCardHTML(j){
       '<div class="dfield" style="margin-bottom:12px;"><dt>投稿聲明需求</dt><div class="reqlist">'+reqBadges(j)+'</div></div>'+
       verBlock+
       '<div class="vernote"><b>掠奪性期刊初篩：</b>'+esc(j.predatoryScreenNote||'—')+'</div>'+
+      (j._userNote ? '<div class="vernote"><b>我的備註：</b>'+esc(j._userNote)+'</div>' : '')+
       '<div class="linkrow">'+
         (j.journalUrl?'<a href="'+esc(j.journalUrl)+'" target="_blank" rel="noopener">期刊官網 ↗</a>':'')+
         (j.submissionUrl?'<a href="'+esc(j.submissionUrl)+'" target="_blank" rel="noopener">投稿系統 ↗</a>':'')+
+        '<button class="btn-ghost" data-editjournal="'+esc(j.id)+'" style="margin-left:auto;">✎ 修正這筆資料</button>'+
       '</div>'+
     '</div>'+
   '</div>';
@@ -1537,6 +1795,12 @@ function renderJournals(){
     }
     el.addEventListener('click', toggle);
     el.addEventListener('keydown', function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); toggle(); } });
+  });
+  listEl.querySelectorAll('[data-editjournal]').forEach(function(el){
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      openJournalEdit(el.getAttribute('data-editjournal'));
+    });
   });
   listEl.querySelectorAll('[data-star]').forEach(function(el){
     el.addEventListener('click', function(ev){
@@ -1684,12 +1948,12 @@ function lunarDerivedHolidays(year){
     var endOfYear = new Date(year, 11, 31);
     while(cursor <= endOfYear){
       var lunar = Solar.fromYmd(cursor.getFullYear(), cursor.getMonth()+1, cursor.getDate()).getLunar();
-      var lm = lunar.getMonthInChinese();
-      var ld = lunar.getDayInChinese();
+      var lm = lunarMonthText(lunar);   // normalised, whether the build returns Chinese or numbers
+      var ld = lunarDayText(lunar);
       if(lm==='正月' && ld==='初一' && !cnyDate) cnyDate = new Date(cursor);
       else if(lm==='五月' && ld==='初五') map[mmdd(cursor)] = '端午節';
       else if(lm==='八月' && ld==='十五') map[mmdd(cursor)] = '中秋節';
-      if(lunar.getJieQi()==='清明') map[mmdd(cursor)] = '清明節';
+      if(lunar.getJieQi && lunar.getJieQi()==='清明') map[mmdd(cursor)] = '清明節';
       cursor = addDays(cursor, 1);
     }
     if(cnyDate){
@@ -1728,15 +1992,44 @@ function toTrad(s){
   if(S2T[s]) return S2T[s];
   return s.replace(/闰/g,'閏');   // 閏月：getMonthInChinese 會回「闰五月」
 }
+/* Build the 農曆 label ourselves from the numeric month/day when the library's
+   Chinese getters don't hand back Chinese. Some builds return plain numbers, and
+   concatenating those produced dates like "72" instead of 七月初二. */
+var LUNAR_MONTHS = ['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+var LUNAR_DAYS = ['','初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+function looksChinese(s){
+  return typeof s === 'string' && /[一-鿿]/.test(s);
+}
+function lunarMonthText(lunar){
+  var s = lunar.getMonthInChinese && lunar.getMonthInChinese();
+  if(looksChinese(s)) return toTrad(s);
+  var n = lunar.getMonth && lunar.getMonth();      // negative = 閏月
+  if(typeof n === 'number' && n !== 0){
+    var leap = n < 0;
+    var idx = Math.abs(n);
+    if(idx >= 1 && idx <= 12) return (leap?'閏':'') + LUNAR_MONTHS[idx-1];
+  }
+  return '';
+}
+function lunarDayText(lunar){
+  var s = lunar.getDayInChinese && lunar.getDayInChinese();
+  if(looksChinese(s)) return toTrad(s);
+  var n = lunar.getDay && lunar.getDay();
+  if(typeof n === 'number' && n >= 1 && n <= 30) return LUNAR_DAYS[n];
+  return '';
+}
 function lunarInfo(date){
   try{
     var solar = Solar.fromYmd(date.getFullYear(), date.getMonth()+1, date.getDate());
     var lunar = solar.getLunar();
     var festivals = [].concat(lunar.getFestivals()||[], lunar.getJieQi()?[lunar.getJieQi()]:[]);
-    return {
-      text: toTrad(lunar.getMonthInChinese())+toTrad(lunar.getDayInChinese()),
-      festival: toTrad(festivals.filter(Boolean)[0]) || null
-    };
+    var fest = festivals.filter(function(f){ return looksChinese(f); })[0];
+    var day = lunarDayText(lunar);
+    // show the month only on the 1st, so cells stay short the rest of the time
+    var text = (day === '初一') ? (lunarMonthText(lunar) + day) : day;
+    return { text: text, festival: fest ? toTrad(fest) : null };
   }catch(e){
     return { text:'', festival:null };
   }
@@ -2240,6 +2533,9 @@ document.addEventListener('keydown', function(e){
   document.getElementById('recBackdrop').classList.remove('open');
   document.getElementById('fileBackdrop').classList.remove('open');
   document.getElementById('backupBackdrop').classList.remove('open');
+  document.getElementById('jeditBackdrop').classList.remove('open');
+  document.getElementById('authorBackdrop').classList.remove('open');
+  document.getElementById('pubBackdrop').classList.remove('open');
 });
 
 /* ---- .ics export (downloads capability; .ics not on the extension
@@ -2357,8 +2653,124 @@ document.getElementById('exportIcsBtn').addEventListener('click', function(){
 /* ========================================================================
    SUBMISSION HISTORY
    ======================================================================== */
-var STATUS_LABEL = {draft:'草稿', submitted:'已投稿', under_review:'審查中', revision:'修改中', accepted:'已接受', rejected:'已拒絕'};
-var STATUS_CYCLE = ['draft','submitted','under_review','revision','accepted','rejected'];
+var STATUS_LABEL = {draft:'草稿', submitted:'已投稿', under_review:'審查中', revision:'修改中', accepted:'已接受', published:'已出版', rejected:'已拒絕'};
+var STATUS_CYCLE = ['draft','submitted','under_review','revision','accepted','published','rejected'];
+/* Accepted and published are different things on a CV — accepted papers cite as
+   "Advance online publication" until they get a volume and pages. */
+var PUBLISHED_STATUSES = ['accepted','published'];
+
+/* ---- APA 7 ----
+   Built from the record's own fields so a paper only has to be typed once.
+   citationOverride wins when set, because no generator gets every edge case
+   (corporate authors, translated titles, errata) and the user needs the last word. */
+function apaName(a){
+  var n = (a && a.nameEN || '').trim();
+  if(!n) return '';
+  var last, rest;
+  if(n.indexOf(',') !== -1){
+    var p = n.split(',');
+    last = p[0].trim();
+    rest = p.slice(1).join(' ').trim();
+  } else {
+    var parts = n.split(/\s+/);
+    last = parts.pop();
+    rest = parts.join(' ');
+  }
+  if(!rest) return last;
+  var initials = rest.split(/\s+/).map(function(seg){
+    return seg.split('-').map(function(x){
+      return x ? x.charAt(0).toUpperCase()+'.' : '';
+    }).filter(Boolean).join('-');
+  }).filter(Boolean).join(' ');
+  return last + (initials ? ', '+initials : '');
+}
+function apaAuthors(authors){
+  var names = (authors||[]).map(apaName).filter(Boolean);
+  if(names.length === 0) return '';
+  if(names.length === 1) return names[0];
+  if(names.length === 2) return names[0]+', & '+names[1];
+  if(names.length <= 20) return names.slice(0,-1).join(', ')+', & '+names[names.length-1];
+  // APA 7: 21+ authors → first 19, ellipsis, final author
+  return names.slice(0,19).join(', ')+', . . . '+names[names.length-1];
+}
+function apaYear(r){
+  if(r.pubYear) return String(r.pubYear);
+  var d = r.acceptedDate || r.submittedDate || '';
+  return d ? d.slice(0,4) : 'n.d.';
+}
+function buildAPA7(r){
+  if(r.citationOverride && r.citationOverride.trim()){
+    var o = r.citationOverride.trim();
+    return { text:o, html:esc(o), custom:true };
+  }
+  var authors = apaAuthors(r.authors);
+  var title = (r.titleEN || '').trim();
+  var journal = (r.journalTitle && r.journalTitle !== '（未選擇）') ? r.journalTitle : '';
+  var vol = (r.volume||'').toString().trim();
+  var iss = (r.issue||'').toString().trim();
+  var pages = (r.pages||'').toString().trim();
+  var art = (r.articleNumber||'').toString().trim();
+  var doi = (r.doi||'').toString().trim().replace(/^https?:\/\/(dx\.)?doi\.org\//i,'');
+
+  var t = '', h = '';
+  if(authors){ t += authors+' '; h += esc(authors)+' '; }
+  t += '('+apaYear(r)+'). ';  h += '('+esc(apaYear(r))+'). ';
+  if(title){
+    var end = /[.?!]$/.test(title) ? ' ' : '. ';
+    t += title+end;  h += esc(title)+end;
+  }
+  if(journal){
+    t += journal;    h += '<em>'+esc(journal)+'</em>';
+    // accepted but no volume/pages yet → advance online publication
+    if(!vol && !pages && !art && r.status === 'accepted'){
+      t += '. Advance online publication.';
+      h += '. Advance online publication.';
+    } else {
+      if(vol){ t += ', '+vol; h += ', <em>'+esc(vol)+'</em>'; }
+      if(iss){ t += '('+iss+')'; h += '('+esc(iss)+')'; }
+      if(pages){ t += ', '+pages; h += ', '+esc(pages); }
+      else if(art){ t += ', Article '+art; h += ', Article '+esc(art); }
+      t += '.'; h += '.';
+    }
+  }
+  if(doi){
+    t += ' https://doi.org/'+doi;
+    h += ' https://doi.org/'+esc(doi);
+  }
+  return { text:t.trim(), html:h.trim(), custom:false };
+}
+
+/* Clipboard: prefer rich HTML so the italics survive a paste into Word, then
+   plain text, then a legacy execCommand copy for contexts that block the API. */
+function copyToClipboard(text, html){
+  return new Promise(function(resolve, reject){
+    function legacy(){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok ? resolve() : reject();
+      }catch(e){ reject(); }
+    }
+    if(html && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+      try{
+        navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], {type:'text/html'}),
+          'text/plain': new Blob([text], {type:'text/plain'})
+        })]).then(resolve).catch(function(){
+          navigator.clipboard.writeText(text).then(resolve).catch(legacy);
+        });
+        return;
+      }catch(e){}
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(resolve).catch(legacy);
+    } else legacy();
+  });
+}
 
 var DEFAULT_RECORDS = [
   {
@@ -2414,6 +2826,30 @@ function saveRecords(){ try{ localStorage.setItem('submissionRecords', JSON.stri
 
 var FILE_LABEL = {coverletter:'Cover Letter', manuscript:'匿名英文主文', chinese:'中文投稿版本', reviewComments:'審稿意見信', response:'Point-by-point 回覆', other:'其他附件'};
 
+function apaBlock(r){
+  var cite = buildAPA7(r);
+  var ready = PUBLISHED_STATUSES.indexOf(r.status) !== -1;
+  var missing = [];
+  if(!cite.custom){
+    if(!(r.authors||[]).some(function(a){ return a.nameEN; })) missing.push('作者英文姓名');
+    if(!r.titleEN) missing.push('英文文章名稱');
+    if(!r.pubYear && !r.acceptedDate) missing.push('出版年');
+    if(r.status === 'published'){
+      if(!r.volume) missing.push('卷');
+      if(!r.pages && !r.articleNumber) missing.push('頁碼或文章編號');
+    }
+  }
+  return '<div class="apabox'+(ready?'':' dim')+'">'+
+    '<div class="apahead">'+
+      '<span class="apalabel">APA 7 引用'+(cite.custom?'（自訂）':'')+'</span>'+
+      '<button class="btn-ghost" data-copyapa="'+esc(r.id)+'">⧉ 複製</button>'+
+    '</div>'+
+    '<div class="apatext" id="apa-'+esc(r.id)+'">'+(cite.html || '<span class="apaempty">資料不足，無法組成引用。</span>')+'</div>'+
+    (missing.length ? '<div class="apamiss">還缺：'+esc(missing.join('、'))+'（在「編輯這筆投稿」補上）</div>' : '')+
+    (!ready ? '<div class="apamiss">這篇還不是已接受／已出版，引用僅供預覽。</div>' : '')+
+  '</div>';
+}
+
 function renderHistory(){
   var stats = [
     {n:records.length, l:'投稿總數'},
@@ -2467,6 +2903,7 @@ function renderHistory(){
         '<table class="authortable"><thead><tr><th>中文姓名</th><th>英文姓名</th><th>服務單位</th><th>職稱</th></tr></thead><tbody>'+authorRows+'</tbody></table>'+
         '<div class="dfield" style="margin-bottom:8px;"><dt>投稿檔案</dt></div>'+
         '<div class="filelist">'+fileChips+'</div>'+
+        apaBlock(r)+
         '<div class="subactions">'+
           '<button class="btn-ghost" data-editrec="'+esc(r.id)+'">✎ 編輯這筆投稿</button>'+
           '<button class="btn-ghost" data-cycle="'+esc(r.id)+'">更新狀態 →</button>'+
@@ -2494,6 +2931,22 @@ function renderHistory(){
       records = records.filter(function(x){ return x.id!==id; });
       items = items.filter(function(it){ return it.linkedRecordId!==id; });
       saveItems(); saveRecords(); renderHistory();
+    });
+  });
+  list.querySelectorAll('[data-copyapa]').forEach(function(el){
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      var r = records.filter(function(x){ return x.id===el.getAttribute('data-copyapa'); })[0];
+      if(!r) return;
+      var c = buildAPA7(r);
+      if(!c.text){ el.textContent = '沒有內容'; setTimeout(function(){ el.textContent='⧉ 複製'; },1800); return; }
+      copyToClipboard(c.text, c.html).then(function(){
+        el.textContent = '✓ 已複製';
+        setTimeout(function(){ el.textContent = '⧉ 複製'; }, 1800);
+      }).catch(function(){
+        el.textContent = '請手動選取複製';
+        setTimeout(function(){ el.textContent = '⧉ 複製'; }, 2500);
+      });
     });
   });
   list.querySelectorAll('[data-editrec]').forEach(function(el){
@@ -2536,6 +2989,296 @@ function renderHistory(){
 }
 var hstate = { open:{} };
 document.getElementById('openWizardBtn').addEventListener('click', function(){ resetWizard(); goto('submission','wizard'); });
+document.getElementById('openAuthorBook').addEventListener('click', openAuthorBook);
+
+/* ---- 著作清單 ---- */
+var pubBackdrop = document.getElementById('pubBackdrop');
+function pubRecords(){
+  var onlyPub = document.getElementById('pubOnlyPublished').checked;
+  return records.filter(function(r){
+    return !onlyPub || PUBLISHED_STATUSES.indexOf(r.status) !== -1;
+  }).sort(function(a,b){
+    return String(apaYear(b)).localeCompare(String(apaYear(a)));
+  });
+}
+function renderPubList(){
+  var rs = pubRecords();
+  document.getElementById('pubCount').textContent = '共 '+rs.length+' 筆';
+  var el = document.getElementById('pubList');
+  if(rs.length === 0){
+    el.innerHTML = '<div class="empty-state" style="padding:30px 10px;"><p class="big">沒有符合的著作</p>'+
+      '<p>把投稿紀錄的狀態改成「已接受」或「已出版」就會列在這裡。</p></div>';
+    return;
+  }
+  el.innerHTML = rs.map(function(r,i){
+    var c = buildAPA7(r);
+    return '<div class="pubitem"><span class="pubnum">'+(i+1)+'.</span>'+
+      '<span class="pubcite">'+(c.html||'<span class="apaempty">資料不足</span>')+'</span></div>';
+  }).join('');
+}
+function pubPlainText(){
+  return pubRecords().map(function(r){ return buildAPA7(r).text; })
+    .filter(Boolean).join('\n\n');
+}
+function pubHtml(){
+  return '<div>'+pubRecords().map(function(r){
+    return '<p>'+buildAPA7(r).html+'</p>';
+  }).join('')+'</div>';
+}
+document.getElementById('openPubList').addEventListener('click', function(){
+  document.getElementById('pubHint').hidden = true;
+  renderPubList();
+  pubBackdrop.classList.add('open');
+});
+document.getElementById('pubClose').addEventListener('click', function(){ pubBackdrop.classList.remove('open'); });
+pubBackdrop.addEventListener('click', function(ev){ if(ev.target===pubBackdrop) pubBackdrop.classList.remove('open'); });
+document.getElementById('pubOnlyPublished').addEventListener('change', renderPubList);
+document.getElementById('pubCopyAll').addEventListener('click', function(){
+  var t = pubPlainText();
+  var h = document.getElementById('pubHint');
+  if(!t){ h.textContent = '沒有可複製的內容。'; h.className='exporthint err'; h.hidden=false; return; }
+  copyToClipboard(t, pubHtml()).then(function(){
+    h.textContent = '已複製 '+pubRecords().length+' 筆，可直接貼上（Word 會保留斜體）。';
+    h.className = 'exporthint ok'; h.hidden = false;
+  }).catch(function(){
+    h.textContent = '瀏覽器擋下了複製，請直接在上面選取文字複製。';
+    h.className = 'exporthint err'; h.hidden = false;
+  });
+});
+document.getElementById('pubDownload').addEventListener('click', function(){
+  var t = pubPlainText();
+  var h = document.getElementById('pubHint');
+  if(!t){ h.textContent = '沒有可匯出的內容。'; h.className='exporthint err'; h.hidden=false; return; }
+  saveFile('很無敵的工作室_著作清單_'+ymd(new Date())+'.txt', t,
+    function(){ h.textContent='已存成 .txt。'; h.className='exporthint ok'; h.hidden=false; },
+    function(msg){ h.textContent=msg; h.className='exporthint err'; h.hidden=false; });
+});
+document.getElementById('addJournalBtn').addEventListener('click', function(){ openJournalEdit(null); });
+
+/* ---- 投稿報表 (CSV) ----
+   CSV rather than .xlsx: it needs no library, opens in Excel by double-click, and
+   can't break if a CDN is unreachable. The UTF-8 BOM is what makes Excel read the
+   Chinese correctly instead of showing mojibake. */
+function csvCell(v){
+  var s = (v==null?'':String(v));
+  return /[",\n\r]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+}
+function buildReportCSV(){
+  var head = ['期刊名稱','JCR分區','Impact Factor','收錄類型','英文文章名稱','中文文章名稱',
+              '目前狀態','投稿日期','修改日期','接受日期','下一截止日',
+              '作者(依序)','通訊作者','作者人數','附加檔案數','備註'];
+  var rows = records.map(function(r){
+    var j = DATA.filter(function(x){ return x.id===r.journalId; })[0];
+    var authors = (r.authors||[]);
+    var corr = authors.filter(function(a){ return a.corresponding; })
+                      .map(function(a){ return a.nameZH||a.nameEN||''; }).join('、');
+    return [
+      r.journalTitle || '',
+      j ? effQuartile(j) : '',
+      j ? (effIF(j)||'') : '',
+      j ? rawIndexType(j) : '',
+      r.titleEN || '', r.titleZH || '',
+      STATUS_LABEL[r.status] || r.status || '',
+      r.submittedDate || '', r.revisionDate || '', r.acceptedDate || '', r.deadlineDate || '',
+      authors.map(function(a){ return a.nameZH||a.nameEN||''; }).join('、'),
+      corr, authors.length, (r.files||[]).length,
+      r.notes || ''
+    ].map(csvCell).join(',');
+  });
+  return '﻿' + [head.map(csvCell).join(',')].concat(rows).join('\r\n') + '\r\n';
+}
+document.getElementById('exportReportBtn').addEventListener('click', function(){
+  if(records.length===0){
+    var h0 = document.getElementById('reportHint');
+    h0.textContent = '目前沒有投稿紀錄可以匯出。';
+    h0.className = 'exporthint err'; h0.hidden = false;
+    return;
+  }
+  saveFile('很無敵的工作室_投稿報表_'+ymd(new Date())+'.csv', buildReportCSV(),
+    function(){
+      var h = document.getElementById('reportHint');
+      h.textContent = '已匯出 '+records.length+' 筆投稿紀錄，可直接用 Excel 開啟。';
+      h.className = 'exporthint ok'; h.hidden = false;
+      setTimeout(function(){ h.hidden = true; }, 6000);
+    },
+    function(msg){
+      var h = document.getElementById('reportHint');
+      h.textContent = msg; h.className = 'exporthint err'; h.hidden = false;
+    });
+});
+
+/* ========================================================================
+   JOURNAL CORRECTIONS
+   ======================================================================== */
+var jeditBackdrop = document.getElementById('jeditBackdrop');
+var editingJournalId = null;   // null while adding a brand-new journal
+
+function jeditFieldId(key){ return 'je-f-'+key; }
+
+function openJournalEdit(id){
+  editingJournalId = id || null;
+  var j = id ? DATA.filter(function(x){ return x.id===id; })[0] : null;
+  var e = (id && journalEdits[id]) || (j && j._isCustom ? j : {}) || {};
+
+  document.getElementById('jeditTitle').textContent = j ? '修正期刊資料' : '新增期刊';
+  document.getElementById('jeditIntro').textContent = j
+    ? '留白的欄位會沿用原始資料。修正只存在你的瀏覽器，會跟著備份檔一起走。'
+    : '手動新增一筆資料庫裡沒有的期刊。至少要填期刊名稱。';
+  document.getElementById('jeditRevert').style.display = (id && journalEdits[id]) ? '' : 'none';
+
+  var groups = fieldGroupList();
+  document.getElementById('jeditFields').innerHTML = EDITABLE_FIELDS.map(function(f){
+    var cur = j && !j._isCustom ? j[f.target] : null;
+    var val = j && j._isCustom ? (j[f.target]!=null?j[f.target]:'') : (journalEdits[id] && journalEdits[id][f.key]!=null ? journalEdits[id][f.key] : '');
+    if(f.type==='field'){
+      var opts = groups.map(function(g){
+        return '<option value="'+esc(g)+'"'+(String(val)===g?' selected':'')+'>'+esc(g)+'</option>';
+      }).join('');
+      return '<div class="field"><label for="'+jeditFieldId(f.key)+'">'+esc(f.label)+
+        (cur?'<span class="origval">原始：'+esc(cur)+'</span>':'')+'</label>'+
+        '<select id="'+jeditFieldId(f.key)+'"><option value="">'+(j?'（沿用原始）':'請選擇…')+'</option>'+opts+'</select></div>';
+    }
+    return '<div class="field"><label for="'+jeditFieldId(f.key)+'">'+esc(f.label)+
+      (cur!=null && cur!=='' ? '<span class="origval">原始：'+esc(cur)+'</span>' : '')+'</label>'+
+      '<input type="'+(f.type==='number'?'number':'text')+'" id="'+jeditFieldId(f.key)+'" value="'+esc(val)+'"'+
+      (f.hint?' placeholder="'+esc(f.hint)+'"':'')+'></div>';
+  }).join('');
+
+  document.getElementById('je-predatory').value = (e.predatoryScreenLevel) || '';
+  document.getElementById('je-note').value = e.note || '';
+  document.getElementById('je-confirmed').checked = !!e.confirmed;
+  jeditBackdrop.classList.add('open');
+}
+
+document.getElementById('jeditCancel').addEventListener('click', function(){ jeditBackdrop.classList.remove('open'); });
+jeditBackdrop.addEventListener('click', function(ev){ if(ev.target===jeditBackdrop) jeditBackdrop.classList.remove('open'); });
+
+document.getElementById('jeditRevert').addEventListener('click', function(){
+  if(!editingJournalId) return;
+  if(!confirm('確定要把這筆期刊還原成原始資料嗎？你的修正會被清除。')) return;
+  delete journalEdits[editingJournalId];
+  saveJournalEdits(); rebuildJournals(); recomputeMiscFields();
+  jeditBackdrop.classList.remove('open');
+  renderJournals();
+});
+
+document.getElementById('jeditSave').addEventListener('click', function(){
+  var vals = {};
+  EDITABLE_FIELDS.forEach(function(f){
+    var el = document.getElementById(jeditFieldId(f.key));
+    var v = el ? el.value.trim() : '';
+    if(v!=='') vals[f.key] = (f.type==='number') ? Number(v) : v;
+  });
+  var pred = document.getElementById('je-predatory').value;
+  var note = document.getElementById('je-note').value.trim();
+  var confirmed = document.getElementById('je-confirmed').checked;
+
+  if(editingJournalId){
+    var target = customJournals.filter(function(c){ return c.id===editingJournalId; })[0];
+    if(target){
+      // a journal the user created: write the values straight onto it
+      EDITABLE_FIELDS.forEach(function(f){
+        target[f.target] = (vals[f.key]!=null) ? vals[f.key] : null;
+      });
+      if(!target.title){ alert('請填期刊名稱。'); return; }
+      target.predatoryScreenLevel = pred || 'C';
+      target.note = note; target.confirmed = confirmed; target.editedAt = ymd(new Date());
+    } else {
+      vals.predatoryScreenLevel = pred || undefined;
+      vals.note = note; vals.confirmed = confirmed; vals.editedAt = ymd(new Date());
+      journalEdits[editingJournalId] = vals;
+    }
+  } else {
+    if(!vals.title){ alert('請填期刊名稱。'); return; }
+    var nj = { id:'custom-'+Date.now(), verificationConfidence: confirmed ? 'high' : 'unconfirmed',
+               predatoryScreenLevel: pred || 'C',
+               verificationNote: note || '使用者自行新增的期刊',
+               verificationSource:'使用者自行輸入', verificationDate: ymd(new Date()),
+               predatoryScreenNote: note || '使用者自行新增，未經本工具查證。',
+               note:note, confirmed:confirmed, editedAt: ymd(new Date()) };
+    EDITABLE_FIELDS.forEach(function(f){ nj[f.target] = (vals[f.key]!=null) ? vals[f.key] : null; });
+    if(!nj.fieldGroup) nj.fieldGroup = '未分類';
+    customJournals.push(nj);
+  }
+  saveJournalEdits(); rebuildJournals(); recomputeMiscFields();
+  jeditBackdrop.classList.remove('open');
+  renderJournals();
+});
+
+/* ========================================================================
+   AUTHOR BOOK
+   ======================================================================== */
+var authorBackdrop = document.getElementById('authorBackdrop');
+var authorBook = [];
+try{
+  var rawAB = localStorage.getItem('authorBook');
+  if(rawAB) authorBook = JSON.parse(rawAB);
+}catch(e){}
+function saveAuthorBook(){ try{ localStorage.setItem('authorBook', JSON.stringify(authorBook)); }catch(e){} }
+
+function authorLabel(a){
+  return (a.nameZH || a.nameEN || '（未命名）') + (a.affZH ? '｜'+a.affZH : '');
+}
+function renderAuthorBook(){
+  var wrap = document.getElementById('authorBookList');
+  if(authorBook.length===0){
+    wrap.innerHTML = '<div class="empty-state" style="padding:26px 10px;"><p class="big">作者簿是空的</p><p>在這裡或投稿表單裡按「存入作者簿」就會出現。</p></div>';
+    return;
+  }
+  wrap.innerHTML = authorBook.map(function(a,i){
+    return '<div class="authorcard">'+
+      '<button class="rmauthor" data-abdel="'+i+'">✕ 刪除</button>'+
+      '<div class="field2">'+
+        '<div class="field"><label>中文姓名</label><input data-ab="nameZH" data-abi="'+i+'" value="'+esc(a.nameZH||'')+'"></div>'+
+        '<div class="field"><label>英文姓名</label><input data-ab="nameEN" data-abi="'+i+'" value="'+esc(a.nameEN||'')+'"></div>'+
+      '</div>'+
+      '<div class="field2">'+
+        '<div class="field"><label>中文單位</label><input data-ab="affZH" data-abi="'+i+'" value="'+esc(a.affZH||'')+'"></div>'+
+        '<div class="field"><label>英文單位</label><input data-ab="affEN" data-abi="'+i+'" value="'+esc(a.affEN||'')+'"></div>'+
+      '</div>'+
+      '<div class="field" style="margin-bottom:0;"><label>職稱</label><input data-ab="titleZH" data-abi="'+i+'" value="'+esc(a.titleZH||'')+'"></div>'+
+    '</div>';
+  }).join('');
+  wrap.querySelectorAll('[data-ab]').forEach(function(el){
+    el.addEventListener('input', function(){
+      var i = parseInt(el.getAttribute('data-abi'),10);
+      authorBook[i][el.getAttribute('data-ab')] = el.value;
+      saveAuthorBook();
+    });
+  });
+  wrap.querySelectorAll('[data-abdel]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var i = parseInt(el.getAttribute('data-abdel'),10);
+      if(!confirm('確定要從作者簿刪除「'+authorLabel(authorBook[i])+'」嗎？')) return;
+      authorBook.splice(i,1); saveAuthorBook(); renderAuthorBook();
+    });
+  });
+}
+function openAuthorBook(){ renderAuthorBook(); authorBackdrop.classList.add('open'); }
+document.getElementById('abClose').addEventListener('click', function(){ authorBackdrop.classList.remove('open'); });
+authorBackdrop.addEventListener('click', function(ev){ if(ev.target===authorBackdrop) authorBackdrop.classList.remove('open'); });
+document.getElementById('abAdd').addEventListener('click', function(){
+  authorBook.push({nameZH:'',nameEN:'',affZH:'',affEN:'',titleZH:''});
+  saveAuthorBook(); renderAuthorBook();
+});
+function authorBookOptions(){
+  return '<option value="">從作者簿帶入…</option>'+authorBook.map(function(a,i){
+    return '<option value="'+i+'">'+esc(authorLabel(a))+'</option>';
+  }).join('');
+}
+function rememberAuthor(a){
+  if(!a || (!a.nameZH && !a.nameEN)) return false;
+  var dup = authorBook.filter(function(x){
+    return (x.nameZH||'')===(a.nameZH||'') && (x.nameEN||'')===(a.nameEN||'');
+  })[0];
+  if(dup){
+    dup.affZH=a.affZH; dup.affEN=a.affEN; dup.titleZH=a.titleZH;
+  } else {
+    authorBook.push({nameZH:a.nameZH, nameEN:a.nameEN, affZH:a.affZH, affEN:a.affEN, titleZH:a.titleZH});
+  }
+  saveAuthorBook();
+  return true;
+}
 
 /* ========================================================================
    BACKUP / RESTORE
@@ -2555,14 +3298,20 @@ function collectBackup(){
     calendarItems: items,
     classSchedule: CLASS_SCHEDULE,
     submissionRecords: records,
-    journalTargets: targets
+    journalTargets: targets,
+    journalEdits: journalEdits,
+    customJournals: customJournals,
+    authorBook: authorBook
   };
 }
 function describeBackup(b){
   return '重要事項 '+(b.calendarItems||[]).length+' 筆、'+
          '課程 '+(b.classSchedule||[]).length+' 堂、'+
          '投稿紀錄 '+(b.submissionRecords||[]).length+' 筆、'+
-         '目標期刊 '+Object.keys(b.journalTargets||{}).filter(function(k){return b.journalTargets[k];}).length+' 本';
+         '目標期刊 '+Object.keys(b.journalTargets||{}).filter(function(k){return b.journalTargets[k];}).length+' 本、'+
+         '期刊修正 '+Object.keys(b.journalEdits||{}).length+' 筆、'+
+         '自建期刊 '+(b.customJournals||[]).length+' 本、'+
+         '作者簿 '+(b.authorBook||[]).length+' 位';
 }
 function openBackupModal(){
   document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
@@ -2633,6 +3382,17 @@ document.getElementById('doImport').addEventListener('click', function(){
   if(pendingImport.journalTargets && typeof pendingImport.journalTargets==='object'){
     targets = pendingImport.journalTargets;
     saveTargets();
+  }
+  if(pendingImport.journalEdits && typeof pendingImport.journalEdits==='object'){
+    journalEdits = pendingImport.journalEdits;
+  }
+  if(Array.isArray(pendingImport.customJournals)){
+    customJournals = pendingImport.customJournals;
+  }
+  saveJournalEdits(); rebuildJournals(); recomputeMiscFields();
+  if(Array.isArray(pendingImport.authorBook)){
+    authorBook = pendingImport.authorBook;
+    saveAuthorBook();
   }
   backupBackdrop.classList.remove('open');
   pendingImport = null;
@@ -2707,7 +3467,11 @@ function renderRecAuthors(){
         '<div class="field"><label>英文單位</label><input data-ra="affEN" data-ri="'+i+'" value="'+esc(a.affEN||'')+'"></div>'+
       '</div>'+
       '<div class="field" style="margin-bottom:6px;"><label>職稱</label><input data-ra="titleZH" data-ri="'+i+'" value="'+esc(a.titleZH||'')+'"></div>'+
-      '<label class="corrcheck"><input type="checkbox" data-ra="corresponding" data-ri="'+i+'"'+(a.corresponding?' checked':'')+'> 通訊作者</label>'+
+      '<div class="authorbar">'+
+        '<select class="abpick" data-rabfill="'+i+'">'+authorBookOptions()+'</select>'+
+        '<button type="button" class="btn-ghost" data-rabsave="'+i+'">存入作者簿</button>'+
+        '<label class="corrcheck" style="margin:0 0 0 auto;"><input type="checkbox" data-ra="corresponding" data-ri="'+i+'"'+(a.corresponding?' checked':'')+'> 通訊作者</label>'+
+      '</div>'+
     '</div>';
   }).join('');
   document.querySelectorAll('[data-rmrecauthor]').forEach(function(el){
@@ -2715,6 +3479,26 @@ function renderRecAuthors(){
       syncRecAuthors();
       recAuthors.splice(parseInt(el.getAttribute('data-rmrecauthor'),10),1);
       renderRecAuthors();
+    });
+  });
+  document.querySelectorAll('[data-rabfill]').forEach(function(el){
+    el.addEventListener('change', function(){
+      if(el.value==='') return;
+      syncRecAuthors();
+      var src = authorBook[parseInt(el.value,10)];
+      var i = parseInt(el.getAttribute('data-rabfill'),10);
+      if(src && recAuthors[i]){
+        ['nameZH','nameEN','affZH','affEN','titleZH'].forEach(function(k){ recAuthors[i][k] = src[k]||''; });
+      }
+      renderRecAuthors();
+    });
+  });
+  document.querySelectorAll('[data-rabsave]').forEach(function(el){
+    el.addEventListener('click', function(){
+      syncRecAuthors();
+      var i = parseInt(el.getAttribute('data-rabsave'),10);
+      if(rememberAuthor(recAuthors[i])){ renderRecAuthors(); }
+      else alert('請先填姓名再存入作者簿。');
     });
   });
 }
@@ -2742,11 +3526,52 @@ function openRecModal(id){
   document.getElementById('r-deadlineNote').value = r.deadlineNote || '';
   document.getElementById('r-sync').checked = !!r.syncToCalendar;
   document.getElementById('r-notes').value = r.notes || '';
+  document.getElementById('r-pubYear').value = r.pubYear || '';
+  document.getElementById('r-volume').value = r.volume || '';
+  document.getElementById('r-issue').value = r.issue || '';
+  document.getElementById('r-pages').value = r.pages || '';
+  document.getElementById('r-articleNumber').value = r.articleNumber || '';
+  document.getElementById('r-doi').value = r.doi || '';
+  document.getElementById('r-citationOverride').value = r.citationOverride || '';
   recAuthors = JSON.parse(JSON.stringify(r.authors || [{nameZH:'',nameEN:'',affZH:'',affEN:'',titleZH:'',corresponding:true}]));
   renderRecAuthors();
+  refreshApaPreview();
   recBackdrop.classList.add('open');
   document.getElementById('r-titleEN').focus();
 }
+/* Preview mirrors exactly what the card will show, so what you see while typing
+   is what gets copied later. */
+function draftRecFromForm(){
+  syncRecAuthors();
+  var jid = document.getElementById('r-journal').value;
+  var journal = DATA.filter(function(j){ return j.id===jid; })[0];
+  return {
+    journalTitle: journal ? journal.title : '',
+    titleEN: document.getElementById('r-titleEN').value.trim(),
+    status: document.getElementById('r-status').value,
+    acceptedDate: document.getElementById('r-accepted').value,
+    submittedDate: document.getElementById('r-submitted').value,
+    pubYear: document.getElementById('r-pubYear').value.trim(),
+    volume: document.getElementById('r-volume').value.trim(),
+    issue: document.getElementById('r-issue').value.trim(),
+    pages: document.getElementById('r-pages').value.trim(),
+    articleNumber: document.getElementById('r-articleNumber').value.trim(),
+    doi: document.getElementById('r-doi').value.trim(),
+    citationOverride: document.getElementById('r-citationOverride').value,
+    authors: recAuthors
+  };
+}
+function refreshApaPreview(){
+  var c = buildAPA7(draftRecFromForm());
+  document.getElementById('r-apaPreview').innerHTML =
+    c.html || '<span class="apaempty">補上作者英文姓名、英文標題與出版年後就會出現。</span>';
+}
+['r-journal','r-titleEN','r-status','r-accepted','r-submitted','r-pubYear','r-volume',
+ 'r-issue','r-pages','r-articleNumber','r-doi','r-citationOverride'].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el){ el.addEventListener('input', refreshApaPreview); el.addEventListener('change', refreshApaPreview); }
+});
+
 document.getElementById('cancelRec').addEventListener('click', function(){ recBackdrop.classList.remove('open'); });
 recBackdrop.addEventListener('click', function(e){ if(e.target===recBackdrop) recBackdrop.classList.remove('open'); });
 document.getElementById('r-addAuthor').addEventListener('click', function(){
@@ -2774,6 +3599,13 @@ document.getElementById('saveRec').addEventListener('click', function(){
     r.deadlineNote = document.getElementById('r-deadlineNote').value.trim();
     r.syncToCalendar = document.getElementById('r-sync').checked;
     r.notes = document.getElementById('r-notes').value.trim();
+    r.pubYear = document.getElementById('r-pubYear').value.trim();
+    r.volume = document.getElementById('r-volume').value.trim();
+    r.issue = document.getElementById('r-issue').value.trim();
+    r.pages = document.getElementById('r-pages').value.trim();
+    r.articleNumber = document.getElementById('r-articleNumber').value.trim();
+    r.doi = document.getElementById('r-doi').value.trim();
+    r.citationOverride = document.getElementById('r-citationOverride').value.trim();
     r.authors = recAuthors;
     syncRecordToCalendar(r);
   });
@@ -2813,14 +3645,14 @@ function syncRecordToCalendar(r){
 /* ========================================================================
    WIZARD
    ======================================================================== */
-var FIELD_GROUPS = (function(){
+function fieldGroupList(){
   var seen = {}, out = [];
   DATA.forEach(function(j){
     var f = j.fieldGroup || '未分類';
     if(!seen[f]){ seen[f]=true; out.push(f); }
   });
   return out;
-})();
+}
 
 var QUARTILE_RANK = {'Q1':4,'Q1（估）':3.8,'Q1/Q2交界':3.5,'Q2':3,'Q2（估）':2.8,'Q3':2,'Q3（估）':1.8,'Q4':1,'Q4（估）':0.9};
 function quartileScore(q){
@@ -2928,7 +3760,7 @@ function stepUpload(){
     ? '<div class="uploadedfile"><div>📄</div><div class="fn">'+esc(wz.fileName)+'</div><div class="sectiontags">'+
       ['摘要','介紹','方法','結果','結論'].map(function(s){ return '<span class="sectiontag">'+s+' ✓</span>'; }).join('')+'</div></div>'
     : '<button class="dropzone" id="dropzoneBtn"><div class="dzicon">⬆</div>點擊上傳論文檔案（.docx / .pdf）<br>系統會辨識摘要／介紹／方法／結果／結論版塊</button>';
-  var opts = '<option value="">請選擇…</option>'+FIELD_GROUPS.map(function(f){
+  var opts = '<option value="">請選擇…</option>'+fieldGroupList().map(function(f){
     return '<option value="'+esc(f)+'"'+(wz.researchField===f?' selected':'')+'>'+esc(f)+'</option>';
   }).join('');
   return ''+
@@ -2973,7 +3805,7 @@ function stepJournal(){
       var okQ = !q || j.title.toLowerCase().indexOf(q)!==-1 || (j.abbreviation||'').toLowerCase().indexOf(q)!==-1;
       return okQ && (!ff || j.fieldGroup===ff);
     });
-    var fieldOpts = '<option value="">全部領域</option>'+FIELD_GROUPS.map(function(f){
+    var fieldOpts = '<option value="">全部領域</option>'+fieldGroupList().map(function(f){
       return '<option value="'+esc(f)+'"'+(ff===f?' selected':'')+'>'+esc(f)+'</option>';
     }).join('');
     body = '<div class="selfselectbar">'+
@@ -3078,7 +3910,11 @@ function stepAuthors(){
         '<div class="field"><label>英文單位</label><input data-a="affEN" data-i="'+i+'" value="'+esc(a.affEN)+'"></div>'+
       '</div>'+
       '<div class="field" style="margin-bottom:6px;"><label>職稱</label><input data-a="titleZH" data-i="'+i+'" value="'+esc(a.titleZH)+'" placeholder="副教授"></div>'+
-      '<label class="corrcheck"><input type="checkbox" data-a="corresponding" data-i="'+i+'"'+(a.corresponding?' checked':'')+'> 通訊作者</label>'+
+      '<div class="authorbar">'+
+        '<select class="abpick" data-abfill="'+i+'">'+authorBookOptions()+'</select>'+
+        '<button type="button" class="btn-ghost" data-absave="'+i+'">存入作者簿</button>'+
+        '<label class="corrcheck" style="margin:0 0 0 auto;"><input type="checkbox" data-a="corresponding" data-i="'+i+'"'+(a.corresponding?' checked':'')+'> 通訊作者</label>'+
+      '</div>'+
     '</div>';
   }).join('');
 
@@ -3177,6 +4013,26 @@ function bindStepEvents(){
       syncAuthorFields();
       wz.authors.splice(parseInt(el.getAttribute('data-rmauthor'),10), 1);
       renderWizard();
+    });
+  });
+  document.querySelectorAll('[data-abfill]').forEach(function(el){
+    el.addEventListener('change', function(){
+      if(el.value==='') return;
+      syncAuthorFields();
+      var src = authorBook[parseInt(el.value,10)];
+      var i = parseInt(el.getAttribute('data-abfill'),10);
+      if(src && wz.authors[i]){
+        ['nameZH','nameEN','affZH','affEN','titleZH'].forEach(function(k){ wz.authors[i][k] = src[k]||''; });
+      }
+      renderWizard();
+    });
+  });
+  document.querySelectorAll('[data-absave]').forEach(function(el){
+    el.addEventListener('click', function(){
+      syncAuthorFields();
+      var i = parseInt(el.getAttribute('data-absave'),10);
+      if(rememberAuthor(wz.authors[i])){ renderWizard(); }
+      else alert('請先填姓名再存入作者簿。');
     });
   });
   on('f-titleEN','input', function(){ wz.titleEN = this.value; });
