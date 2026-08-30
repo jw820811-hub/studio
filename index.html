@@ -15,7 +15,7 @@
 <body>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Iansui&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
 <style>
   :root{
@@ -41,10 +41,16 @@
     --seal:#A8402C;
     --shadow: 0 1px 2px rgba(22,28,27,.05), 0 6px 20px -10px rgba(22,28,27,.18);
     --shadow-lift: 0 2px 6px rgba(22,28,27,.08), 0 14px 34px -14px rgba(22,28,27,.26);
-    --font-display:'Fraunces','Noto Serif TC',Georgia,serif;
+    /* Iansui is a Traditional-Chinese pen hand. It carries the personality of
+       the page — headings, names, the date — while tables, figures and journal
+       titles stay in the neutral faces, where a handwriting face would cost
+       more legibility than it is worth. Latin glyphs fall through to Fraunces,
+       so English journal titles keep their serif. */
+    --font-hand:'Fraunces','Iansui','LXGW WenKai TC','Noto Serif TC',Georgia,serif;
+    --font-display:'Fraunces','Iansui','Noto Serif TC',Georgia,serif;
     --font-body:'Public Sans','Noto Sans TC',-apple-system,BlinkMacSystemFont,sans-serif;
     --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,monospace;
-    --r-sm:7px; --r-md:10px; --r-lg:14px;
+    --r-sm:9px; --r-md:13px; --r-lg:18px;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -85,7 +91,7 @@
   html,body{margin:0; padding:0;}
   body{
     background:var(--paper); color:var(--ink); font-family:var(--font-body);
-    font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
   }
   ::selection{background:var(--accent-soft); color:var(--accent-ink);}
   a{color:var(--accent);}
@@ -96,14 +102,66 @@
   @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} }
 
   /* ============ app shell ============ */
-  .masthead{
-    position:sticky; top:0; z-index:40; background:var(--paper);
-    border-bottom:1px solid var(--line);
+  /* A fixed left rail carries navigation; the main column scrolls under a slim
+     sticky topbar. Below 900px the rail slides out as a drawer, because five
+     sections plus a submenu is more than a phone-width rail can hold. */
+  .shell{display:flex; min-height:100vh;}
+  .sidebar{
+    width:228px; flex-shrink:0; background:var(--paper-sunken);
+    border-right:1px solid var(--line); display:flex; flex-direction:column;
+    position:sticky; top:0; height:100vh; z-index:45;
   }
-  .mast-inner{
-    max-width:1340px; margin:0 auto; padding:16px 24px 0;
-    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  .rail-head{padding:20px 18px 16px; border-bottom:1px solid var(--line);}
+  .rail-nav{flex:1; overflow-y:auto; padding:12px 10px;}
+  .railbtn{
+    display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    background:none; border:none; border-radius:var(--r-sm); padding:10px 11px;
+    font-family:var(--font-hand); font-size:15.5px; font-weight:600;
+    color:var(--ink-soft); margin-bottom:2px;
   }
+  .railbtn svg{flex-shrink:0; opacity:.75;}
+  .railbtn:hover{background:var(--paper-raised); color:var(--ink);}
+  .railbtn.active{background:var(--accent-soft); color:var(--accent-ink);}
+  .railbtn.active svg{opacity:1;}
+  .railsub{display:none; margin:2px 0 8px 12px; padding-left:11px; border-left:1px solid var(--line-strong);}
+  .railsub.open{display:block;}
+  .railsubbtn{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    padding:6px 9px; border-radius:var(--r-sm); font-size:13.5px; color:var(--ink-soft); font-weight:500;
+  }
+  .railsubbtn:hover{color:var(--ink-soft); background:var(--paper-raised);}
+  .railsubbtn.active{color:var(--accent-ink); font-weight:600; background:var(--paper-raised);}
+  .rail-foot{padding:12px 14px; border-top:1px solid var(--line);}
+  .rail-foot .btn-ghost{width:100%;}
+
+  .main{flex:1; min-width:0; display:flex; flex-direction:column;}
+  .topbar{
+    position:sticky; top:0; z-index:38; background:var(--paper);
+    border-bottom:1px solid var(--line); display:flex; align-items:center;
+    gap:16px; padding:0 24px; min-height:57px;
+  }
+  .menubtn{
+    display:none; background:none; border:1px solid var(--line-strong);
+    border-radius:var(--r-sm); padding:6px 9px; color:var(--ink-soft); line-height:1;
+  }
+  .pagetitle{font-family:var(--font-display); font-size:17px; font-weight:600; white-space:nowrap;}
+  .scrim{
+    position:fixed; inset:0; background:rgba(14,20,19,.45); z-index:44; display:none;
+  }
+  .scrim.open{display:block;}
+  @media (max-width:900px){
+    .sidebar{
+      position:fixed; left:0; top:0; height:100vh; transform:translateX(-100%);
+      transition:transform .22s ease; box-shadow:var(--shadow-lift);
+    }
+    .sidebar.open{transform:translateX(0);}
+    .menubtn{display:block;}
+    .topbar{padding:0 16px; gap:12px;}
+  }
+  /* The header counters are a convenience, not the record — below this width they
+     would wrap under the page title and collide with it, so they step aside. */
+  @media (max-width:760px){ .topbar .mast-meta{display:none;} }
+
   /* Stacked lockup: a signed "Woody" over the studio name, with a hand-drawn
      swash tying the two lines together so the mark reads as drawn, not typed. */
   .wordmark{flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:1px;}
@@ -113,7 +171,7 @@
   }
   .sig-name{
     font-family:'Caveat','Segoe Script','Bradley Hand',cursive;
-    font-weight:700; font-size:34px; line-height:1;
+    font-weight:700; font-size:36px; line-height:1;
     letter-spacing:.5px; display:block;
   }
   .sig-swash{
@@ -121,78 +179,249 @@
   }
   .wordmark h1{
     font-family:var(--font-display),'Noto Serif TC',serif; font-weight:600;
-    font-size:16.5px; margin:0; letter-spacing:2.5px; line-height:1.2;
+    font-size:17.5px; margin:0; letter-spacing:2.5px; line-height:1.2;
     white-space:nowrap; color:var(--ink); text-indent:2.5px;
   }
   @media (max-width:520px){
-    .sig-name{font-size:28px;}
+    .sig-name{font-size:30px;}
     .sig-swash{height:8px; margin-top:-4px;}
-    .wordmark h1{font-size:14px; letter-spacing:1.6px;}
+    .wordmark h1{font-size:15px; letter-spacing:1.6px;}
   }
   .mast-meta{margin-left:auto; display:flex; gap:20px; flex-wrap:wrap; align-items:center; padding-top:4px;}
   .mast-backup{flex-shrink:0; align-self:center;}
-  .mast-meta .stat{font-size:12px; color:var(--muted); white-space:nowrap;}
+  .mast-meta .stat{font-size:13px; color:var(--muted); white-space:nowrap;}
   .mast-meta .stat b{
     font-family:var(--font-mono); color:var(--ink); font-weight:600;
-    font-variant-numeric:tabular-nums; font-size:13px;
+    font-variant-numeric:tabular-nums; font-size:14px;
   }
 
-  .nav-primary{
-    max-width:1340px; margin:0 auto; padding:14px 24px 0;
-    display:flex; gap:26px; border-bottom:1px solid transparent;
-  }
-  .navbtn{
-    background:none; border:none; padding:0 0 11px; font-size:14.5px; font-weight:600;
-    color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-1px;
-  }
-  .navbtn:hover{color:var(--ink-soft);}
-  .navbtn.active{color:var(--ink); border-bottom-color:var(--accent);}
-
-  .nav-secondary{
-    background:var(--paper-sunken); border-top:1px solid var(--line);
-  }
-  .nav-secondary-inner{
-    max-width:1340px; margin:0 auto; padding:0 24px; display:flex; gap:4px;
-  }
-  .subnavbtn{
-    background:none; border:none; padding:9px 14px; font-size:12.8px; font-weight:600;
-    color:var(--muted); border-radius:var(--r-sm) var(--r-sm) 0 0;
-  }
-  .subnavbtn:hover{color:var(--ink-soft);}
-  .subnavbtn.active{color:var(--accent-ink); background:var(--paper);}
-
-  .page{max-width:1340px; margin:0 auto; padding:22px 24px 80px;}
+  .page{max-width:1180px; margin:0 auto; padding:22px 26px 80px; width:100%;}
+  /* Rows whose left and right ends have to be read together get a shorter
+     measure than the page, so the eye is not asked to cross 1200px of nothing.
+     The journal database opts out: it pairs a filter rail with the list and
+     genuinely uses the width. */
+  .listmeasure{max-width:1000px;}
   .view{display:none;}
   .view.active{display:block;}
+
+
+  /* ============ 首頁 ============ */
+  .todaystrip{
+    display:flex; align-items:flex-end; gap:18px; flex-wrap:wrap;
+    padding:0 0 18px; border-bottom:1px solid var(--line); margin-bottom:22px;
+    max-width:1080px;
+  }
+  .todaynum{
+    font-family:var(--font-mono); font-size:54px; font-weight:600; line-height:.92;
+    font-variant-numeric:tabular-nums; color:var(--ink);
+  }
+  .todaymeta{display:flex; flex-direction:column; gap:3px; padding-bottom:3px;}
+  .todaymeta .l1{font-family:var(--font-hand); font-size:17px; font-weight:600;}
+  .todaymeta .l2{font-size:13px; color:var(--muted);}
+  .todaymeta .l2 .lu{font-family:'Noto Serif TC',serif; color:var(--brass);}
+  .todaytags{display:flex; gap:6px; flex-wrap:wrap; margin-left:auto; padding-bottom:4px;}
+  .homegrid{
+    display:grid; grid-template-columns:1.15fr 1fr; gap:22px; align-items:start;
+    max-width:1080px;
+  }
+  @media (max-width:980px){.homegrid{grid-template-columns:1fr;}}
+  .homecol{display:flex; flex-direction:column; gap:22px;}
+  .hpanel{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow); padding:16px 18px 14px;
+  }
+  .hpanel > h2{
+    font-family:var(--font-display); font-size:15.5px; font-weight:600; margin:0 0 12px;
+    display:flex; align-items:center; gap:9px;
+  }
+  .hpanel > h2 .count{
+    font-family:var(--font-mono); font-size:12px; color:var(--muted); font-weight:500;
+    font-variant-numeric:tabular-nums;
+  }
+  .hpanel > h2 .more{
+    margin-left:auto; font-size:12.5px; font-weight:600; color:var(--accent);
+    background:none; border:none; padding:2px 4px; border-radius:5px;
+  }
+  .hpanel > h2 .more:hover{background:var(--accent-soft);}
+  .hempty{font-size:13.5px; color:var(--muted); padding:4px 2px 8px; line-height:1.7;}
+
+  /* 需要注意 — severity is carried by the stripe as well as the words, so the
+     list can be triaged without reading every line. */
+  .alertlist{display:flex; flex-direction:column; gap:8px;}
+  .alertrow{
+    display:flex; align-items:flex-start; gap:11px; padding:10px 12px; border-radius:var(--r-md);
+    background:var(--paper-sunken); border-left:3px solid var(--neutral); width:100%;
+    text-align:left; border-top:none; border-right:none; border-bottom:none; font-family:inherit;
+  }
+  .alertrow:hover{background:var(--paper-raised); box-shadow:var(--shadow);}
+  .alertrow.crit{border-left-color:var(--danger); background:var(--danger-soft);}
+  .alertrow.warn{border-left-color:var(--warn); background:var(--warn-soft);}
+  .alertrow.info{border-left-color:var(--info); background:var(--info-soft);}
+  .alertrow .at{font-size:13.8px; font-weight:600; color:var(--ink); line-height:1.45;}
+  .alertrow .as{font-size:12.5px; color:var(--ink-soft); margin-top:2px; line-height:1.5;}
+  .alertrow .an{
+    margin-left:auto; font-family:var(--font-mono); font-size:12.5px; white-space:nowrap;
+    font-variant-numeric:tabular-nums; color:var(--ink-soft); padding-top:1px;
+  }
+  .alertrow.crit .an{color:var(--danger); font-weight:700;}
+
+  .hrow{display:flex; align-items:center; gap:11px; padding:8px 2px; border-bottom:1px solid var(--line);}
+  .hrow:last-child{border-bottom:none;}
+  .htime{
+    font-family:var(--font-mono); font-size:12.5px; color:var(--muted); white-space:nowrap;
+    font-variant-numeric:tabular-nums; min-width:44px;
+  }
+  .hbody{flex:1; min-width:0;}
+  .hbody .t{font-size:14px; font-weight:600; line-height:1.4;}
+  .hbody .s{font-size:12px; color:var(--muted); margin-top:2px;}
+  .hbody .t.done{text-decoration:line-through; color:var(--muted); font-weight:500;}
+  .hdot{width:8px; height:8px; border-radius:50%; flex-shrink:0; background:var(--neutral);}
+  .hdot.class{background:var(--brass);}
+  .hdot.item{background:var(--danger);}
+  .hdot.school{background:var(--info);}
+  .hdot.proj{background:var(--accent);}
+  .hdot.sub{background:var(--warn);}
+  .hdate{
+    font-family:var(--font-mono); font-size:12px; color:var(--muted); white-space:nowrap;
+    font-variant-numeric:tabular-nums; min-width:52px;
+  }
+  .hdate.soon{color:var(--danger); font-weight:700;}
+  .hcheck{
+    width:16px; height:16px; border-radius:4px; border:1.5px solid var(--line-strong);
+    background:var(--paper); flex-shrink:0; padding:0; line-height:1;
+  }
+  .hcheck.on{background:var(--ok); border-color:var(--ok); color:var(--paper); font-size:11px;}
+  .hbar{height:5px; background:var(--line); border-radius:20px; overflow:hidden; margin-top:6px;}
+  .hbar i{display:block; height:100%; background:var(--accent); border-radius:20px;}
+  .hbar.over i{background:var(--danger);}
+  /* Four actions in a fixed 2x2 grid: a flex row wrapped 3+1 at panel width,
+     which read as a mistake rather than a set. */
+  /* ---- 首頁迷你月曆 ---- */
+  .mini-head{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .mini-title{
+    font-family:var(--font-mono); font-size:14px; font-weight:600;
+    font-variant-numeric:tabular-nums; min-width:104px;
+  }
+  .mini-nav{
+    width:24px; height:24px; border-radius:6px; border:1px solid var(--line-strong);
+    background:none; color:var(--ink-soft); font-size:14px; line-height:1; padding:0;
+  }
+  .mini-nav:hover{border-color:var(--accent); color:var(--accent);}
+  .mini-today{
+    margin-left:auto; font-size:12.5px; font-weight:600; color:var(--accent);
+    background:none; border:none; padding:3px 6px; border-radius:5px;
+  }
+  .mini-today:hover{background:var(--accent-soft);}
+  .minigrid{
+    display:grid; grid-template-columns:repeat(7,1fr);
+    border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden;
+    background:var(--paper-raised);
+  }
+  .mini-dow{
+    padding:5px 2px; text-align:center; font-size:11px; font-weight:700; color:var(--muted);
+    background:var(--paper-sunken); border-bottom:1px solid var(--line);
+    border-left:1px solid var(--line);
+  }
+  .mini-dow:first-child{border-left:none;}
+  .mini-cell{
+    min-height:62px; border-left:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:4px 5px 5px; display:flex; flex-direction:column; gap:2px; align-items:stretch;
+    background:none; text-align:left; font-family:inherit; color:inherit; cursor:pointer;
+    overflow:hidden;
+  }
+  .mini-cell:nth-child(7n+1){border-left:none;}
+  .mini-cell:hover{background:var(--paper-sunken);}
+  .mini-cell.other{opacity:.38;}
+  .mini-cell.today{background:var(--accent-soft);}
+  .mini-d{
+    font-family:var(--font-mono); font-size:13px; font-weight:600; line-height:1.2;
+    font-variant-numeric:tabular-nums;
+  }
+  .mini-cell.today .mini-d{color:var(--accent-ink);}
+  .mini-cell.holiday .mini-d{color:var(--danger);}
+  .mini-chip{
+    font-size:10px; line-height:1.35; padding:1px 4px; border-radius:4px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .mini-chip.hol{background:var(--danger-soft); color:var(--danger); font-weight:700;}
+  .mini-chip.item{background:var(--danger-soft); color:var(--danger); font-weight:600;}
+  .mini-chip.class{background:var(--brass-soft); color:var(--brass);}
+  .mini-chip.school{background:var(--info-soft); color:var(--info);}
+  .mini-chip.more{color:var(--muted);}
+  .mini-dots{display:flex; gap:3px; flex-wrap:wrap; margin-top:auto;}
+  .mini-dot{width:5px; height:5px; border-radius:50%;}
+  .mini-dot.item{background:var(--danger);}
+  .mini-dot.class{background:var(--brass);}
+  .mini-dot.school{background:var(--info);}
+  /* Below this width a 7-column grid gives each day about 45px — too little for
+     any label, so the cells fall back to dots and the count. */
+  @media (max-width:700px){
+    .mini-cell{min-height:46px;}
+    .mini-chip:not(.hol){display:none;}
+  }
+
+  .quickrow{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
+  .quickrow .btn-ghost{text-align:center; padding:9px 10px;}
+
+  /* ============ 確認對話框與提示 ============ */
+  /* Confirms are raised above every other modal: most of them are opened from
+     inside one (delete a project from its editor, clear the school calendar from
+     its editor), and at equal z-index the later element in the document wins —
+     which put the question behind the dialog that asked it. */
+  #confirmBackdrop{z-index:80;}
+  .confirm-modal{max-width:390px;}
+  .confirm-modal h2{margin-bottom:10px;}
+  .confirm-body{font-size:14px; color:var(--ink-soft); line-height:1.7; white-space:pre-line;}
+  .btn-danger{
+    background:var(--danger); color:var(--paper); border:none; border-radius:var(--r-sm);
+    padding:10px 18px; font-size:14.5px; font-weight:600;
+  }
+  .btn-danger:hover{opacity:.92;}
+  .toastwrap{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+    z-index:90; display:flex; flex-direction:column; gap:8px; align-items:center;
+    pointer-events:none; padding:0 16px; width:100%; max-width:520px;
+  }
+  .toast{
+    background:var(--ink); color:var(--paper); border-radius:var(--r-md);
+    padding:11px 16px; font-size:13.8px; line-height:1.6; box-shadow:var(--shadow-lift);
+    white-space:pre-line; max-width:100%;
+  }
+  .toast.err{background:var(--danger); color:var(--paper);}
+  .toast.ok{background:var(--ok); color:var(--paper);}
 
   /* ============ shared bits ============ */
   .notice{
     background:var(--paper-raised); border:1px solid var(--line); border-left:3px solid var(--accent);
-    border-radius:var(--r-md); padding:12px 16px; font-size:12.5px; color:var(--ink-soft);
+    border-radius:var(--r-md); padding:12px 16px; font-size:13.5px; color:var(--ink-soft);
     line-height:1.65; margin-bottom:18px;
   }
   .notice b{color:var(--ink);}
+  /* Text on a filled accent/semantic ground uses --paper, not #fff: the accent
+     is dark teal in light mode but light teal in dark mode, where white text on
+     it drops to roughly 2:1 contrast. --paper inverts with the theme, so the
+     pairing stays legible in both. */
   .btn-primary{
-    background:var(--accent); color:#fff; border:none; border-radius:var(--r-sm);
-    padding:10px 18px; font-size:13.5px; font-weight:600;
+    background:var(--accent); color:var(--paper); border:none; border-radius:var(--r-sm);
+    padding:10px 18px; font-size:14.5px; font-weight:600;
   }
   .btn-primary:hover{opacity:.92;}
   .btn-primary:disabled{opacity:.45; cursor:default;}
   .btn-secondary{
     background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:var(--r-sm);
-    padding:10px 18px; font-size:13.5px; color:var(--ink-soft);
+    padding:10px 18px; font-size:14.5px; color:var(--ink-soft);
   }
   .btn-secondary:hover{border-color:var(--accent); color:var(--accent);}
   .btn-ghost{
     background:none; border:1px solid var(--line-strong); border-radius:var(--r-sm);
-    padding:7px 13px; font-size:12.5px; color:var(--ink-soft);
+    padding:7px 13px; font-size:13.5px; color:var(--ink-soft);
   }
   .btn-ghost:hover{border-color:var(--accent); color:var(--accent);}
   .field{margin-bottom:14px;}
-  .field label{display:block; font-size:11.5px; color:var(--muted); margin-bottom:5px; font-weight:600;}
+  .field label{display:block; font-size:12.5px; color:var(--muted); margin-bottom:5px; font-weight:600;}
   .field input, .field select, .field textarea{
     width:100%; border:1px solid var(--line-strong); border-radius:var(--r-sm);
-    padding:9px 11px; font-size:13px; background:var(--paper-raised); color:var(--ink);
+    padding:9px 11px; font-size:14px; background:var(--paper-raised); color:var(--ink);
   }
   .field textarea{resize:vertical; min-height:54px;}
   .field2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
@@ -209,7 +438,7 @@
   .switch.on{background:var(--accent);}
   .switch.on::after{transform:translateX(14px); background:#fff;}
   .empty-state{text-align:center; padding:56px 20px; color:var(--muted);}
-  .empty-state .big{font-family:var(--font-display); font-size:18px; color:var(--ink-soft); margin-bottom:6px;}
+  .empty-state .big{font-family:var(--font-display); font-size:19.5px; color:var(--ink-soft); margin-bottom:6px;}
 
   /* ============ CALENDAR ============ */
   .cal-toolbar{display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin-bottom:16px;}
@@ -220,28 +449,33 @@
   }
   .weeknav button:hover{border-color:var(--accent); color:var(--accent);}
   .weeklabel{
-    font-size:13px; font-weight:600; min-width:158px; text-align:center;
+    font-size:14px; font-weight:600; min-width:158px; text-align:center;
     font-variant-numeric:tabular-nums;
   }
   .todaybtn{
     background:var(--accent-soft); color:var(--accent-ink); border:none;
-    border-radius:var(--r-sm); padding:7px 13px; font-size:12.5px; font-weight:600;
+    border-radius:var(--r-sm); padding:7px 13px; font-size:13.5px; font-weight:600;
   }
   .viewtoggle{display:flex; gap:2px; background:var(--paper-sunken); border-radius:var(--r-sm); padding:3px;}
   .vtbtn{
     border:none; background:transparent; padding:6px 14px; border-radius:6px;
-    font-size:12.5px; font-weight:600; color:var(--ink-soft);
+    font-size:13.5px; font-weight:600; color:var(--ink-soft);
   }
   .vtbtn.active{background:var(--paper-raised); color:var(--accent); box-shadow:var(--shadow);}
   .cal-actions{margin-left:auto; display:flex; gap:9px; align-items:center; flex-wrap:wrap;}
   .exportmsg{
-    width:100%; font-size:12px; padding:9px 13px; border-radius:var(--r-sm); margin-top:2px;
+    width:100%; font-size:13px; padding:9px 13px; border-radius:var(--r-sm); margin-top:2px;
   }
   .exportmsg.ok{background:var(--ok-soft); color:var(--ok);}
   .exportmsg.err{background:var(--danger-soft); color:var(--danger);}
 
+  /* The seven day columns cannot shrink below a legible width, so on a phone the
+     grid scrolls sideways inside its own container instead of being clipped by
+     the rounded card — which silently hid 週六 and 週日 entirely. */
+  .gridscroll{overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px;}
+  .gridscroll[hidden]{display:none;}
   .weekgrid{
-    display:grid; grid-template-columns:54px repeat(7,1fr);
+    display:grid; grid-template-columns:54px repeat(7,1fr); min-width:660px;
     border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden;
     background:var(--paper-raised); box-shadow:var(--shadow);
   }
@@ -253,32 +487,32 @@
     padding:9px 6px 11px; text-align:center;
   }
   .daycol-head.today{background:var(--accent-soft);}
-  .dow{font-size:10.5px; color:var(--muted); font-weight:600; letter-spacing:.04em;}
+  .dow{font-size:11.5px; color:var(--muted); font-weight:600; letter-spacing:.04em;}
   .daycol-head.today .dow{color:var(--accent-ink);}
-  .solar-date{font-family:var(--font-mono); font-size:18px; font-weight:600; margin-top:2px;}
+  .solar-date{font-family:var(--font-mono); font-size:19.5px; font-weight:600; margin-top:2px;}
   .daycol-head.today .solar-date{color:var(--accent-ink);}
-  .lunar-date{font-family:'Noto Serif TC',serif; font-size:10.5px; color:var(--brass); margin-top:2px;}
+  .lunar-date{font-family:'Noto Serif TC',serif; font-size:11.5px; color:var(--brass); margin-top:2px;}
   .festival{
-    display:inline-block; margin-top:4px; font-size:9.5px; padding:1px 7px;
+    display:inline-block; margin-top:4px; font-size:10.5px; padding:1px 7px;
     border-radius:20px; background:var(--brass-soft); color:var(--brass); font-weight:600;
   }
   .hourcol{border-right:1px solid var(--line); background:var(--paper-sunken);}
   .hourcell{
     height:52px; border-bottom:1px solid var(--line); font-family:var(--font-mono);
-    font-size:10px; color:var(--muted); text-align:right; padding:2px 6px 0 0;
+    font-size:11px; color:var(--muted); text-align:right; padding:2px 6px 0 0;
   }
   .daycol-body{border-left:1px solid var(--line); position:relative;}
   .daycol-body .hourcell{border-bottom:1px dashed var(--line); background:none;}
   .daycol-body.today{background:linear-gradient(180deg, var(--accent-soft) 0%, transparent 5%);}
   .classblock{
     position:absolute; left:3px; right:3px; border-radius:var(--r-sm); padding:5px 7px;
-    font-size:11px; background:var(--brass-soft); color:var(--brass);
+    font-size:12px; background:var(--brass-soft); color:var(--brass);
     border-left:3px solid var(--brass); overflow:hidden; line-height:1.35;
   }
-  .classblock b{display:block; font-size:11.5px; font-weight:700;}
+  .classblock b{display:block; font-size:12.5px; font-weight:700;}
   .eventblock{
     position:absolute; left:3px; right:3px; border-radius:var(--r-sm); padding:4px 7px;
-    font-size:10.5px; border-left:3px solid var(--danger); background:var(--danger-soft);
+    font-size:11.5px; border-left:3px solid var(--danger); background:var(--danger-soft);
     color:var(--danger); font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
   }
   .eventblock.done{
@@ -287,28 +521,28 @@
   }
   .daycol-head.holiday .solar-date{color:var(--danger);}
   .holidaytag{
-    display:inline-block; margin-top:4px; font-size:9.5px; padding:1px 7px;
+    display:inline-block; margin-top:4px; font-size:10.5px; padding:1px 7px;
     border-radius:20px; background:var(--danger-soft); color:var(--danger); font-weight:700;
   }
   .schooltag{
-    display:block; margin-top:3px; font-size:9px; line-height:1.3; padding:1px 5px;
+    display:block; margin-top:3px; font-size:10px; line-height:1.3; padding:1px 5px;
     border-radius:4px; background:var(--info-soft); color:var(--info); font-weight:600;
   }
   .schooltag.exam{background:var(--danger-soft); color:var(--danger); font-weight:700;}
   .schooltag.deadline{background:var(--brass-soft); color:var(--brass); font-weight:700;}
   .weeknote{
-    font-size:10.5px; color:var(--info); font-weight:600; text-align:center;
+    font-size:11.5px; color:var(--info); font-weight:600; text-align:center;
     padding:6px 2px 0; line-height:1.3;
   }
 
   /* month view */
   .monthgrid{
-    display:grid; grid-template-columns:repeat(7,1fr); border:1px solid var(--line);
+    display:grid; grid-template-columns:repeat(7,1fr); min-width:660px; border:1px solid var(--line);
     border-radius:var(--r-lg); overflow:hidden; background:var(--paper-raised); box-shadow:var(--shadow);
   }
   .monthgrid[hidden]{display:none;}
   .mdow{
-    padding:9px 6px; text-align:center; font-size:11px; font-weight:700; color:var(--muted);
+    padding:9px 6px; text-align:center; font-size:12px; font-weight:700; color:var(--muted);
     background:var(--paper-sunken); border-bottom:1px solid var(--line); border-left:1px solid var(--line);
   }
   .mdow:first-child{border-left:none;}
@@ -322,17 +556,17 @@
   .mcell.other{opacity:.4;}
   .mcell.today{background:var(--accent-soft);}
   .mcell-head{display:flex; align-items:baseline; gap:6px;}
-  .mcell-d{font-family:var(--font-mono); font-size:14px; font-weight:600;}
+  .mcell-d{font-family:var(--font-mono); font-size:15px; font-weight:600;}
   .mcell.today .mcell-d{color:var(--accent-ink);}
   .mcell.holiday .mcell-d{color:var(--danger);}
-  .mcell-lunar{font-family:'Noto Serif TC',serif; font-size:10px; color:var(--brass);}
-  .mcell-hol{font-size:9.5px; color:var(--danger); font-weight:700; line-height:1.3;}
-  .mcell-school{font-size:9px; color:var(--info); font-weight:600; line-height:1.3;}
+  .mcell-lunar{font-family:'Noto Serif TC',serif; font-size:11px; color:var(--brass);}
+  .mcell-hol{font-size:10.5px; color:var(--danger); font-weight:700; line-height:1.3;}
+  .mcell-school{font-size:10px; color:var(--info); font-weight:600; line-height:1.3;}
   .mcell-school.exam{color:var(--danger); font-weight:700;}
   .mcell-school.deadline{color:var(--brass); font-weight:700;}
   .btn-ghost.on{background:var(--info-soft); color:var(--info); border-color:var(--info);}
   .mpill{
-    font-size:10px; padding:2px 6px; border-radius:5px; overflow:hidden;
+    font-size:11px; padding:2px 6px; border-radius:5px; overflow:hidden;
     text-overflow:ellipsis; white-space:nowrap; text-align:left;
   }
   .mpill.class{background:var(--brass-soft); color:var(--brass);}
@@ -341,7 +575,7 @@
   .mpill.more{color:var(--muted); background:none; padding-left:2px;}
   @media (max-width:760px){
     .mcell{min-height:76px; padding:4px;}
-    .mpill{font-size:9px;}
+    .mpill{font-size:10px;}
   }
 
   .cal-lower{margin-top:24px; display:grid; grid-template-columns:1.45fr 1fr; gap:22px; align-items:start;}
@@ -351,43 +585,43 @@
     background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-lg);
     box-shadow:var(--shadow); padding:18px 18px 10px;
   }
-  .panel h2{font-family:var(--font-display); font-size:16px; font-weight:600; margin:0 0 14px;}
+  .panel h2{font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 14px;}
   .panel-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
   .panel-head h2{margin:0;}
   .classrow{display:flex; align-items:center; gap:11px; padding:10px 2px; border-bottom:1px solid var(--line);}
   .classrow:last-child{border-bottom:none;}
   .classdow{
-    font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px;
+    font-size:12px; font-weight:700; padding:3px 9px; border-radius:20px;
     background:var(--brass-soft); color:var(--brass); flex-shrink:0;
   }
   .classbody{flex:1; min-width:0;}
-  .classbody .cn{font-size:13.5px; font-weight:600;}
-  .classbody .cm{font-family:var(--font-mono); font-size:11px; color:var(--muted); margin-top:2px;}
+  .classbody .cn{font-size:14.5px; font-weight:600;}
+  .classbody .cm{font-family:var(--font-mono); font-size:12px; color:var(--muted); margin-top:2px;}
   .rowactions{display:flex; gap:2px; flex-shrink:0;}
-  .editbtn{background:none; border:none; color:var(--muted); padding:4px 6px; border-radius:6px; font-size:12px;}
+  .editbtn{background:none; border:none; color:var(--muted); padding:4px 6px; border-radius:6px; font-size:13px;}
   .editbtn:hover{background:var(--accent-soft); color:var(--accent-ink);}
   .modal-wide{max-width:620px;}
-  .modal-hint{font-size:11.5px; color:var(--danger); margin:0 0 4px; line-height:1.55;}
+  .modal-hint{font-size:12.5px; color:var(--danger); margin:0 0 4px; line-height:1.55;}
   .modal-hint.warn{color:var(--warn);}
   .modal-hint.ok{color:var(--ok);}
   .ubadge{
-    font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:20px;
+    font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:20px;
     background:var(--neutral-soft); color:var(--neutral); margin-left:7px;
     vertical-align:middle; white-space:nowrap;
   }
   .ubadge.ok{background:var(--ok-soft); color:var(--ok);}
   .origval{
-    font-family:var(--font-mono); font-size:10px; color:var(--muted);
+    font-family:var(--font-mono); font-size:11px; color:var(--muted);
     font-weight:400; margin-left:8px; text-transform:none; letter-spacing:0;
   }
   .hist-actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
-  .exporthint{font-size:12px; margin:10px 0 0;}
+  .exporthint{font-size:13px; margin:10px 0 0;}
   .exporthint.ok{color:var(--ok);}
   .exporthint.err{color:var(--danger);}
   .exporthint[hidden]{display:none;}
   .abpick{
     border:1px solid var(--line-strong); border-radius:var(--r-sm); padding:7px 10px;
-    font-size:12px; background:var(--paper-raised); color:var(--ink); max-width:210px;
+    font-size:13px; background:var(--paper-raised); color:var(--ink); max-width:210px;
   }
   .authorbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;}
 
@@ -399,30 +633,30 @@
   .apabox.dim{border-left-color:var(--line-strong);}
   .apahead{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;}
   .apalabel{
-    font-size:10.5px; text-transform:uppercase; letter-spacing:.07em;
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.07em;
     color:var(--muted); font-weight:700;
   }
   .apatext{
-    font-family:var(--font-display),'Noto Serif TC',serif; font-size:13.5px;
+    font-family:var(--font-display),'Noto Serif TC',serif; font-size:14.5px;
     line-height:1.75; color:var(--ink); word-break:break-word;
     padding-left:2.2em; text-indent:-2.2em;   /* hanging indent, as APA prints it */
   }
   .apatext em{font-style:italic;}
   .apaempty{color:var(--muted); font-style:normal; font-family:var(--font-body);}
-  .apamiss{font-size:11.5px; color:var(--warn); margin-top:8px; line-height:1.6;}
+  .apamiss{font-size:12.5px; color:var(--warn); margin-top:8px; line-height:1.6;}
 
   .pubtoolbar{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     padding-bottom:10px; border-bottom:1px solid var(--line); margin-bottom:12px; flex-wrap:wrap;
   }
-  .pubcount{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+  .pubcount{font-family:var(--font-mono); font-size:13px; color:var(--muted);}
   .publist{max-height:46vh; overflow-y:auto; padding-right:4px;}
   .pubitem{
     display:flex; gap:10px; padding:11px 2px; border-bottom:1px solid var(--line);
-    font-family:var(--font-display),'Noto Serif TC',serif; font-size:13.5px; line-height:1.75;
+    font-family:var(--font-display),'Noto Serif TC',serif; font-size:14.5px; line-height:1.75;
   }
   .pubitem:last-child{border-bottom:none;}
-  .pubnum{color:var(--muted); font-family:var(--font-mono); font-size:12px; flex-shrink:0; padding-top:2px;}
+  .pubnum{color:var(--muted); font-family:var(--font-mono); font-size:13px; flex-shrink:0; padding-top:2px;}
   .pubcite{flex:1; min-width:0; word-break:break-word;}
   .pubcite em{font-style:italic;}
   .statuspill.published{background:var(--accent-soft); color:var(--accent-ink);}
@@ -430,7 +664,7 @@
   /* chain / review clock / rounds / checklist */
   .pillcol{display:flex; flex-direction:column; align-items:flex-end; gap:5px;}
   .clockbadge{
-    font-family:var(--font-mono); font-size:10px; font-weight:600; padding:2px 7px;
+    font-family:var(--font-mono); font-size:11px; font-weight:600; padding:2px 7px;
     border-radius:20px; background:var(--neutral-soft); color:var(--neutral); white-space:nowrap;
   }
   .clockbadge.over{background:var(--danger-soft); color:var(--danger);}
@@ -438,30 +672,30 @@
     margin-top:16px; background:var(--paper-sunken); border:1px solid var(--line);
     border-left:3px solid var(--info); border-radius:var(--r-sm); padding:12px 14px;
   }
-  .chainsum{font-family:var(--font-mono); font-size:11px; color:var(--ink-soft);}
+  .chainsum{font-family:var(--font-mono); font-size:12px; color:var(--ink-soft);}
   .chainlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px;}
   .chainitem{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12.5px;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13.5px;
     padding:6px 8px; border-radius:var(--r-sm);
   }
   .chainitem.current{background:var(--accent-soft);}
   .chainj{font-family:var(--font-display),serif; font-weight:600; color:var(--ink);}
-  .chaind{font-family:var(--font-mono); font-size:11px; color:var(--muted);}
-  .chainr{font-size:11.5px; color:var(--danger);}
+  .chaind{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+  .chainr{font-size:12.5px; color:var(--danger);}
   .roundcard{
     border:1px solid var(--line); border-radius:var(--r-md); padding:14px;
     margin-bottom:12px; background:var(--paper);
   }
   .roundhead{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:12px;}
   .roundlabel{
-    width:70px; font-weight:700; font-size:14px; border:1px solid var(--line-strong);
+    width:70px; font-weight:700; font-size:15px; border:1px solid var(--line-strong);
     border-radius:var(--r-sm); padding:6px 9px; background:var(--paper-raised); color:var(--ink);
   }
   .rounddate{
     border:1px solid var(--line-strong); border-radius:var(--r-sm); padding:6px 9px;
-    font-size:12px; background:var(--paper-raised); color:var(--ink);
+    font-size:13px; background:var(--paper-raised); color:var(--ink);
   }
-  .roundprog{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin-right:auto;}
+  .roundprog{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); margin-right:auto;}
   .cmtcard{
     border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:var(--r-sm);
     padding:12px 13px; margin-bottom:10px; position:relative; background:var(--paper-raised);
@@ -476,11 +710,11 @@
   .checkbox{
     width:20px; height:20px; border-radius:6px; border:1.5px solid var(--line-strong);
     flex-shrink:0; display:flex; align-items:center; justify-content:center;
-    font-size:12px; color:#fff; margin-top:1px;
+    font-size:13px; color:var(--paper); margin-top:1px;
   }
   .checkrow.on .checkbox{background:var(--ok); border-color:var(--ok);}
-  .ckl{font-size:13px; font-weight:600;}
-  .ckd{font-size:11.5px; color:var(--muted); margin-top:2px;}
+  .ckl{font-size:14px; font-weight:600;}
+  .ckd{font-size:12.5px; color:var(--muted); margin-top:2px;}
 
   .modal-hint[hidden]{display:none;}
   .itemrow{display:flex; align-items:flex-start; gap:11px; padding:11px 2px; border-bottom:1px solid var(--line);}
@@ -488,56 +722,56 @@
   .checkbtn{
     width:20px; height:20px; border-radius:6px; border:1.5px solid var(--line-strong);
     flex-shrink:0; margin-top:2px; display:flex; align-items:center; justify-content:center;
-    background:var(--paper-raised); font-size:12px; color:#fff; padding:0;
+    background:var(--paper-raised); font-size:13px; color:var(--paper); padding:0;
   }
   .checkbtn.on{background:var(--ok); border-color:var(--ok);}
   .itembody{flex:1; min-width:0;}
-  .itemtitle{font-size:13.5px; font-weight:600;}
+  .itemtitle{font-size:14.5px; font-weight:600;}
   .itemtitle.done{text-decoration:line-through; color:var(--muted); font-weight:500;}
   .itemmeta{display:flex; flex-wrap:wrap; gap:7px; margin-top:5px; align-items:center;}
-  .catchip{font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px;}
+  .catchip{font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px;}
   .catchip.deadline{background:var(--danger-soft); color:var(--danger);}
   .catchip.meeting{background:var(--info-soft); color:var(--info);}
   .catchip.personal{background:var(--accent-soft); color:var(--accent-ink);}
-  .repeatbadge{font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:20px; background:var(--brass-soft); color:var(--brass);}
-  .linkbadge{font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:20px; background:var(--accent-soft); color:var(--accent-ink);}
-  .duedate{font-family:var(--font-mono); font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums;}
+  .repeatbadge{font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:20px; background:var(--brass-soft); color:var(--brass);}
+  .linkbadge{font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:20px; background:var(--accent-soft); color:var(--accent-ink);}
+  .duedate{font-family:var(--font-mono); font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums;}
   .remind-icons{display:flex; gap:4px; margin-left:auto;}
   .remind-icons span{
-    font-size:10.5px; padding:1px 6px; border-radius:5px;
+    font-size:11.5px; padding:1px 6px; border-radius:5px;
     background:var(--paper-sunken); border:1px solid var(--line); color:var(--ink-soft);
   }
   .delbtn{background:none; border:none; color:var(--muted); padding:4px; border-radius:6px; flex-shrink:0;}
   .delbtn:hover{background:var(--danger-soft); color:var(--danger);}
   .settgroup{margin-bottom:18px;}
   .settgroup h3{
-    font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted);
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted);
     margin:0 0 9px; font-weight:600;
   }
   .chanrow{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:9px 2px; border-bottom:1px solid var(--line); font-size:13px;
+    padding:9px 2px; border-bottom:1px solid var(--line); font-size:14px;
   }
   .chanrow:last-child{border-bottom:none;}
   .chanleft{display:flex; align-items:center; gap:9px;}
   .chanicon{
     width:26px; height:26px; border-radius:var(--r-sm); display:flex; align-items:center;
-    justify-content:center; font-size:12px; flex-shrink:0; font-weight:700;
+    justify-content:center; font-size:13px; flex-shrink:0; font-weight:700;
   }
   .chanicon.line{background:var(--ok-soft); color:var(--ok);}
   .chanicon.email{background:var(--info-soft); color:var(--info);}
   .chanicon.push{background:var(--warn-soft); color:var(--warn);}
   .leadselect{
-    font-size:11.5px; border:1px solid var(--line-strong); border-radius:6px;
+    font-size:12.5px; border:1px solid var(--line-strong); border-radius:6px;
     padding:4px 7px; background:var(--paper-raised); color:var(--ink);
   }
   .linkbox{
     background:var(--paper-sunken); border:1px dashed var(--line-strong); border-radius:var(--r-md);
-    padding:12px; font-size:12px; color:var(--ink-soft); line-height:1.65;
+    padding:12px; font-size:13px; color:var(--ink-soft); line-height:1.65;
   }
   .linkbox code{
     background:var(--paper-raised); border:1px solid var(--line); border-radius:5px;
-    padding:1px 6px; font-family:var(--font-mono); font-size:11.5px;
+    padding:1px 6px; font-family:var(--font-mono); font-size:12.5px;
   }
 
   .modal-backdrop{
@@ -549,19 +783,21 @@
     background:var(--paper-raised); border-radius:var(--r-lg); width:100%; max-width:430px;
     padding:22px; box-shadow:var(--shadow-lift); max-height:88vh; overflow-y:auto;
   }
-  .modal h2{font-family:var(--font-display); font-size:17px; margin:0 0 16px;}
+  .modal h2{font-family:var(--font-hand); font-size:19px; margin:0 0 16px;}
   .chiprow{display:flex; gap:7px; flex-wrap:wrap;}
   .chipopt{
     border:1px solid var(--line-strong); border-radius:20px; padding:6px 12px;
-    font-size:12px; background:var(--paper); color:var(--ink-soft);
+    font-size:13px; background:var(--paper); color:var(--ink-soft);
   }
-  .chipopt.sel{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+  .chipopt.sel{background:var(--accent); border-color:var(--accent); color:var(--paper); font-weight:600;}
   .modal-actions{display:flex; gap:10px; margin-top:20px;}
   .modal-actions .btn-primary{flex:1;}
 
   /* ============ JOURNAL DATABASE ============ */
   .jshell{display:flex; gap:24px; align-items:flex-start;}
-  .jsidebar{width:238px; flex-shrink:0;}
+  /* .filter-opt bleeds 8px either side so its hover fill extends past the text;
+     without matching padding here that bleed pushed the column into overflow. */
+  .jsidebar{width:256px; flex-shrink:0; padding:0 8px;}
   .jmain{flex:1; min-width:0;}
 
   .searchrow{display:flex; gap:10px; margin-bottom:16px;}
@@ -570,11 +806,11 @@
     border:1px solid var(--line-strong); border-radius:var(--r-md); padding:9px 12px;
   }
   .search svg{flex-shrink:0; opacity:.5;}
-  .search input{border:none; background:transparent; outline:none; color:var(--ink); font-size:14px; width:100%;}
+  .search input{border:none; background:transparent; outline:none; color:var(--ink); font-size:15px; width:100%;}
   .search input::placeholder{color:var(--muted);}
   select.sortsel{
     background:var(--paper-raised); border:1px solid var(--line-strong);
-    border-radius:var(--r-md); padding:9px 10px; color:var(--ink); font-size:12.5px;
+    border-radius:var(--r-md); padding:9px 10px; color:var(--ink); font-size:13.5px;
   }
 
   .fgroup{border-bottom:1px solid var(--line);}
@@ -584,10 +820,10 @@
     padding:11px 2px; text-align:left; color:var(--ink-soft);
   }
   .fgroup-head .gname{
-    font-size:11px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; color:var(--muted);
+    font-size:12px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; color:var(--muted);
   }
   .fgroup-head .gactive{
-    font-size:11px; font-weight:600; color:var(--accent-ink); background:var(--accent-soft);
+    font-size:12px; font-weight:600; color:var(--accent-ink); background:var(--accent-soft);
     padding:1px 8px; border-radius:20px; max-width:110px; overflow:hidden;
     text-overflow:ellipsis; white-space:nowrap;
   }
@@ -600,36 +836,36 @@
   .filter-opt{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     padding:5px 8px; margin:0 -8px; cursor:pointer; border-radius:6px;
-    font-size:12.8px; color:var(--ink-soft);
+    font-size:13.8px; color:var(--ink-soft);
   }
   .filter-opt:hover{background:var(--paper-sunken); color:var(--ink);}
   .filter-opt.active{background:var(--accent-soft); color:var(--accent-ink); font-weight:600;}
   .fo-left{display:flex; align-items:center; gap:7px; overflow:hidden;}
   .fo-left .lbl{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .swatch{width:8px; height:8px; border-radius:2px; flex-shrink:0;}
-  .cnt{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); flex-shrink:0; font-variant-numeric:tabular-nums;}
+  .cnt{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); flex-shrink:0; font-variant-numeric:tabular-nums;}
   .filter-opt.active .cnt{color:var(--accent-ink);}
   .toggle-row{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:9px 11px; background:var(--paper-raised); border:1px solid var(--line);
-    border-radius:var(--r-sm); margin-bottom:8px; font-size:12.5px; cursor:pointer;
+    border-radius:var(--r-sm); margin-bottom:8px; font-size:13.5px; cursor:pointer;
   }
   .toggle-row.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-ink); font-weight:600;}
 
   .activechips{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px;}
   .achip{
-    display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600;
+    display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;
     background:var(--accent-soft); color:var(--accent-ink); border:none;
     border-radius:20px; padding:5px 8px 5px 11px;
   }
-  .achip .x{opacity:.65; font-size:13px; line-height:1;}
+  .achip .x{opacity:.65; font-size:14px; line-height:1;}
   .achip:hover .x{opacity:1;}
   .achip.clearall{background:none; border:1px solid var(--line-strong); color:var(--muted); padding:5px 11px;}
   .achip.clearall:hover{border-color:var(--danger); color:var(--danger);}
 
   .list-head{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
-    margin-bottom:10px; font-size:12.5px; color:var(--muted);
+    margin-bottom:10px; font-size:13.5px; color:var(--muted);
   }
   .jcard{
     background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-md);
@@ -648,11 +884,11 @@
   .starbtn svg{width:15px; height:15px;}
   .titleblock{min-width:0;}
   .titleblock .ttl{
-    font-family:var(--font-display); font-weight:600; font-size:15px; margin:0 0 3px;
+    font-family:var(--font-display); font-weight:600; font-size:16px; margin:0 0 3px;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
   .titleblock .meta{
-    font-size:11.5px; color:var(--muted); display:flex; gap:8px; align-items:center;
+    font-size:12.5px; color:var(--muted); display:flex; gap:8px; align-items:center;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
   .titleblock .meta .fg{
@@ -660,7 +896,7 @@
     border-radius:20px; font-weight:600; flex-shrink:0;
   }
   .chip{
-    font-family:var(--font-mono); font-size:11px; font-weight:600; padding:3px 9px;
+    font-family:var(--font-mono); font-size:12px; font-weight:600; padding:3px 9px;
     border-radius:20px; white-space:nowrap; max-width:86px;
     overflow:hidden; text-overflow:ellipsis;
   }
@@ -669,15 +905,15 @@
   .chip.q3{background:var(--warn-soft); color:var(--warn);}
   .chip.q4,.chip.unk{background:var(--neutral-soft); color:var(--neutral);}
   .ifval{
-    font-family:var(--font-mono); font-size:13.5px; font-weight:600; text-align:right;
+    font-family:var(--font-mono); font-size:14.5px; font-weight:600; text-align:right;
     min-width:52px; max-width:88px; font-variant-numeric:tabular-nums;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
-  .ifval sup{font-size:9px; color:var(--muted); margin-left:1px;}
-  .ifval .demo-mark{font-size:9.5px; color:var(--muted); font-weight:500; display:block; margin-top:1px;}
+  .ifval sup{font-size:10px; color:var(--muted); margin-left:1px;}
+  .ifval .demo-mark{font-size:10.5px; color:var(--muted); font-weight:500; display:block; margin-top:1px;}
   .ifval.empty{color:var(--muted); font-weight:400;}
   .riskbadge{
-    font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px;
+    font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:20px;
     background:var(--danger-soft); color:var(--danger); white-space:nowrap;
   }
   .confdot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
@@ -687,14 +923,14 @@
   .confdot.unconfirmed{background:var(--danger);}
   .chev{color:var(--muted); transition:transform .15s; flex-shrink:0;}
   .jcard.open .chev{transform:rotate(90deg);}
-  .detail{display:none; border-top:1px solid var(--line); padding:16px 16px 18px 62px; font-size:12.8px;}
+  .detail{display:none; border-top:1px solid var(--line); padding:16px 16px 18px 62px; font-size:13.8px;}
   .jcard.open .detail{display:block;}
   .detail-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(196px,1fr)); gap:14px 20px; margin-bottom:14px;}
-  .dfield dt{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:3px;}
-  .dfield dd{margin:0; color:var(--ink-soft); font-size:12.8px;}
+  .dfield dt{font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:3px;}
+  .dfield dd{margin:0; color:var(--ink-soft); font-size:13.8px;}
   .dfield dd.mono{font-family:var(--font-mono);}
   .reqlist{display:flex; flex-wrap:wrap; gap:6px; margin-top:3px;}
-  .req{font-size:11px; padding:2px 8px; border-radius:20px; border:1px solid var(--line-strong); color:var(--muted);}
+  .req{font-size:12px; padding:2px 8px; border-radius:20px; border:1px solid var(--line-strong); color:var(--muted);}
   .req.need{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft); font-weight:600;}
   .vernote{
     background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-sm);
@@ -702,7 +938,7 @@
   }
   .vernote b{color:var(--ink);}
   .linkrow{display:flex; gap:14px; margin-top:12px;}
-  .linkrow a{font-size:12.5px; font-weight:600; text-decoration:none;}
+  .linkrow a{font-size:13.5px; font-weight:600; text-decoration:none;}
 
   @media (max-width:900px){
     .jshell{flex-direction:column;}
@@ -716,57 +952,64 @@
   .statsrow{display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;}
   .stattile{
     background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-md);
-    padding:12px 16px; min-width:108px; box-shadow:var(--shadow);
+    padding:11px 15px 12px; box-shadow:var(--shadow);
+    flex:1 1 0; min-width:112px; max-width:186px;
   }
-  .stattile .n{font-family:var(--font-mono); font-size:21px; font-weight:600; font-variant-numeric:tabular-nums;}
-  .stattile .l{font-size:11px; color:var(--muted); margin-top:2px;}
+  .stattile .n{
+    font-family:var(--font-mono); font-size:21.5px; font-weight:600; line-height:1.15;
+    font-variant-numeric:tabular-nums; letter-spacing:-.01em;
+  }
+  .stattile .l{font-size:12px; color:var(--muted); margin-top:3px; letter-spacing:.02em;}
   .subcard{
     background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-md);
     box-shadow:var(--shadow); margin-bottom:10px; overflow:hidden;
   }
   .subcard-row{
-    display:grid; grid-template-columns:1fr auto auto auto 18px; gap:15px;
+    display:grid; grid-template-columns:minmax(0,1fr) auto auto auto 18px; gap:15px;
     align-items:center; padding:14px 16px; cursor:pointer;
   }
   @media (max-width:760px){ .subcard-row{grid-template-columns:1fr auto 18px;} .subcard-row .subdate{display:none;} }
-  .subcard-titles .en{font-family:var(--font-display); font-weight:600; font-size:14.5px;}
-  .subcard-titles .zh{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .subcard-titles .en{font-family:var(--font-display); font-weight:600; font-size:15.5px;}
+  .subcard-titles .zh{font-size:13px; color:var(--ink-soft); margin-top:2px;}
   .subcard-titles .journal{
-    font-family:var(--font-display); font-size:14px; color:var(--accent);
+    font-family:var(--font-display); font-size:15px; color:var(--accent);
     margin-top:7px; font-weight:600;
   }
-  .statuspill{font-size:11px; font-weight:700; padding:4px 11px; border-radius:20px; white-space:nowrap;}
+  .statuspill{font-size:12px; font-weight:700; padding:4px 11px; border-radius:20px; white-space:nowrap;}
   .statuspill.draft{background:var(--neutral-soft); color:var(--neutral);}
   .statuspill.submitted{background:var(--info-soft); color:var(--info);}
   .statuspill.under_review{background:var(--warn-soft); color:var(--warn);}
   .statuspill.revision{background:var(--warn-soft); color:var(--warn);}
   .statuspill.accepted{background:var(--ok-soft); color:var(--ok);}
   .statuspill.rejected{background:var(--danger-soft); color:var(--danger);}
-  .subdate{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); text-align:right; font-variant-numeric:tabular-nums;}
+  .subdate{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); text-align:right; font-variant-numeric:tabular-nums;}
   .iconbtn{background:none; border:none; color:var(--muted); padding:5px; border-radius:6px;}
   .iconbtn:hover{background:var(--danger-soft); color:var(--danger);}
   .subcard.open .chev{transform:rotate(90deg);}
   .subdetail{display:none; border-top:1px solid var(--line); padding:16px;}
   .subcard.open .subdetail{display:block;}
-  .dgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(186px,1fr)); gap:14px 20px; margin-bottom:16px;}
-  .authortable{width:100%; border-collapse:collapse; margin-bottom:16px; font-size:12.5px;}
+  .dgrid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,220px));
+    gap:15px 26px; margin-bottom:20px; justify-content:start;
+  }
+  .authortable{width:100%; border-collapse:collapse; margin-bottom:16px; font-size:13.5px;}
   .authortable th{
-    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em;
     color:var(--muted); padding:6px 10px; border-bottom:1px solid var(--line); font-weight:600;
   }
   .authortable td{padding:7px 10px; border-bottom:1px solid var(--line); color:var(--ink-soft);}
   .authortable tr:last-child td{border-bottom:none;}
   .corrbadge{
-    font-size:9.5px; background:var(--accent-soft); color:var(--accent-ink);
+    font-size:10.5px; background:var(--accent-soft); color:var(--accent-ink);
     padding:1px 7px; border-radius:20px; font-weight:700; margin-left:6px;
   }
   .filelist{display:flex; flex-wrap:wrap; gap:8px;}
   .filechip{
-    display:flex; align-items:center; gap:6px; font-size:11.5px; background:var(--paper-sunken);
+    display:flex; align-items:center; gap:6px; font-size:12.5px; background:var(--paper-sunken);
     border:1px solid var(--line); border-radius:var(--r-sm); padding:6px 10px; color:var(--ink-soft);
   }
-  .filechip .ver{font-family:var(--font-mono); font-size:10px; color:var(--muted);}
-  .chipx{background:none; border:none; color:var(--muted); padding:0 0 0 3px; font-size:11px; line-height:1;}
+  .filechip .ver{font-family:var(--font-mono); font-size:11px; color:var(--muted);}
+  .chipx{background:none; border:none; color:var(--muted); padding:0 0 0 3px; font-size:12px; line-height:1;}
   .chipx:hover{color:var(--danger);}
   .subactions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
 
@@ -776,34 +1019,34 @@
   .stepnum{
     width:26px; height:26px; border-radius:50%; background:var(--paper-raised);
     border:1.5px solid var(--line-strong); display:flex; align-items:center;
-    justify-content:center; font-size:11.5px; font-weight:700; color:var(--muted); font-family:var(--font-mono);
+    justify-content:center; font-size:12.5px; font-weight:700; color:var(--muted); font-family:var(--font-mono);
   }
-  .step.active .stepnum{background:var(--accent); border-color:var(--accent); color:#fff;}
-  .step.done .stepnum{background:var(--ok); border-color:var(--ok); color:#fff;}
-  .steplabel{font-size:12px; font-weight:600; color:var(--muted); white-space:nowrap;}
+  .step.active .stepnum{background:var(--accent); border-color:var(--accent); color:var(--paper);}
+  .step.done .stepnum{background:var(--ok); border-color:var(--ok); color:var(--paper);}
+  .steplabel{font-size:13px; font-weight:600; color:var(--muted); white-space:nowrap;}
   .step.active .steplabel{color:var(--ink);}
   .stepline{width:32px; height:1.5px; background:var(--line-strong); margin:0 10px; flex-shrink:0;}
   .stepcard{
     background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--r-lg);
     box-shadow:var(--shadow); padding:26px;
   }
-  .stepcard h2{font-family:var(--font-display); font-size:18px; margin:0 0 6px;}
-  .stepdesc{font-size:12.8px; color:var(--muted); margin:0 0 20px; line-height:1.65;}
+  .stepcard h2{font-family:var(--font-display); font-size:19.5px; margin:0 0 6px;}
+  .stepdesc{font-size:13.8px; color:var(--muted); margin:0 0 20px; line-height:1.65;}
   .dropzone{
     border:2px dashed var(--line-strong); border-radius:var(--r-md); padding:32px 20px;
     text-align:center; color:var(--muted); cursor:pointer; margin-bottom:16px; width:100%;
-    background:none; font-size:13px;
+    background:none; font-size:14px;
   }
   .dropzone:hover{border-color:var(--accent); color:var(--accent);}
-  .dzicon{font-size:24px; margin-bottom:8px;}
+  .dzicon{font-size:25.5px; margin-bottom:8px;}
   .uploadedfile{
     display:flex; align-items:center; gap:12px; background:var(--accent-soft);
     border-radius:var(--r-md); padding:12px 15px; margin-bottom:16px; flex-wrap:wrap;
   }
-  .uploadedfile .fn{font-weight:600; font-size:13px; color:var(--accent-ink); flex:1;}
+  .uploadedfile .fn{font-weight:600; font-size:14px; color:var(--accent-ink); flex:1;}
   .sectiontags{display:flex; gap:6px; flex-wrap:wrap;}
   .sectiontag{
-    font-size:10.5px; background:var(--paper-raised); border:1px solid var(--line-strong);
+    font-size:11.5px; background:var(--paper-raised); border:1px solid var(--line-strong);
     border-radius:20px; padding:2px 9px; color:var(--ink-soft);
   }
   .journaltabs{
@@ -812,7 +1055,7 @@
   }
   .jtabbtn{
     border:none; background:transparent; padding:6px 13px; border-radius:6px;
-    font-size:12px; font-weight:600; color:var(--ink-soft);
+    font-size:13px; font-weight:600; color:var(--ink-soft);
   }
   .jtabbtn.active{background:var(--paper-raised); color:var(--accent); box-shadow:var(--shadow);}
   .recjournal{
@@ -822,25 +1065,25 @@
   }
   .recjournal:hover{border-color:var(--line-strong);}
   .recjournal.selected{border-color:var(--accent); background:var(--accent-soft);}
-  .rank{font-family:var(--font-mono); font-size:15px; font-weight:700; color:var(--muted); width:20px; text-align:center; flex-shrink:0;}
+  .rank{font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--muted); width:20px; text-align:center; flex-shrink:0;}
   .recjournal.selected .rank{color:var(--accent);}
   .recbody{flex:1; min-width:0;}
-  .recbody .t{font-family:var(--font-display); font-weight:600; font-size:14px;}
-  .recbody .m{font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.5;}
-  .matchscore{font-family:var(--font-mono); font-size:12.5px; font-weight:700; color:var(--ok); text-align:right; flex-shrink:0;}
-  .matchscore .l{font-size:9.5px; color:var(--muted); font-weight:400; display:block;}
+  .recbody .t{font-family:var(--font-display); font-weight:600; font-size:15px;}
+  .recbody .m{font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5;}
+  .matchscore{font-family:var(--font-mono); font-size:13.5px; font-weight:700; color:var(--ok); text-align:right; flex-shrink:0;}
+  .matchscore .l{font-size:10.5px; color:var(--muted); font-weight:400; display:block;}
   .dwarn{
-    font-size:10px; font-weight:700; color:var(--danger); background:var(--danger-soft);
+    font-size:11px; font-weight:700; color:var(--danger); background:var(--danger-soft);
     border-radius:20px; padding:1px 8px; white-space:nowrap;
   }
   .selfselectbar{display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
   .selfselectbar .searchbox{
     flex:1; min-width:180px; border:1px solid var(--line-strong); border-radius:var(--r-sm);
-    padding:9px 12px; font-size:13px; background:var(--paper); color:var(--ink);
+    padding:9px 12px; font-size:14px; background:var(--paper); color:var(--ink);
   }
   .selfselectbar select{
     border:1px solid var(--line-strong); border-radius:var(--r-sm); padding:9px 11px;
-    font-size:12.5px; background:var(--paper); color:var(--ink); max-width:220px;
+    font-size:13.5px; background:var(--paper); color:var(--ink); max-width:220px;
   }
   .journallist{max-height:400px; overflow-y:auto; padding-right:4px;}
   .togglegrid{display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; margin-bottom:20px;}
@@ -848,20 +1091,20 @@
   .togglerow{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:9px 12px; background:var(--paper); border:1px solid var(--line);
-    border-radius:var(--r-sm); font-size:12.8px; cursor:pointer;
+    border-radius:var(--r-sm); font-size:13.8px; cursor:pointer;
   }
   .genbtn{
-    background:var(--accent); color:#fff; border:none; border-radius:var(--r-sm);
-    padding:11px 18px; font-size:13.5px; font-weight:600;
+    background:var(--accent); color:var(--paper); border:none; border-radius:var(--r-sm);
+    padding:11px 18px; font-size:14.5px; font-weight:600;
   }
   .progressbar{height:6px; background:var(--line); border-radius:20px; overflow:hidden; margin:16px 0;}
   .progressbar .fill{height:100%; background:var(--accent); transition:width .25s;}
   .diffbox{
     background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
-    padding:14px 16px; font-size:12.8px; line-height:1.75; margin-top:14px;
+    padding:14px 16px; font-size:13.8px; line-height:1.75; margin-top:14px;
   }
   .diffbox .lbl{
-    font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
     margin-bottom:6px; font-weight:700;
   }
   .diffbox del{background:var(--danger-soft); color:var(--danger); padding:1px 3px; border-radius:3px;}
@@ -872,21 +1115,21 @@
     border-radius:var(--r-md); padding:11px 14px; flex-wrap:wrap; background:var(--paper);
   }
   .docrow.generated{border-color:var(--ok); background:var(--ok-soft);}
-  .docname{flex:1; font-size:13px; font-weight:600; min-width:180px;}
-  .docsub{font-size:11px; color:var(--muted); font-weight:400; margin-top:1px;}
+  .docname{flex:1; font-size:14px; font-weight:600; min-width:180px;}
+  .docsub{font-size:12px; color:var(--muted); font-weight:400; margin-top:1px;}
   .docgenbtn{
-    font-size:11.5px; background:var(--paper-raised); border:1px solid var(--line-strong);
+    font-size:12.5px; background:var(--paper-raised); border:1px solid var(--line-strong);
     border-radius:6px; padding:6px 11px; color:var(--ink-soft);
   }
   .docgenbtn:hover{border-color:var(--accent); color:var(--accent);}
   .docpreview{
     flex-basis:100%; margin-top:8px; padding-top:8px; border-top:1px dashed var(--line-strong);
-    font-size:11.8px; color:var(--ink-soft); line-height:1.7;
+    font-size:12.8px; color:var(--ink-soft); line-height:1.7;
     display:flex; flex-direction:column; align-items:flex-start; gap:8px;
   }
   .doctext{
     margin:0; width:100%; white-space:pre-wrap; word-break:break-word;
-    font-family:var(--font-body); font-size:12px; line-height:1.75; color:var(--ink-soft);
+    font-family:var(--font-body); font-size:13px; line-height:1.75; color:var(--ink-soft);
     background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-sm);
     padding:11px 13px; max-height:230px; overflow-y:auto;
   }
@@ -895,16 +1138,16 @@
     padding:14px 15px 15px; margin-bottom:18px;
   }
   .docsettings h3{
-    font-size:10.5px; text-transform:uppercase; letter-spacing:.07em;
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.07em;
     color:var(--muted); margin:0 0 12px; font-weight:700;
   }
   .authorcard{border:1px solid var(--line); border-radius:var(--r-md); padding:13px 14px; margin-bottom:10px; position:relative; background:var(--paper);}
-  .rmauthor{position:absolute; top:9px; right:9px; background:none; border:none; color:var(--muted); font-size:12px;}
+  .rmauthor{position:absolute; top:9px; right:9px; background:none; border:none; color:var(--muted); font-size:13px;}
   .rmauthor:hover{color:var(--danger);}
-  .corrcheck{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--ink-soft); margin-top:4px;}
+  .corrcheck{display:flex; align-items:center; gap:7px; font-size:13px; color:var(--ink-soft); margin-top:4px;}
   .corrcheck input{width:auto;}
   .addauthorbtn{
-    font-size:12.5px; color:var(--accent); background:none; border:1px dashed var(--line-strong);
+    font-size:13.5px; color:var(--accent); background:none; border:1px dashed var(--line-strong);
     border-radius:var(--r-sm); padding:10px; width:100%; font-weight:600;
   }
   .addauthorbtn:hover{border-color:var(--accent);}
@@ -925,25 +1168,36 @@
     justify-content:center; overflow:hidden; border-bottom:1px solid var(--line);
   }
   .bcard-photo img{width:100%; height:100%; object-fit:cover; display:block;}
-  .bcard-photo .nophoto{font-size:11px; color:var(--muted);}
+  .bcard-photo .nophoto{font-size:12px; color:var(--muted);}
+  /* No photo is the common case for a hand-typed card, so give it an identity
+     mark rather than an apology. */
+  .bcard-photo.mono{
+    background:linear-gradient(160deg, var(--accent-soft), var(--paper-sunken));
+    height:74px;
+  }
+  .bcard-photo .initial{
+    font-family:var(--font-display),'Noto Serif TC',serif; font-size:32px; font-weight:600;
+    color:var(--accent); opacity:.62; line-height:1;
+  }
   .bcard-body{padding:11px 13px 13px; flex:1;}
-  .bcard-name{font-size:15px; font-weight:700; line-height:1.3;}
-  .bcard-name .en{font-size:11.5px; color:var(--muted); font-weight:500; margin-left:6px;}
-  .bcard-title{font-size:11.5px; color:var(--brass); margin-top:3px; font-weight:600;}
-  .bcard-org{font-size:12px; color:var(--ink-soft); margin-top:4px; line-height:1.4;}
+  .bcard-name{font-family:var(--font-hand); font-size:18px; font-weight:600; line-height:1.35;}
+  .bcard-name .en{font-size:12.5px; color:var(--muted); font-weight:500; margin-left:6px;}
+  .bcard-title{font-size:12.5px; color:var(--brass); margin-top:3px; font-weight:600;}
+  .bcard-org{font-size:13px; color:var(--ink-soft); margin-top:4px; line-height:1.4;}
   .bcard-contact{
-    font-family:var(--font-mono); font-size:10.5px; color:var(--muted);
-    margin-top:7px; line-height:1.55; word-break:break-all;
+    font-family:var(--font-mono); font-size:11.5px; color:var(--muted);
+    margin-top:7px; line-height:1.55; overflow-wrap:anywhere;
   }
   .bcard-tagrow{margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;}
-  .btag{font-size:9.5px; padding:1px 7px; border-radius:20px; background:var(--accent-soft); color:var(--accent-ink);}
+  .btag{font-size:10.5px; padding:1px 7px; border-radius:20px; background:var(--accent-soft); color:var(--accent-ink);}
   .cardempty{
     border:1px dashed var(--line-strong); border-radius:var(--r-lg); padding:40px 20px;
-    text-align:center; color:var(--muted); font-size:13px; line-height:1.8;
+    text-align:center; color:var(--muted); font-size:14.5px; line-height:1.9;
+    font-family:var(--font-hand);
   }
   .ocrbox{
     background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-md);
-    padding:11px 13px; font-size:12px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;
+    padding:11px 13px; font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;
   }
   .ocrbox b{color:var(--ink);}
   .ocrbar{height:5px; background:var(--line); border-radius:20px; overflow:hidden; margin-top:8px;}
@@ -955,15 +1209,15 @@
     border:1px solid var(--line); border-radius:var(--r-md); margin-bottom:14px; display:block;
   }
   .rawtoggle{
-    background:none; border:none; color:var(--muted); font-size:11.5px;
+    background:none; border:none; color:var(--muted); font-size:12.5px;
     text-decoration:underline; padding:0; margin-bottom:12px;
   }
   .rawtext{
-    font-family:var(--font-mono); font-size:11px; white-space:pre-wrap; color:var(--muted);
+    font-family:var(--font-mono); font-size:12px; white-space:pre-wrap; color:var(--muted);
     background:var(--paper-sunken); border:1px solid var(--line); border-radius:var(--r-sm);
     padding:10px; margin-bottom:14px; max-height:170px; overflow:auto;
   }
-  .cardqueue{font-size:11.5px; color:var(--muted); margin:0 0 10px;}
+  .cardqueue{font-size:12.5px; color:var(--muted); margin:0 0 10px;}
 
   /* ============ 計畫管理 ============ */
   .projbar{display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
@@ -973,8 +1227,8 @@
     align-items:center; padding:14px 16px; cursor:pointer;
   }
   @media (max-width:760px){ .pcard-row{grid-template-columns:1fr auto 18px;} .pcard-row .subdate{display:none;} }
-  .pname{font-family:var(--font-display); font-weight:600; font-size:15px; line-height:1.35;}
-  .pmeta{font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.5;}
+  .pname{font-family:var(--font-hand); font-weight:600; font-size:17px; line-height:1.4;}
+  .pmeta{font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.5;}
   .pmeta .sep{opacity:.5; margin:0 6px;}
   .statuspill.p_draft{background:var(--neutral-soft); color:var(--neutral);}
   .statuspill.p_review{background:var(--info-soft); color:var(--info);}
@@ -983,42 +1237,53 @@
   .pbudgetbar{height:6px; background:var(--line); border-radius:20px; overflow:hidden; margin-top:9px; max-width:340px;}
   .pbudgetbar i{display:block; height:100%; background:var(--accent); border-radius:20px;}
   .pbudgetbar.over i{background:var(--danger);}
-  .pmoney{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin-top:5px; font-variant-numeric:tabular-nums;}
+  .pmoney{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); margin-top:5px; font-variant-numeric:tabular-nums;}
   .pmoney b{color:var(--ink-soft);}
   .pmoney .over{color:var(--danger); font-weight:700;}
   .psection{margin-bottom:18px;}
+  .psection{margin-bottom:22px;}
   .psection h3{
-    font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
-    margin:0 0 9px; font-weight:700; display:flex; align-items:center; gap:10px;
+    font-family:var(--font-hand); font-size:14px; letter-spacing:.02em; color:var(--ink-soft);
+    margin:0 0 10px; font-weight:700; display:flex; align-items:center; gap:10px;
   }
-  .psection h3 .btn-ghost{padding:3px 9px; font-size:11px; text-transform:none; letter-spacing:0;}
-  .ptable{width:100%; border-collapse:collapse; font-size:12.5px;}
+  /* a hairline that runs to the end of the section marks where it starts and
+     how far it reaches, which a bare label does not */
+  .psection h3::after{
+    content:""; flex:1; height:1px; background:var(--line); min-width:12px;
+  }
+  .psection h3 .btn-ghost{order:2;}
+  .psection h3::after{order:1;}
+  .psection h3 .btn-ghost{padding:3px 9px; font-size:12px; text-transform:none; letter-spacing:0;}
+  .ptablewrap{overflow-x:auto;}
+  .ptable{width:100%; border-collapse:collapse; font-size:13.5px; max-width:820px;}
+  .ptable.wide{max-width:1000px;}
+  .ptable td:first-child{color:var(--ink); font-weight:500;}
   .ptable th{
-    text-align:left; font-size:10.5px; letter-spacing:.05em; color:var(--muted);
-    padding:6px 10px; border-bottom:1px solid var(--line); font-weight:600; white-space:nowrap;
+    text-align:left; font-size:11.5px; letter-spacing:.05em; color:var(--muted);
+    padding:5px 10px 7px; border-bottom:1px solid var(--line-strong); font-weight:600; white-space:nowrap;
   }
-  .ptable td{padding:7px 10px; border-bottom:1px solid var(--line); color:var(--ink-soft);}
+  .ptable td{padding:8px 10px; border-bottom:1px solid var(--line); color:var(--ink-soft);}
   .ptable tr:last-child td{border-bottom:none;}
   .ptable .num{font-family:var(--font-mono); text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
   .ptable tfoot td{font-weight:700; color:var(--ink); border-top:1px solid var(--line-strong); border-bottom:none;}
   .ptable .neg{color:var(--danger); font-weight:700;}
   .ptable .zero{color:var(--muted);}
   .ptable .rowact{text-align:right; white-space:nowrap; width:1%;}
-  .expill{font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:20px; white-space:nowrap;}
+  .expill{font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:20px; white-space:nowrap;}
   .expill.planned{background:var(--neutral-soft); color:var(--neutral);}
   .expill.paid{background:var(--info-soft); color:var(--info);}
   .expill.settled{background:var(--ok-soft); color:var(--ok);}
   .pfilerow{
     display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid var(--line);
-    font-size:12.5px;
+    font-size:13.5px;
   }
   .pfilerow:last-child{border-bottom:none;}
   .pfilerow .fn{flex:1; min-width:0; word-break:break-all;}
-  .pfilerow .fs{font-family:var(--font-mono); font-size:10.5px; color:var(--muted); white-space:nowrap;}
-  .pempty{font-size:12px; color:var(--muted); padding:8px 2px;}
-  .msrow{display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid var(--line); font-size:12.5px;}
+  .pfilerow .fs{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); white-space:nowrap;}
+  .pempty{font-size:13px; color:var(--muted); padding:8px 2px;}
+  .msrow{display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid var(--line); font-size:13.5px;}
   .msrow:last-child{border-bottom:none;}
-  .msrow .md{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); white-space:nowrap;}
+  .msrow .md{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); white-space:nowrap;}
   .msrow .ml{flex:1; min-width:0;}
   .budgetgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px;}
   .budgetgrid .field{margin-bottom:0;}
@@ -1027,8 +1292,11 @@
   .memberrow .field{margin-bottom:0;}
 </style>
 
-<header class="masthead">
-  <div class="mast-inner">
+<div class="scrim" id="navScrim"></div>
+<div class="shell">
+
+<aside class="sidebar" id="navRail">
+  <div class="rail-head">
     <div class="wordmark">
       <span class="sig" aria-hidden="true">
         <span class="sig-name">Woody</span>
@@ -1039,25 +1307,91 @@
       </span>
       <h1>很無敵的工作室</h1>
     </div>
-    <div class="mast-meta" id="mastMeta"></div>
-    <button class="btn-ghost mast-backup" id="backupBtn">⤓ 資料備份</button>
   </div>
-  <nav class="nav-primary">
-    <button class="navbtn" id="nav-calendar">行事曆</button>
-    <button class="navbtn active" id="nav-submission">投稿系統</button>
-    <button class="navbtn" id="nav-projects">計畫管理</button>
-    <button class="navbtn" id="nav-cards">名片簿</button>
-  </nav>
-  <div class="nav-secondary" id="navSecondary">
-    <div class="nav-secondary-inner">
-      <button class="subnavbtn" data-sub="wizard">新增投稿</button>
-      <button class="subnavbtn active" data-sub="history">投稿歷程</button>
-      <button class="subnavbtn" data-sub="journals">期刊資料庫</button>
+  <nav class="rail-nav">
+    <button class="railbtn" id="nav-home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/></svg>首頁</button>
+    <button class="railbtn" id="nav-calendar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>行事曆</button>
+    <button class="railbtn" id="nav-submission"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4.5 4.5V21H6z"/><path d="M14 3v5h4.5"/><path d="M9 13h6M9 17h4"/></svg>投稿系統</button>
+    <div class="railsub" id="navSecondary">
+      <button class="railsubbtn" data-sub="wizard">新增投稿</button>
+      <button class="railsubbtn" data-sub="history">投稿歷程</button>
+      <button class="railsubbtn" data-sub="journals">期刊資料庫</button>
     </div>
+    <button class="railbtn" id="nav-projects"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3.5 7.5h17V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19z"/><path d="M9 7.5V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5v2"/><path d="M3.5 12h17"/></svg>計畫管理</button>
+    <button class="railbtn" id="nav-cards"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.2"/><circle cx="8.6" cy="11" r="2.1"/><path d="M5.4 16c.5-1.5 1.8-2.3 3.2-2.3S11.3 14.5 11.8 16M14.6 10h4M14.6 13.4h4"/></svg>名片簿</button>
+  </nav>
+  <div class="rail-foot">
+    <button class="btn-ghost" id="backupBtn">⤓ 資料備份</button>
   </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <button class="menubtn" id="menuBtn" aria-label="開啟選單">☰</button>
+  <div class="pagetitle" id="pageTitle">首頁</div>
+  <div class="mast-meta" id="mastMeta"></div>
 </header>
 
 <div class="page">
+
+  <!-- ============ 首頁 ============ -->
+  <section class="view active" id="view-home">
+    <div class="todaystrip">
+      <div class="todaynum" id="homeDay">—</div>
+      <div class="todaymeta">
+        <div class="l1" id="homeDate"></div>
+        <div class="l2" id="homeSub"></div>
+      </div>
+      <div class="todaytags" id="homeTags"></div>
+    </div>
+    <div class="homegrid">
+      <div class="homecol">
+        <div class="hpanel" id="panelAlerts" hidden>
+          <h2>需要注意 <span class="count" id="alertCount"></span></h2>
+          <div class="alertlist" id="homeAlerts"></div>
+        </div>
+        <div class="hpanel">
+          <div class="mini-head">
+            <button class="mini-nav" id="miniPrev" aria-label="上個月">‹</button>
+            <div class="mini-title" id="miniTitle"></div>
+            <button class="mini-nav" id="miniNext" aria-label="下個月">›</button>
+            <button class="mini-today" id="miniToday">回到本月</button>
+            <button class="more" data-go="calendar" style="margin-left:0;">開啟行事曆 →</button>
+          </div>
+          <div class="minigrid" id="miniGrid"></div>
+        </div>
+        <div class="hpanel">
+          <h2>今天 <span class="count" id="todayCount"></span></h2>
+          <div id="homeToday"></div>
+        </div>
+        <div class="hpanel">
+          <h2>接下來十四天 <button class="more" data-go="calendar">月檢視 →</button></h2>
+          <div id="homeUpcoming"></div>
+        </div>
+      </div>
+      <div class="homecol">
+        <div class="hpanel">
+          <h2>快速動作</h2>
+          <div class="quickrow">
+            <button class="btn-ghost" id="qAddItem">＋ 事項</button>
+            <button class="btn-ghost" id="qAddSub">＋ 投稿</button>
+            <button class="btn-ghost" id="qAddProj">＋ 計畫</button>
+            <button class="btn-ghost" id="qAddCard">＋ 名片</button>
+          </div>
+        </div>
+        <div class="hpanel">
+          <h2>進行中的投稿 <span class="count" id="subCount"></span>
+            <button class="more" data-go="history">投稿歷程 →</button></h2>
+          <div id="homeSubs"></div>
+        </div>
+        <div class="hpanel">
+          <h2>執行中的計畫 <span class="count" id="projCount"></span>
+            <button class="more" data-go="projects">計畫管理 →</button></h2>
+          <div id="homeProjects"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ CALENDAR ============ -->
   <section class="view" id="view-calendar">
@@ -1080,8 +1414,8 @@
       <div class="exportmsg" id="exportMsg" hidden></div>
     </div>
 
-    <div class="weekgrid" id="weekgrid"></div>
-    <div class="monthgrid" id="monthgrid" hidden></div>
+    <div class="gridscroll" id="weekScroll"><div class="weekgrid" id="weekgrid"></div></div>
+    <div class="gridscroll" id="monthScroll" hidden><div class="monthgrid" id="monthgrid"></div></div>
 
     <div class="cal-lower">
       <div class="panel">
@@ -1176,10 +1510,10 @@
   </section>
 
   <!-- ============ SUBMISSION HISTORY ============ -->
-  <section class="view active" id="view-history">
-    <div class="statsrow" id="statsrow"></div>
-    <div id="historyList"></div>
-    <div class="hist-actions">
+  <section class="view" id="view-history">
+    <div class="statsrow listmeasure" id="statsrow"></div>
+    <div class="listmeasure" id="historyList"></div>
+    <div class="hist-actions listmeasure">
       <button class="btn-primary" id="openWizardBtn">＋ 新增投稿期刊文章</button>
       <button class="btn-ghost" id="openAuthorBook">👥 作者簿</button>
       <button class="btn-ghost" id="openPubList">📄 著作清單（APA 7）</button>
@@ -1190,8 +1524,8 @@
 
   <!-- ============ 計畫管理 ============ -->
   <section class="view" id="view-projects">
-    <div class="statsrow" id="projStats"></div>
-    <div class="projbar">
+    <div class="statsrow listmeasure" id="projStats"></div>
+    <div class="projbar listmeasure">
       <button class="btn-primary" id="newProject">＋ 新增計畫</button>
       <select class="sortsel" id="projStatusFilter">
         <option value="">全部狀態</option>
@@ -1209,8 +1543,8 @@
       <button class="btn-ghost" id="projExportCsv">⤓ 計畫報表 CSV</button>
       <button class="btn-ghost" id="projExportExpenses">⤓ 支出明細 CSV</button>
     </div>
-    <p class="exporthint" id="projHint" hidden></p>
-    <div id="projList"></div>
+    <p class="exporthint listmeasure" id="projHint" hidden></p>
+    <div class="listmeasure" id="projList"></div>
   </section>
 
   <!-- ============ 名片簿 ============ -->
@@ -1240,6 +1574,8 @@
     <div class="stepcard" id="stepcard"></div>
   </section>
 
+</div>
+</main>
 </div>
 
 <div class="modal-backdrop" id="modalBackdrop">
@@ -1498,6 +1834,18 @@
     </div>
   </div>
 </div>
+
+<div class="modal-backdrop" id="confirmBackdrop">
+  <div class="modal confirm-modal">
+    <h2 id="confirmTitle">確認</h2>
+    <div class="confirm-body" id="confirmBody"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="confirmOk">確定</button>
+      <button class="btn-secondary" id="confirmCancel">取消</button>
+    </div>
+  </div>
+</div>
+<div class="toastwrap" id="toastWrap"></div>
 
 <div class="modal-backdrop" id="schoolBackdrop">
   <div class="modal modal-wide">
@@ -1828,29 +2176,90 @@ function rebuildJournals(){
 rebuildJournals();
 
 function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ========================================================================
+   確認對話框與提示
+   ========================================================================
+   The browser's own confirm() and alert() are silently ignored when the page
+   runs inside a sandboxed frame without allow-modals — which is exactly how the
+   published preview is hosted. Every delete then appeared to do nothing. These
+   in-page replacements work in every environment and match the rest of the UI. */
+var confirmBackdrop = document.getElementById('confirmBackdrop');
+var confirmPending = null, confirmCancelled = null;
+
+function askConfirm(opts, onYes){
+  if(typeof opts === 'string') opts = {body: opts};
+  confirmPending = onYes;
+  confirmCancelled = opts.onCancel || null;
+  document.getElementById('confirmTitle').textContent = opts.title || '確認';
+  document.getElementById('confirmBody').textContent = opts.body || '';
+  var ok = document.getElementById('confirmOk');
+  ok.textContent = opts.ok || '確定';
+  ok.className = opts.danger ? 'btn-danger' : 'btn-primary';
+  document.getElementById('confirmCancel').textContent = opts.cancel || '取消';
+  confirmBackdrop.classList.add('open');
+  ok.focus();
+}
+/* Dismissing counts as "no": the cancel callback runs for the button, the
+   backdrop and Escape alike, so a caller can rely on exactly one of the two
+   branches happening. */
+function closeConfirm(ran){
+  confirmBackdrop.classList.remove('open');
+  var no = confirmCancelled;
+  confirmPending = null; confirmCancelled = null;
+  if(!ran && no) no();
+}
+document.getElementById('confirmOk').addEventListener('click', function(){
+  var fn = confirmPending;
+  closeConfirm(true);
+  if(fn) fn();
+});
+document.getElementById('confirmCancel').addEventListener('click', function(){ closeConfirm(); });
+confirmBackdrop.addEventListener('click', function(e){ if(e.target===confirmBackdrop) closeConfirm(); });
+document.addEventListener('keydown', function(e){
+  if(!confirmBackdrop.classList.contains('open')) return;
+  if(e.key === 'Escape'){ e.preventDefault(); closeConfirm(); }
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('confirmOk').click(); }
+});
+
+/* Replaces alert(): a transient message that never blocks the page. */
+function showToast(msg, kind, ms){
+  var wrap = document.getElementById('toastWrap');
+  var el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' '+kind : '');
+  el.setAttribute('role', 'status');
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, ms || 5000);
+}
 function pad(n){ return n<10?'0'+n:''+n; }
 function ymd(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 
 /* ========================================================================
    NAVIGATION
    ======================================================================== */
-/* Lands on 投稿歷程 rather than the leftmost tab: opening straight into a blank
-   wizard would start a new submission every visit, while the history list is
-   what you actually come back to check. */
-var nav = { primary:'submission', sub:'history' };
+/* Opens on 首頁: the one screen that says what needs attention today, assembled
+   from the other sections. Within 投稿系統 the default is 投稿歷程 rather than the
+   wizard, which would otherwise start a new submission on every visit. */
+var nav = { primary:'home', sub:'history' };
+var NAV_TITLE = {home:'首頁', calendar:'行事曆', projects:'計畫管理', cards:'名片簿'};
+var SUB_TITLE = {wizard:'新增投稿', history:'投稿歷程', journals:'期刊資料庫'};
 
 function applyNav(){
-  document.getElementById('nav-calendar').classList.toggle('active', nav.primary==='calendar');
-  document.getElementById('nav-submission').classList.toggle('active', nav.primary==='submission');
-  document.getElementById('nav-projects').classList.toggle('active', nav.primary==='projects');
-  document.getElementById('nav-cards').classList.toggle('active', nav.primary==='cards');
-  document.getElementById('navSecondary').style.display = nav.primary==='submission' ? '' : 'none';
-
-  document.querySelectorAll('.subnavbtn').forEach(function(b){
-    b.classList.toggle('active', b.getAttribute('data-sub')===nav.sub);
+  ['home','calendar','submission','projects','cards'].forEach(function(k){
+    document.getElementById('nav-'+k).classList.toggle('active', nav.primary===k);
   });
+  document.getElementById('navSecondary').classList.toggle('open', nav.primary==='submission');
 
-  var viewId = nav.primary==='calendar' ? 'view-calendar'
+  document.querySelectorAll('.railsubbtn').forEach(function(b){
+    b.classList.toggle('active', nav.primary==='submission' && b.getAttribute('data-sub')===nav.sub);
+  });
+  document.getElementById('pageTitle').textContent = nav.primary==='submission'
+    ? ('投稿系統・'+(SUB_TITLE[nav.sub]||''))
+    : (NAV_TITLE[nav.primary]||'');
+
+  var viewId = nav.primary==='home' ? 'view-home'
+             : nav.primary==='calendar' ? 'view-calendar'
              : nav.primary==='projects' ? 'view-projects'
              : nav.primary==='cards' ? 'view-cards'
              : ('view-'+nav.sub);
@@ -1859,6 +2268,7 @@ function applyNav(){
   });
 
   renderMastMeta();
+  if(nav.primary==='home') renderHome();
   if(nav.primary==='calendar') renderCalendarAll();
   if(nav.primary==='projects') renderProjects();
   if(nav.primary==='cards') renderCards();
@@ -1872,16 +2282,45 @@ function goto(primary, sub){
   applyNav();
   window.scrollTo({top:0, behavior:'smooth'});
 }
-document.getElementById('nav-calendar').addEventListener('click', function(){ goto('calendar'); });
+/* The drawer is only real below 900px; above it these are no-ops. */
+function closeNavDrawer(){
+  document.getElementById('navRail').classList.remove('open');
+  document.getElementById('navScrim').classList.remove('open');
+}
+document.getElementById('menuBtn').addEventListener('click', function(){
+  document.getElementById('navRail').classList.add('open');
+  document.getElementById('navScrim').classList.add('open');
+});
+document.getElementById('navScrim').addEventListener('click', closeNavDrawer);
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeNavDrawer(); });
+
+/* 投稿系統 is the one section with a submenu: selecting it on a phone has to
+   leave the drawer open so its three pages are reachable. Every other choice is
+   a destination, so the drawer gets out of the way. */
+document.getElementById('nav-home').addEventListener('click', function(){ goto('home'); closeNavDrawer(); });
+document.getElementById('nav-calendar').addEventListener('click', function(){ goto('calendar'); closeNavDrawer(); });
 document.getElementById('nav-submission').addEventListener('click', function(){ goto('submission'); });
-document.getElementById('nav-projects').addEventListener('click', function(){ goto('projects'); });
-document.getElementById('nav-cards').addEventListener('click', function(){ goto('cards'); });
-document.querySelectorAll('.subnavbtn').forEach(function(b){
-  b.addEventListener('click', function(){ goto('submission', b.getAttribute('data-sub')); });
+document.getElementById('nav-projects').addEventListener('click', function(){ goto('projects'); closeNavDrawer(); });
+document.getElementById('nav-cards').addEventListener('click', function(){ goto('cards'); closeNavDrawer(); });
+document.querySelectorAll('.railsubbtn').forEach(function(b){
+  b.addEventListener('click', function(){
+    goto('submission', b.getAttribute('data-sub'));
+    closeNavDrawer();
+  });
 });
 
 function renderMastMeta(){
   var el = document.getElementById('mastMeta');
+  if(nav.primary==='home'){
+    var open = items.filter(function(it){ return !it.done && nextOccurrenceFrom(it, stripTime(today)); }).length;
+    var live = records.filter(function(r){
+      return ['submitted','under_review','revision'].indexOf(r.status) !== -1; }).length;
+    el.innerHTML = '<span class="stat">未完成事項 <b>'+open+'</b></span>'+
+                   '<span class="stat">進行中投稿 <b>'+live+'</b></span>'+
+                   '<span class="stat">執行中計畫 <b>'+
+                     projects.filter(function(p){ return p.status==='active'; }).length+'</b></span>';
+    return;
+  }
   if(nav.primary==='projects'){
     var act = projects.filter(function(p){ return p.status==='active'; }).length;
     var spent = projects.reduce(function(a,p){ return a + spentTotal(p); }, 0);
@@ -2804,9 +3243,11 @@ function renderItems(){
     el.addEventListener('click', function(){
       var id = el.getAttribute('data-del');
       var it = items.filter(function(x){ return x.id===id; })[0];
-      if(it && !confirm('確定要刪除「'+it.title+'」嗎？'+(it.repeat!=='none'?'\n這會刪除整個重複系列。':''))) return;
-      items = items.filter(function(x){ return x.id!==id; });
-      saveItems(); renderCalendarAll();
+      askConfirm({title:'刪除事項', danger:true, ok:'刪除',
+        body:'確定要刪除「'+(it?it.title:'')+'」嗎？'+(it && it.repeat!=='none'?'\n這會刪除整個重複系列。':'')}, function(){
+        items = items.filter(function(x){ return x.id!==id; });
+        saveItems(); renderCalendarAll();
+      });
     });
   });
 }
@@ -2841,9 +3282,11 @@ function renderClasses(){
     el.addEventListener('click', function(){
       var id = el.getAttribute('data-delclass');
       var c = CLASS_SCHEDULE.filter(function(x){ return x.id===id; })[0];
-      if(c && !confirm('確定要從課表刪除「'+c.title+'」嗎？')) return;
-      CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(x){ return x.id!==id; });
-      saveClasses(); renderCalendarAll();
+      askConfirm({title:'刪除課程', danger:true, ok:'刪除',
+        body:'確定要從課表刪除「'+(c?c.title:'')+'」嗎？'}, function(){
+        CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(x){ return x.id!==id; });
+        saveClasses(); renderCalendarAll();
+      });
     });
   });
 }
@@ -2913,14 +3356,18 @@ function renderCalendarAll(){
   var sw = document.getElementById('toggleSchool');
   if(sw) sw.classList.toggle('on', showSchool);
   var week = calView==='week';
-  document.getElementById('weekgrid').hidden = !week;
-  document.getElementById('monthgrid').hidden = week;
+  document.getElementById('weekScroll').hidden = !week;
+  document.getElementById('monthScroll').hidden = week;
   document.querySelectorAll('[data-calview]').forEach(function(b){
     b.classList.toggle('active', b.getAttribute('data-calview')===calView);
   });
   renderCalLabel();
   if(week) renderGrid(); else renderMonth();
   renderItems(); renderClasses(); renderMastMeta();
+  /* The home page reads the same items and classes, so a change made from there
+     (or anywhere else) has to redraw it too — otherwise an event added from the
+     mini calendar does not appear until you navigate away and back. */
+  if(nav.primary === 'home') renderHome();
 }
 
 document.getElementById('prevWeek').addEventListener('click', function(){
@@ -3057,17 +3504,21 @@ document.getElementById('scAddEvent').addEventListener('click', function(){
   if(last.length) last[last.length-1].focus();
 });
 document.getElementById('scClear').addEventListener('click', function(){
-  if(!confirm('確定要清空所有校內行程嗎？（學期設定會保留）')) return;
-  syncSchoolDraft();
-  draftSchool.events = [];
-  renderSchoolEditor();
+  askConfirm({title:'清空校內行程', danger:true, ok:'清空',
+    body:'確定要清空所有校內行程嗎？（學期設定會保留）'}, function(){
+    syncSchoolDraft();
+    draftSchool.events = [];
+    renderSchoolEditor();
+  });
 });
 document.getElementById('scReset').addEventListener('click', function(){
-  if(!confirm('確定要還原成內建的美和科技大學 115 學年度校曆嗎？你自己的修改會被覆蓋。')) return;
-  draftSchool = {name: DEFAULT_SCHOOL_NAME,
-                 terms: DEFAULT_SCHOOL_TERMS.map(function(t){ return {name:t.name,start:t.start,end:t.end}; }),
-                 events: DEFAULT_SCHOOL_EVENTS.map(function(e){ return {d:e.d,to:e.to||'',t:e.t,k:e.k}; })};
-  renderSchoolEditor();
+  askConfirm({title:'還原內建校曆', ok:'還原',
+    body:'確定要還原成內建的 '+DEFAULT_SCHOOL_NAME+' 校曆嗎？你自己的修改會被覆蓋。'}, function(){
+    draftSchool = {name: DEFAULT_SCHOOL_NAME,
+                   terms: DEFAULT_SCHOOL_TERMS.map(function(t){ return {name:t.name,start:t.start,end:t.end}; }),
+                   events: DEFAULT_SCHOOL_EVENTS.map(function(e){ return {d:e.d,to:e.to||'',t:e.t,k:e.k}; })};
+    renderSchoolEditor();
+  });
 });
 function showSchoolHint(msg, isErr){
   var el = document.getElementById('schoolHint');
@@ -3778,8 +4229,10 @@ function clockBadge(r){
   var title = c.expected
     ? ('已經過 '+c.days+' 天，該刊預估審查時間 '+c.expected.label+(c.overdue?'（已超過）':''))
     : ('已經過 '+c.days+' 天');
+  /* A bare "43 天" says nothing on its own — name what is being counted. */
+  var lead = r.status==='revision' ? '修改' : '審查';
   return '<span class="clockbadge'+(c.overdue?' over':'')+'" title="'+esc(title)+'">'+
-    (c.overdue?'⏰ ':'')+c.days+' 天</span>';
+    (c.overdue?'⏰ ':'')+lead+' '+c.days+' 天</span>';
 }
 
 function chainBlock(r){
@@ -3913,10 +4366,12 @@ function renderHistory(){
       ev.stopPropagation();
       var id = el.getAttribute('data-delrec');
       var r = records.filter(function(x){ return x.id===id; })[0];
-      if(r && !confirm('確定要刪除投稿紀錄「'+(r.titleEN||r.titleZH)+'」嗎？此動作無法復原。')) return;
-      records = records.filter(function(x){ return x.id!==id; });
-      items = items.filter(function(it){ return it.linkedRecordId!==id; });
-      saveItems(); saveRecords(); renderHistory();
+      askConfirm({title:'刪除投稿紀錄', danger:true, ok:'刪除',
+        body:'確定要刪除「'+(r ? (r.titleEN||r.titleZH||'') : '')+'」嗎？此動作無法復原。'}, function(){
+        records = records.filter(function(x){ return x.id!==id; });
+        items = items.filter(function(it){ return it.linkedRecordId!==id; });
+        saveItems(); saveRecords(); renderHistory();
+      });
     });
   });
   list.querySelectorAll('[data-copyapa]').forEach(function(el){
@@ -4091,9 +4546,11 @@ function renderRounds(){
     btn.addEventListener('click', function(){
       var ri = parseInt(btn.getAttribute('data-rmround'),10);
       var rr = roundsRec();
-      if(!confirm('確定要刪除「'+(rr.reviewRounds[ri].label||'這一輪')+'」及其所有意見與回覆嗎？')) return;
-      rr.reviewRounds.splice(ri,1);
-      saveRecords(); renderRounds(); renderHistory();
+      askConfirm({title:'刪除審查輪次', danger:true, ok:'刪除',
+        body:'確定要刪除「'+(rr.reviewRounds[ri].label||'這一輪')+'」及其所有意見與回覆嗎？'}, function(){
+        rr.reviewRounds.splice(ri,1);
+        saveRecords(); renderRounds(); renderHistory();
+      });
     });
   });
   el.querySelectorAll('[data-copyresp]').forEach(function(btn){
@@ -4463,11 +4920,14 @@ jeditBackdrop.addEventListener('click', function(ev){ if(ev.target===jeditBackdr
 
 document.getElementById('jeditRevert').addEventListener('click', function(){
   if(!editingJournalId) return;
-  if(!confirm('確定要把這筆期刊還原成原始資料嗎？你的修正會被清除。')) return;
-  delete journalEdits[editingJournalId];
-  saveJournalEdits(); rebuildJournals(); recomputeMiscFields();
-  jeditBackdrop.classList.remove('open');
-  renderJournals();
+  var revertId = editingJournalId;
+  askConfirm({title:'還原期刊資料', ok:'還原',
+    body:'確定要把這筆期刊還原成原始資料嗎？你的修正會被清除。'}, function(){
+    delete journalEdits[revertId];
+    saveJournalEdits(); rebuildJournals(); recomputeMiscFields();
+    jeditBackdrop.classList.remove('open');
+    renderJournals();
+  });
 });
 
 document.getElementById('jeditSave').addEventListener('click', function(){
@@ -4488,7 +4948,7 @@ document.getElementById('jeditSave').addEventListener('click', function(){
       EDITABLE_FIELDS.forEach(function(f){
         target[f.target] = (vals[f.key]!=null) ? vals[f.key] : null;
       });
-      if(!target.title){ alert('請填期刊名稱。'); return; }
+      if(!target.title){ showToast('請填期刊名稱。', 'err'); return; }
       target.predatoryScreenLevel = pred || 'C';
       target.note = note; target.confirmed = confirmed; target.editedAt = ymd(new Date());
     } else {
@@ -4497,7 +4957,7 @@ document.getElementById('jeditSave').addEventListener('click', function(){
       journalEdits[editingJournalId] = vals;
     }
   } else {
-    if(!vals.title){ alert('請填期刊名稱。'); return; }
+    if(!vals.title){ showToast('請填期刊名稱。', 'err'); return; }
     var nj = { id:'custom-'+Date.now(), verificationConfidence: confirmed ? 'high' : 'unconfirmed',
                predatoryScreenLevel: pred || 'C',
                verificationNote: note || '使用者自行新增的期刊',
@@ -4557,8 +5017,10 @@ function renderAuthorBook(){
   wrap.querySelectorAll('[data-abdel]').forEach(function(el){
     el.addEventListener('click', function(){
       var i = parseInt(el.getAttribute('data-abdel'),10);
-      if(!confirm('確定要從作者簿刪除「'+authorLabel(authorBook[i])+'」嗎？')) return;
-      authorBook.splice(i,1); saveAuthorBook(); renderAuthorBook();
+      askConfirm({title:'刪除作者', danger:true, ok:'刪除',
+        body:'確定要從作者簿刪除「'+authorLabel(authorBook[i])+'」嗎？'}, function(){
+        authorBook.splice(i,1); saveAuthorBook(); renderAuthorBook();
+      });
     });
   });
 }
@@ -4653,20 +5115,22 @@ document.getElementById('clearDemo').addEventListener('click', function(){
     showBackupHint('clearDemoHint', '目前已經沒有示範資料了，你的資料都是自己建立的。', false);
     return;
   }
-  if(!confirm('會清除 '+demoClasses+' 堂示範課程、'+demoItems+' 筆示範事項、'+demoRecs+
-              ' 筆示範投稿紀錄。你自己新增的資料完全不受影響。確定嗎？')) return;
-  items = items.filter(function(it){ return !isDemoItem(it); });
-  CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(c){
-    return !DEFAULT_CLASSES.some(function(d){ return d.id === c.id; });
+  askConfirm({title:'清除示範資料', danger:true, ok:'清除',
+    body:'會清除 '+demoClasses+' 堂示範課程、'+demoItems+' 筆示範事項、'+demoRecs+
+         ' 筆示範投稿紀錄。\n你自己新增的資料完全不受影響。'}, function(){
+    items = items.filter(function(it){ return !isDemoItem(it); });
+    CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(c){
+      return !DEFAULT_CLASSES.some(function(d){ return d.id === c.id; });
+    });
+    records = records.filter(function(r){
+      return !DEFAULT_RECORDS.some(function(d){ return d.id === r.id; });
+    });
+    saveItems(); saveClasses(); saveRecords();
+    hstate.open = {};
+    showBackupHint('clearDemoHint', '示範資料已清除，可以開始建立你自己的資料了。', false);
+    document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
+    applyNav();
   });
-  records = records.filter(function(r){
-    return !DEFAULT_RECORDS.some(function(d){ return d.id === r.id; });
-  });
-  saveItems(); saveClasses(); saveRecords();
-  hstate.open = {};
-  showBackupHint('clearDemoHint', '示範資料已清除，可以開始建立你自己的資料了。', false);
-  document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
-  applyNav();
 });
 document.getElementById('cancelBackup').addEventListener('click', function(){ backupBackdrop.classList.remove('open'); });
 backupBackdrop.addEventListener('click', function(e){ if(e.target===backupBackdrop) backupBackdrop.classList.remove('open'); });
@@ -4708,7 +5172,12 @@ document.getElementById('importPick').addEventListener('change', function(){
 
 document.getElementById('doImport').addEventListener('click', function(){
   if(!pendingImport) return;
-  if(!confirm('還原會覆蓋目前所有資料（重要事項、課表、投稿紀錄、目標期刊、計畫管理、名片簿），確定要繼續嗎？')) return;
+  askConfirm({title:'還原備份', danger:true, ok:'覆蓋並還原',
+    body:'還原會覆蓋目前所有資料（重要事項、課表、投稿紀錄、目標期刊、計畫管理、名片簿）。\n這個動作無法復原。'},
+    doRestoreBackup);
+});
+function doRestoreBackup(){
+  if(!pendingImport) return;
   if(Array.isArray(pendingImport.calendarItems)){
     items = pendingImport.calendarItems;
     items.forEach(function(it){ if(it.repeat==null) it.repeat='none'; if(it.repeatEnd==null) it.repeatEnd=''; });
@@ -4767,8 +5236,8 @@ document.getElementById('doImport').addEventListener('click', function(){
   pendingImport = null;
   hstate.open = {}; jstate.open = {};
   applyNav();
-  alert('已還原備份。');
-});
+  showToast('已還原備份。', 'ok');
+}
 
 /* ---- file attachment ---- */
 var fileBackdrop = document.getElementById('fileBackdrop');
@@ -4867,7 +5336,7 @@ function renderRecAuthors(){
       syncRecAuthors();
       var i = parseInt(el.getAttribute('data-rabsave'),10);
       if(rememberAuthor(recAuthors[i])){ renderRecAuthors(); }
-      else alert('請先填姓名再存入作者簿。');
+      else showToast('請先填姓名再存入作者簿。', 'err');
     });
   });
 }
@@ -5590,7 +6059,7 @@ function bindStepEvents(){
       syncAuthorFields();
       var i = parseInt(el.getAttribute('data-absave'),10);
       if(rememberAuthor(wz.authors[i])){ renderWizard(); }
-      else alert('請先填姓名再存入作者簿。');
+      else showToast('請先填姓名再存入作者簿。', 'err');
     });
   });
   on('f-titleEN','input', function(){ wz.titleEN = this.value; });
@@ -6171,11 +6640,11 @@ function projDetail(p){
 
   /* 成員 */
   if(p.members.length){
-    out.push('<div class="psection"><h3>計畫成員</h3><table class="ptable">'+
+    out.push('<div class="psection"><h3>計畫成員</h3><div class="ptablewrap"><table class="ptable">'+
       '<thead><tr><th>姓名</th><th>角色</th><th>服務單位</th></tr></thead><tbody>'+
       p.members.map(function(m){
         return '<tr><td>'+esc(m.name)+'</td><td>'+esc(m.role||'')+'</td><td>'+esc(m.org||'')+'</td></tr>';
-      }).join('')+'</tbody></table></div>');
+      }).join('')+'</tbody></table></div></div>');
   }
 
   /* 經費 */
@@ -6183,35 +6652,45 @@ function projDetail(p){
     return budgetPlanned(p, c.k) || spentByCat(p, c.k) || plannedSpendByCat(p, c.k);
   });
   if(rows.length){
-    var tp = 0, ts = 0, tq = 0;
-    var body = rows.map(function(c){
+    var tp = 0, ts = 0, tq = 0, cells = [];
+    rows.forEach(function(c){
       var pl = budgetPlanned(p, c.k), sp = spentByCat(p, c.k), q = plannedSpendByCat(p, c.k);
       tp += pl; ts += sp; tq += q;
-      var left = pl - sp;
-      var rate = pl > 0 ? Math.round(sp/pl*100)+'%' : '—';
+      cells.push({n:c.n, pl:pl, sp:sp, q:q});
+    });
+    /* The 預計支出 column is empty for most projects; a column of dashes is
+       noise, so it only appears once something is actually planned. */
+    var showPlanned = tq > 0;
+    var body = cells.map(function(c){
+      var left = c.pl - c.sp;
+      /* Spending in a category that was never budgeted is a real condition, not
+         an error — flag the negative balance and say why the rate is blank. */
+      var rate = c.pl > 0 ? Math.round(c.sp/c.pl*100)+'%' : '未編列';
       return '<tr><td>'+esc(c.n)+'</td>'+
-        '<td class="num">'+money(pl)+'</td>'+
-        '<td class="num">'+money(sp)+'</td>'+
-        '<td class="num'+(left<0?' neg':'')+'">'+money(left)+'</td>'+
-        '<td class="num'+(pl>0?'':' zero')+'">'+rate+'</td>'+
-        '<td class="num'+(q?'':' zero')+'">'+(q?money(q):'—')+'</td></tr>';
+        '<td class="num'+(c.pl?'':' zero')+'">'+(c.pl?money(c.pl):'—')+'</td>'+
+        '<td class="num'+(c.sp?'':' zero')+'">'+(c.sp?money(c.sp):'—')+'</td>'+
+        '<td class="num'+(left<0?' neg':(left?'':' zero'))+'">'+money(left)+'</td>'+
+        '<td class="num'+(c.pl>0?'':' zero')+'">'+rate+'</td>'+
+        (showPlanned?'<td class="num'+(c.q?'':' zero')+'">'+(c.q?money(c.q):'—')+'</td>':'')+'</tr>';
     }).join('');
-    out.push('<div class="psection"><h3>經費</h3><table class="ptable">'+
+    out.push('<div class="psection"><h3>經費</h3><div class="ptablewrap"><table class="ptable">'+
       '<thead><tr><th>科目</th><th class="num">編列</th><th class="num">已支用</th>'+
-      '<th class="num">餘額</th><th class="num">執行率</th><th class="num">預計支出</th></tr></thead>'+
+      '<th class="num">餘額</th><th class="num">執行率</th>'+
+      (showPlanned?'<th class="num">預計支出</th>':'')+'</tr></thead>'+
       '<tbody>'+body+'</tbody>'+
       '<tfoot><tr><td>合計</td><td class="num">'+money(tp)+'</td><td class="num">'+money(ts)+
       '</td><td class="num'+((tp-ts)<0?' neg':'')+'">'+money(tp-ts)+'</td>'+
       '<td class="num">'+(tp>0?Math.round(ts/tp*100)+'%':'—')+'</td>'+
-      '<td class="num'+(tq?'':' zero')+'">'+(tq?money(tq):'—')+'</td></tr></tfoot></table>'+
-      '<p class="pmoney" style="margin-top:8px;">「已支用」只計已支付與已核銷；「預計支出」是還沒付的規劃金額，不列入餘額計算。</p></div>');
+      (showPlanned?'<td class="num">'+money(tq)+'</td>':'')+'</tr></tfoot></table></div>'+
+      '<p class="pmoney" style="margin-top:9px;">「已支用」只計已支付與已核銷'+
+      (showPlanned?'；「預計支出」是還沒付的規劃金額，不列入餘額計算':'')+'。</p></div>');
   }
 
   /* 支出明細 */
   out.push('<div class="psection"><h3>支出明細'+
     '<button class="btn-ghost" data-addexp="'+esc(p.id)+'">＋ 新增支出</button></h3>'+
     (p.expenses.length
-      ? '<table class="ptable"><thead><tr><th>日期</th><th>科目</th><th>項目</th><th>對象</th>'+
+      ? '<div class="ptablewrap"><table class="ptable wide"><thead><tr><th>日期</th><th>科目</th><th>項目</th><th>對象</th>'+
         '<th class="num">金額</th><th>狀態</th><th class="rowact"></th></tr></thead><tbody>'+
         p.expenses.slice().sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); })
         .map(function(e){
@@ -6225,7 +6704,7 @@ function projDetail(p){
               '<button class="editbtn" data-editexp="'+esc(p.id)+'|'+esc(e.id)+'">編輯</button>'+
               '<button class="iconbtn" data-delexp="'+esc(p.id)+'|'+esc(e.id)+'" title="刪除">✕</button>'+
             '</td></tr>';
-        }).join('')+'</tbody></table>'
+        }).join('')+'</tbody></table></div>'
       : '<div class="pempty">還沒有支出紀錄。</div>')+'</div>');
 
   /* 重要期限 */
@@ -6292,9 +6771,11 @@ function bindProjDetail(){
       var q = splitPair(el.getAttribute('data-delexp'));
       var p = projById(q[0]); if(!p) return;
       var e = p.expenses.filter(function(x){ return x.id===q[1]; })[0];
-      if(!confirm('確定刪除這筆支出（'+(e&&e.item||'')+' '+money(e&&e.amount)+' 元）嗎？')) return;
-      p.expenses = p.expenses.filter(function(x){ return x.id!==q[1]; });
-      saveProjects(); renderProjects();
+      askConfirm({title:'刪除支出', danger:true, ok:'刪除',
+        body:'確定刪除這筆支出嗎？\n'+(e&&e.item||'')+'　'+money(e&&e.amount)+' 元'}, function(){
+        p.expenses = p.expenses.filter(function(x){ return x.id!==q[1]; });
+        saveProjects(); renderProjects();
+      });
     });
   });
   wrap.querySelectorAll('[data-addms]').forEach(function(el){
@@ -6307,10 +6788,12 @@ function bindProjDetail(){
     el.addEventListener('click', function(){
       var q = splitPair(el.getAttribute('data-delms'));
       var p = projById(q[0]); if(!p) return;
-      if(!confirm('確定刪除這個期限嗎？行事曆上同步的事項也會一起移除。')) return;
-      p.milestones = p.milestones.filter(function(x){ return x.id!==q[1]; });
-      items = items.filter(function(it){ return it.linkedMilestone !== q[1]; });
-      saveItems(); saveProjects(); renderProjects();
+      askConfirm({title:'刪除期限', danger:true, ok:'刪除',
+        body:'確定刪除這個期限嗎？行事曆上同步的事項也會一起移除。'}, function(){
+        p.milestones = p.milestones.filter(function(x){ return x.id!==q[1]; });
+        items = items.filter(function(it){ return it.linkedMilestone !== q[1]; });
+        saveItems(); saveProjects(); renderProjects();
+      });
     });
   });
   wrap.querySelectorAll('[data-projfile]').forEach(function(el){
@@ -6444,17 +6927,19 @@ document.getElementById('saveProject').addEventListener('click', function(){
 document.getElementById('deleteProject').addEventListener('click', function(){
   var p = projById(editingProjId);
   if(!p) return;
-  if(!confirm('確定要刪除「'+p.name+'」嗎？經費、支出、期限與所有存進來的檔案都會一起刪除，無法復原。')) return;
-  var ids = p.files.map(function(f){ return f.id; });
-  var msIds = p.milestones.map(function(m){ return m.id; });
-  projects = projects.filter(function(x){ return x.id!==p.id; });
-  items = items.filter(function(it){ return msIds.indexOf(it.linkedMilestone) === -1; });
-  saveItems(); saveProjects();
-  ids.forEach(function(fid){ projFileDel(fid).catch(function(){}); });
-  projBackdrop.classList.remove('open');
-  editingProjId = null;
-  renderProjects();
-  renderMastMeta();
+  askConfirm({title:'刪除計畫', danger:true, ok:'刪除計畫',
+    body:'確定要刪除「'+p.name+'」嗎？\n經費、支出、期限與所有存進來的檔案都會一起刪除，無法復原。'}, function(){
+    var ids = p.files.map(function(f){ return f.id; });
+    var msIds = p.milestones.map(function(m){ return m.id; });
+    projects = projects.filter(function(x){ return x.id!==p.id; });
+    items = items.filter(function(it){ return msIds.indexOf(it.linkedMilestone) === -1; });
+    saveItems(); saveProjects();
+    ids.forEach(function(fid){ projFileDel(fid).catch(function(){}); });
+    projBackdrop.classList.remove('open');
+    editingProjId = null;
+    renderProjects();
+    renderMastMeta();
+  });
 });
 
 /* ---- 支出視窗 ---- */
@@ -6586,7 +7071,7 @@ function addProjectFiles(projId, fileList){
   var tooBig = files.filter(function(f){ return f.size > PROJ_FILE_MAX; });
   files = files.filter(function(f){ return f.size <= PROJ_FILE_MAX; });
   if(tooBig.length){
-    alert('這些檔案超過 60 MB，沒有存入：\n' + tooBig.map(function(f){ return f.name; }).join('\n'));
+    showToast('這些檔案超過 60 MB，沒有存入：\n' + tooBig.map(function(f){ return f.name; }).join('\n'), 'err', 8000);
   }
   if(!files.length) return;
   showProjHint('儲存檔案中…', 'ok');
@@ -6625,11 +7110,13 @@ function deleteProjectFile(projId, fileId){
   var p = projById(projId); if(!p) return;
   var meta = p.files.filter(function(f){ return f.id===fileId; })[0];
   if(!meta) return;
-  if(!confirm('確定要刪除「'+meta.name+'」嗎？這個檔案會從瀏覽器裡永久移除。')) return;
-  p.files = p.files.filter(function(f){ return f.id!==fileId; });
-  saveProjects();
-  projFileDel(fileId).catch(function(){});
-  renderProjects();
+  askConfirm({title:'刪除檔案', danger:true, ok:'刪除',
+    body:'確定要刪除「'+meta.name+'」嗎？這個檔案會從瀏覽器裡永久移除。'}, function(){
+    p.files = p.files.filter(function(f){ return f.id!==fileId; });
+    saveProjects();
+    projFileDel(fileId).catch(function(){});
+    renderProjects();
+  });
 }
 function zipProjectFiles(projId){
   var p = projById(projId); if(!p || !p.files.length) return;
@@ -6937,6 +7424,11 @@ function cardMatches(c, q){
 function cardDisplayName(c){
   return c.name || c.nameEn || c.company || '（未命名名片）';
 }
+/* Surname for a Chinese name, first letter for a Latin one. */
+function cardInitial(c){
+  var n = (c.name || c.nameEn || c.company || '?').trim();
+  return /[一-鿿]/.test(n.charAt(0)) ? n.charAt(0) : n.charAt(0).toUpperCase();
+}
 
 function renderCards(){
   var wrap = document.getElementById('cardGrid');
@@ -6958,8 +7450,9 @@ function renderCards(){
     var contact = [c.mobile, c.phone, c.email].filter(Boolean).join('　');
     var org = [c.company, c.dept].filter(Boolean).join('・');
     return '<button class="bcard" data-card="'+esc(c.id)+'">'+
-      '<div class="bcard-photo" data-photo="'+esc(c.id)+'">'+
-        (c.hasPhoto ? '<span class="nophoto">照片載入中…</span>' : '<span class="nophoto">沒有照片</span>')+
+      '<div class="bcard-photo'+(c.hasPhoto?'':' mono')+'" data-photo="'+esc(c.id)+'">'+
+        (c.hasPhoto ? '<span class="nophoto">照片載入中…</span>'
+                    : '<span class="initial">'+esc(cardInitial(c))+'</span>')+
       '</div>'+
       '<div class="bcard-body">'+
         '<div class="bcard-name">'+esc(cardDisplayName(c))+
@@ -6983,7 +7476,14 @@ function paintThumb(id){
   function put(src){
     var cur = document.querySelector('[data-photo="'+id+'"]');
     if(!cur) return;
-    cur.innerHTML = src ? '<img alt="名片照片" src="'+src+'">' : '<span class="nophoto">照片讀不到了</span>';
+    if(src){
+      cur.classList.remove('mono');
+      cur.innerHTML = '<img alt="名片照片" src="'+src+'">';
+    } else {
+      var card = cards.filter(function(x){ return x.id===id; })[0];
+      cur.classList.add('mono');
+      cur.innerHTML = '<span class="initial">'+esc(card ? cardInitial(card) : '?')+'</span>';
+    }
   }
   if(thumbCache[id]){ put(thumbCache[id]); return; }
   cardImgGet(id).then(function(rec){
@@ -7145,8 +7645,11 @@ document.getElementById('cardManual').addEventListener('click', function(){ card
 document.getElementById('cancelCard').addEventListener('click', function(){
   var remaining = cardQueue.length;
   closeCardModal();
-  if(remaining && confirm('這批還有 '+remaining+' 張沒處理，要繼續下一張嗎？')) nextInBatch();
-  else cardQueue = [];
+  if(!remaining){ return; }
+  askConfirm({title:'還有名片沒處理', ok:'繼續下一張', cancel:'全部取消',
+    body:'這批還有 '+remaining+' 張沒處理，要繼續下一張嗎？',
+    onCancel: function(){ cardQueue = []; }},
+    nextInBatch);
 });
 cardBackdrop.addEventListener('click', function(e){ if(e.target===cardBackdrop) closeCardModal(); });
 document.getElementById('cardRawToggle').addEventListener('click', function(){
@@ -7191,7 +7694,7 @@ document.getElementById('saveCard').addEventListener('click', function(){
       c.hasPhoto = false;
       delete thumbCache[c.id];
       saveCards();
-      alert('欄位已存好，但這台裝置的瀏覽器不讓網頁儲存照片，所以照片沒有保留。');
+      showToast('欄位已存好，但這台裝置的瀏覽器不讓網頁儲存照片，所以照片沒有保留。', 'err', 7000);
       after();
     });
   } else after();
@@ -7200,15 +7703,17 @@ document.getElementById('saveCard').addEventListener('click', function(){
 document.getElementById('deleteCard').addEventListener('click', function(){
   if(!editingCardId) return;
   var c = cards.filter(function(x){ return x.id===editingCardId; })[0];
-  if(!confirm('確定要刪除「'+cardDisplayName(c)+'」這張名片嗎？照片也會一起刪掉。')) return;
   var id = editingCardId;
-  cards = cards.filter(function(x){ return x.id!==id; });
-  delete thumbCache[id];
-  saveCards();
-  cardImgDel(id).catch(function(){});
-  closeCardModal();
-  renderCards();
-  renderMastMeta();
+  askConfirm({title:'刪除名片', danger:true, ok:'刪除',
+    body:'確定要刪除「'+cardDisplayName(c)+'」這張名片嗎？照片也會一起刪掉。'}, function(){
+    cards = cards.filter(function(x){ return x.id!==id; });
+    delete thumbCache[id];
+    saveCards();
+    cardImgDel(id).catch(function(){});
+    closeCardModal();
+    renderCards();
+    renderMastMeta();
+  });
 });
 
 /* ---- 匯出 ---- */
@@ -7279,6 +7784,307 @@ document.getElementById('cardExportVcf').addEventListener('click', function(){
     },
     function(msg){ showCardHint(msg,'err'); });
 });
+
+
+/* ========================================================================
+   首頁
+   ======================================================================== */
+/* One screen that answers "what needs me today". Everything here is derived
+   from the other four sections — nothing is stored separately — so it can never
+   drift out of step with the calendar, submissions, projects or school terms. */
+function daysBetween(a, b){
+  return Math.round((stripTime(b) - stripTime(a)) / 86400000);
+}
+function relDay(n){
+  if(n === 0) return '今天';
+  if(n === 1) return '明天';
+  if(n === 2) return '後天';
+  if(n < 0) return '逾期 '+(-n)+' 天';
+  return n+' 天後';
+}
+function goHomeLink(view, sub){
+  return function(){ sub ? goto(view, sub) : goto(view); };
+}
+
+/* ---- 需要注意 ---- */
+function homeAlerts(){
+  var out = [];
+  var t0 = stripTime(today);
+
+  items.forEach(function(it){
+    if(it.done || (it.repeat && it.repeat !== 'none')) return;
+    var d = parseISODate(it.date);
+    if(!d) return;
+    var n = daysBetween(t0, d);
+    if(n < 0){
+      out.push({sev:'crit', title:it.title, sub:'重要事項已逾期', n:relDay(n), sort:n,
+                go:goHomeLink('calendar')});
+    }
+  });
+
+  records.forEach(function(r){
+    if(['submitted','under_review'].indexOf(r.status) === -1) return;
+    var clock = reviewClock(r);
+    if(clock && clock.overdue){
+      var over = clock.days - clock.expected.days;
+      out.push({sev:'warn',
+                title:(r.titleZH || r.titleEN || '（未命名論文）'),
+                sub:r.journalTitle+'　已審 '+clock.days+' 天，超過預期的 '+clock.expected.days+' 天',
+                n:'+'+over+' 天', sort:-over,
+                go:goHomeLink('submission','history')});
+    }
+  });
+
+  projects.forEach(function(p){
+    var total = budgetTotal(p), spent = spentTotal(p);
+    if(total > 0 && spent > total){
+      out.push({sev:'crit', title:p.name, sub:'計畫經費已超支', n:'超 '+money(spent-total),
+                sort:-9999, go:goHomeLink('projects')});
+    }
+    if(p.status === 'active' && p.end){
+      var left = daysBetween(t0, parseISODate(p.end));
+      if(left >= 0 && left <= 60 && total > 0 && spent / total < 0.6){
+        out.push({sev:'warn', title:p.name,
+                  sub:'距結束剩 '+left+' 天，經費只執行 '+Math.round(spent/total*100)+'%',
+                  n:left+' 天', sort:left, go:goHomeLink('projects')});
+      }
+    }
+  });
+
+  return out.sort(function(a,b){ return a.sort - b.sort; }).slice(0, 6);
+}
+
+/* ---- 今天 ---- */
+function homeTodayRows(){
+  var rows = [];
+  var dow = (today.getDay() + 6) % 7;
+  CLASS_SCHEDULE.filter(function(c){ return c.dow === dow; }).forEach(function(c){
+    rows.push({time:c.start, kind:'class', title:c.title,
+               sub:c.start+'–'+c.end+(c.room ? '　'+c.room : ''), sort:c.start});
+  });
+  items.filter(function(it){ return itemOccursOn(it, today); }).forEach(function(it){
+    rows.push({time:it.time || '', kind:'item', title:it.title, done:it.done,
+               sub:CAT_LABEL[it.cat] || '', id:it.id, sort:it.time || '99:99'});
+  });
+  schoolEventsOn(today).forEach(function(se){
+    rows.push({time:'', kind:'school', title:se.t, sub:'校內行事曆', sort:'00:00'});
+  });
+  return rows.sort(function(a,b){ return String(a.sort).localeCompare(String(b.sort)); });
+}
+
+/* ---- 接下來十四天 ---- */
+function homeUpcoming(){
+  var rows = [], t0 = stripTime(today);
+  for(var i = 1; i <= 14; i++){
+    var d = addDays(t0, i);
+    var key = ymd(d);
+    items.filter(function(it){ return itemOccursOn(it, d) && !it.done; }).forEach(function(it){
+      rows.push({date:key, n:i, kind:it.linkedRecordId ? 'sub' : (it.linkedMilestone ? 'proj' : 'item'),
+                 title:it.title, sub:(it.time ? it.time+'　' : '')+(CAT_LABEL[it.cat]||'')});
+    });
+    schoolEventsOn(d).forEach(function(se){
+      rows.push({date:key, n:i, kind:'school', title:se.t, sub:'校內行事曆'});
+    });
+    var hol = holidayFor(d);
+    if(hol) rows.push({date:key, n:i, kind:'item', title:hol, sub:'國定假日'});
+  }
+  return rows;
+}
+
+/* A month at a glance on the home page. It keeps its own anchor so paging
+   through it does not move the full calendar, and it reads the same sources as
+   every other view rather than storing anything of its own. */
+var homeMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+/* The weekly timetable repeats on every weekday, so spelling it out here would
+   paint the same three chips across the whole month and bury the things that
+   actually differ from one day to the next. Classes are reduced to a dot; the
+   named chips are reserved for holidays, one-off items and school events. */
+function miniDayMarks(d){
+  var chips = [], classes = [];
+  var hol = holidayFor(d);
+  if(hol) chips.push({k:'hol', t:hol});
+  items.filter(function(it){ return itemOccursOn(it, d) && !it.done; })
+    .sort(function(a,b){ return (a.time||'99').localeCompare(b.time||'99'); })
+    .forEach(function(it){ chips.push({k:'item', t:it.title}); });
+  schoolEventsOn(d).forEach(function(se){ chips.push({k:'school', t:se.t}); });
+  CLASS_SCHEDULE.filter(function(c){ return c.dow === ((d.getDay()+6)%7); })
+    .sort(function(a,b){ return a.start.localeCompare(b.start); })
+    .forEach(function(c){ classes.push({k:'class', t:c.start+' '+c.title}); });
+  return {chips:chips, classes:classes};
+}
+
+function renderMiniCal(){
+  var grid = document.getElementById('miniGrid');
+  var y = homeMonth.getFullYear(), m = homeMonth.getMonth();
+  document.getElementById('miniTitle').textContent = y+' 年 '+(m+1)+' 月';
+  document.getElementById('miniToday').hidden =
+    (y === today.getFullYear() && m === today.getMonth());
+
+  var html = DOW_LABEL.map(function(l){ return '<div class="mini-dow">'+l+'</div>'; }).join('');
+  var start = startOfWeek(new Date(y, m, 1));
+  for(var i = 0; i < 42; i++){
+    var d = addDays(start, i);
+    if(i >= 35 && d.getMonth() !== m) break;
+    var marks = miniDayMarks(d);
+    var hol = holidayFor(d);
+    var chips = marks.chips.slice(0, 2).map(function(x){
+      return '<span class="mini-chip '+x.k+'">'+esc(x.t)+'</span>';
+    }).join('');
+    if(marks.chips.length > 2) chips += '<span class="mini-chip more">+'+(marks.chips.length-2)+'</span>';
+    /* Dots carry the day's shape at phone width, where labels are hidden. */
+    var dots = marks.chips.filter(function(x){ return x.k!=='hol'; })
+      .slice(0, 4).map(function(x){ return '<span class="mini-dot '+x.k+'"></span>'; }).join('');
+    if(marks.classes.length) dots += '<span class="mini-dot class"></span>';
+    var tip = marks.chips.concat(marks.classes).map(function(x){ return x.t; });
+    html += '<button class="mini-cell'+
+      (d.getMonth()!==m ? ' other' : '')+
+      (ymd(d)===ymd(today) ? ' today' : '')+
+      (hol ? ' holiday' : '')+
+      '" data-miniday="'+ymd(d)+'" title="'+esc(ymd(d)+(tip.length?'　'+tip.join('、'):''))+'">'+
+      '<span class="mini-d">'+d.getDate()+'</span>'+chips+
+      (dots ? '<span class="mini-dots">'+dots+'</span>' : '')+
+    '</button>';
+  }
+  grid.innerHTML = html;
+  grid.querySelectorAll('[data-miniday]').forEach(function(el){
+    el.addEventListener('click', function(){
+      openItemModal(null, el.getAttribute('data-miniday'));
+    });
+  });
+}
+document.getElementById('miniPrev').addEventListener('click', function(){
+  homeMonth = new Date(homeMonth.getFullYear(), homeMonth.getMonth()-1, 1);
+  renderMiniCal();
+});
+document.getElementById('miniNext').addEventListener('click', function(){
+  homeMonth = new Date(homeMonth.getFullYear(), homeMonth.getMonth()+1, 1);
+  renderMiniCal();
+});
+document.getElementById('miniToday').addEventListener('click', function(){
+  homeMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  renderMiniCal();
+});
+
+function renderHome(){
+  renderMiniCal();
+  /* strip */
+  var lu = lunarInfo(today);
+  var wk = showSchool ? schoolWeekLabel(today) : null;
+  var hol = holidayFor(today);
+  document.getElementById('homeDay').textContent = today.getDate();
+  document.getElementById('homeDate').textContent =
+    today.getFullYear()+' 年 '+(today.getMonth()+1)+' 月　星期'+DOW_LABEL[(today.getDay()+6)%7];
+  document.getElementById('homeSub').innerHTML =
+    '<span class="lu">'+esc(lu.text)+'</span>' + (lu.festival ? '　'+esc(lu.festival) : '');
+  var tags = [];
+  if(hol) tags.push('<span class="statuspill p_draft" style="background:var(--danger-soft);color:var(--danger);">'+esc(hol)+'</span>');
+  if(wk) tags.push('<span class="statuspill p_review">'+esc(wk.term)+'　第 '+wk.week+' 週</span>');
+  document.getElementById('homeTags').innerHTML = tags.join('');
+
+  /* alerts */
+  var alerts = homeAlerts();
+  document.getElementById('panelAlerts').hidden = !alerts.length;
+  document.getElementById('alertCount').textContent = alerts.length ? alerts.length+' 項' : '';
+  document.getElementById('homeAlerts').innerHTML = alerts.map(function(a, i){
+    return '<button class="alertrow '+a.sev+'" data-alert="'+i+'">'+
+      '<div><div class="at">'+esc(a.title)+'</div><div class="as">'+esc(a.sub)+'</div></div>'+
+      '<span class="an">'+esc(a.n)+'</span></button>';
+  }).join('');
+  document.querySelectorAll('#homeAlerts [data-alert]').forEach(function(el){
+    el.addEventListener('click', function(){ alerts[parseInt(el.getAttribute('data-alert'),10)].go(); });
+  });
+
+  /* today */
+  var trows = homeTodayRows();
+  document.getElementById('todayCount').textContent = trows.length ? trows.length+' 項' : '';
+  document.getElementById('homeToday').innerHTML = trows.length
+    ? trows.map(function(r){
+        return '<div class="hrow">'+
+          '<span class="htime">'+esc(r.time || '全天')+'</span>'+
+          '<span class="hdot '+r.kind+'"></span>'+
+          '<div class="hbody"><div class="t'+(r.done?' done':'')+'">'+esc(r.title)+'</div>'+
+            (r.sub ? '<div class="s">'+esc(r.sub)+'</div>' : '')+'</div>'+
+          (r.kind==='item'
+            ? '<button class="hcheck'+(r.done?' on':'')+'" data-hdone="'+esc(r.id)+'" '+
+              'title="標記完成／未完成" aria-label="標記完成">'+(r.done?'✓':'')+'</button>'
+            : '')+
+        '</div>';
+      }).join('')
+    : '<div class="hempty">今天沒有課、也沒有排定的事項。</div>';
+  document.querySelectorAll('#homeToday [data-hdone]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.getAttribute('data-hdone');
+      items.forEach(function(it){ if(it.id===id) it.done = !it.done; });
+      saveItems();
+      renderHome();
+      renderMastMeta();
+    });
+  });
+
+  /* upcoming */
+  var urows = homeUpcoming();
+  document.getElementById('homeUpcoming').innerHTML = urows.length
+    ? urows.slice(0, 12).map(function(r){
+        return '<div class="hrow">'+
+          '<span class="hdate'+(r.n<=3?' soon':'')+'">'+esc(relDay(r.n))+'</span>'+
+          '<span class="hdot '+r.kind+'"></span>'+
+          '<div class="hbody"><div class="t">'+esc(r.title)+'</div>'+
+            (r.sub ? '<div class="s">'+esc(r.sub)+'</div>' : '')+'</div>'+
+          '<span class="htime">'+esc(r.date.slice(5))+'</span>'+
+        '</div>';
+      }).join('') + (urows.length > 12
+        ? '<div class="hempty">還有 '+(urows.length-12)+' 項，到行事曆看完整清單。</div>' : '')
+    : '<div class="hempty">接下來兩週沒有排定的事情。</div>';
+
+  /* submissions in flight */
+  var live = records.filter(function(r){
+    return ['submitted','under_review','revision'].indexOf(r.status) !== -1;
+  });
+  document.getElementById('subCount').textContent = live.length ? live.length+' 篇' : '';
+  document.getElementById('homeSubs').innerHTML = live.length
+    ? live.map(function(r){
+        var clock = reviewClock(r);
+        return '<div class="hrow">'+
+          '<div class="hbody"><div class="t">'+esc(r.titleZH || r.titleEN || '（未命名論文）')+'</div>'+
+            '<div class="s">'+esc(r.journalTitle||'')+'</div></div>'+
+          '<span class="statuspill '+esc(r.status)+'">'+esc(STATUS_LABEL[r.status]||r.status)+'</span>'+
+          (clock ? '<span class="htime">'+clock.days+' 天</span>' : '')+
+        '</div>';
+      }).join('')
+    : '<div class="hempty">目前沒有審查中或修改中的稿件。</div>';
+
+  /* projects under way */
+  var act = projects.filter(function(p){ return p.status === 'active'; });
+  document.getElementById('projCount').textContent = act.length ? act.length+' 個' : '';
+  document.getElementById('homeProjects').innerHTML = act.length
+    ? act.map(function(p){
+        var total = budgetTotal(p), spent = spentTotal(p);
+        var pct = total > 0 ? Math.min(100, Math.round(spent/total*100)) : 0;
+        var over = total > 0 && spent > total;
+        return '<div class="hrow" style="display:block;">'+
+          '<div class="t" style="font-size:13px;font-weight:600;">'+esc(p.name)+'</div>'+
+          (total > 0
+            ? '<div class="hbar'+(over?' over':'')+'"><i style="width:'+pct+'%"></i></div>'+
+              '<div class="s" style="margin-top:4px;font-family:var(--font-mono);">'+
+              money(spent)+' / '+money(total)+' 元　'+(over?'超支':'執行 '+pct+'%')+'</div>'
+            : '<div class="s">尚未編列經費</div>')+
+        '</div>';
+      }).join('')
+    : '<div class="hempty">目前沒有執行中的計畫。</div>';
+}
+
+document.querySelectorAll('#view-home [data-go]').forEach(function(el){
+  el.addEventListener('click', function(){
+    var v = el.getAttribute('data-go');
+    if(v === 'history' || v === 'journals' || v === 'wizard') goto('submission', v);
+    else goto(v);
+  });
+});
+document.getElementById('qAddItem').addEventListener('click', function(){ goto('calendar'); openItemModal(null); });
+document.getElementById('qAddSub').addEventListener('click', function(){ goto('submission','wizard'); });
+document.getElementById('qAddProj').addEventListener('click', function(){ goto('projects'); openProjModal(null); });
+document.getElementById('qAddCard').addEventListener('click', function(){ goto('cards'); openNewCard(); });
 
 /* ======================================================================== */
 applyNav();
