@@ -615,7 +615,9 @@
   .rowactions{display:flex; gap:2px; flex-shrink:0;}
   .editbtn{background:none; border:none; color:var(--muted); padding:4px 6px; border-radius:6px; font-size:14px;}
   .editbtn:hover{background:var(--accent-soft); color:var(--accent-ink);}
-  .modal-wide{max-width:620px;}
+  .termrow{display:grid; grid-template-columns:1fr 180px 180px auto; gap:10px; margin-bottom:10px; align-items:end;}
+  .termrow .field{margin-bottom:0;}
+  @media (max-width:720px){ .termrow{grid-template-columns:1fr 1fr; } .termrow>button{grid-column:1 / -1; justify-self:start;} }
   .modal-hint{font-size:13.5px; color:var(--danger); margin:0 0 4px; line-height:1.55;}
   .modal-hint.warn{color:var(--warn);}
   .modal-hint.ok{color:var(--ok);}
@@ -800,6 +802,10 @@
     background:var(--paper-raised); border-radius:var(--r-lg); width:100%; max-width:430px;
     padding:22px; box-shadow:var(--shadow-lift); max-height:88vh; overflow-y:auto;
   }
+  /* 這兩條一定要排在 .modal 後面。原本寫在前面，被 .modal 的 max-width:430px
+     蓋掉，所有標成 modal-wide 的視窗其實都還是窄的。 */
+  .modal-wide{max-width:620px;}
+  .modal-xwide{max-width:960px;}
   .modal h2{font-family:var(--font-hand); font-size:20px; margin:0 0 16px;}
   .chiprow{display:flex; gap:7px; flex-wrap:wrap;}
   .chipopt{
@@ -1332,6 +1338,24 @@
   .memberrow{display:grid; grid-template-columns:1.1fr .8fr 1fr auto; gap:9px; margin-bottom:9px; align-items:end;}
   @media (max-width:640px){.memberrow{grid-template-columns:1fr;}}
   .memberrow .field{margin-bottom:0;}
+
+  /* ---- 校曆匯入的審核清單 ---- */
+  .screvrow{
+    display:grid; grid-template-columns:26px 130px 130px 1fr 105px 30px; gap:8px;
+    align-items:center; padding:7px 4px; border-bottom:1px solid var(--line);
+  }
+  .screvrow:last-child{border-bottom:none;}
+  .screvrow input[type=date], .screvrow input[type=text], .screvrow select{
+    width:100%; margin:0; font-size:14px; padding:6px 8px;
+  }
+  .screvrow input[type=checkbox]{width:17px; height:17px; margin:0; cursor:pointer;}
+  .screvrow.off{opacity:.42;}
+  @media (max-width:760px){
+    .screvrow{grid-template-columns:26px 1fr 1fr; grid-template-areas:"c t t" ". d e" ". k x"; row-gap:6px;}
+    .screvrow .rc{grid-area:c;} .screvrow .rt{grid-area:t;} .screvrow .rd{grid-area:d;}
+    .screvrow .re{grid-area:e;} .screvrow .rk{grid-area:k;} .screvrow .rx{grid-area:x;}
+  }
+  #scReviewCount{font-size:13px; color:var(--muted); font-weight:400; letter-spacing:0;}
 </style>
 
 <div class="scrim" id="navScrim"></div>
@@ -1698,6 +1722,9 @@
     <div class="field">
       <label for="c-term">這門課上到什麼時候</label>
       <select id="c-term"></select>
+      <p class="modal-hint" id="c-termNote" hidden style="margin:6px 0 0;">
+        建好校曆（行事曆上方的 ⚙ 編輯校曆）之後，這裡就會直接出現學期可以選，不用每門課自己填日期。
+      </p>
     </div>
     <div class="field2" id="c-customTerm" hidden>
       <div class="field"><label for="c-termStart">學期開始</label><input type="date" id="c-termStart"></div>
@@ -1914,13 +1941,21 @@
 <div class="toastwrap" id="toastWrap"></div>
 
 <div class="modal-backdrop" id="schoolBackdrop">
-  <div class="modal modal-wide">
+  <div class="modal modal-wide modal-xwide">
     <h2>校內行事曆</h2>
     <p class="stepdesc" style="margin:-8px 0 16px; font-size:12px; color:var(--muted); line-height:1.7;">
-      內建的是美和科技大學 115 學年度。換一間學校就把下面整個換掉——學期用來算「第 N 週」，
-      行程會顯示在週檢視與月檢視上，也會一起匯出到 ICS。國定假日由系統另外處理，這裡不用再列。
+      這裡是空的，校曆要自己建一份——每間學校不一樣，先預設一間反而害別人看到不是自己的行程。
+      學期用來算「第 N 週」和課表的學期起訖；校內行程會出現在首頁、週檢視、月檢視，也會一起匯出到 ICS。
+      國定假日系統已經處理好，這裡不用再列。
     </p>
-    <div class="field"><label for="sc-name">校曆名稱</label><input id="sc-name" placeholder="例如：○○大學 116 學年度"></div>
+    <div class="field2">
+      <div class="field"><label for="sc-name">校曆名稱</label><input id="sc-name" placeholder="例如：○○大學 116 學年度"></div>
+      <div class="field"><label for="sc-year">學年度（民國）</label><input id="sc-year" type="number" min="90" max="200" step="1" placeholder="例如：116"></div>
+    </div>
+    <p class="stepdesc" style="margin:-8px 0 18px; font-size:12px; color:var(--muted); line-height:1.7;">
+      學年度是給匯入用的：學校發的表格常常只寫「9/14」，系統要靠它才知道是哪一年。
+      8 月以後算學年度當年、7 月以前算隔年。
+    </p>
 
     <div class="psection">
       <h3>學期 <button class="btn-ghost" type="button" id="scAddTerm">＋ 加一個學期</button></h3>
@@ -1936,13 +1971,36 @@
     </div>
 
     <div class="linkbox" style="margin-top:14px;">
-      <b>換學校或分享給同事</b><br>
-      「匯出校曆檔」會存成一個 <code>.json</code>；同事在他的網頁按「匯入校曆檔」選這個檔，就有一樣的校曆了。
+      <b>匯入 / 匯出</b><br>
+      學校發的校曆如果是<b>圖片或 PDF</b>，直接丟進來，系統會把日期和名稱讀出來讓你逐筆確認再加入。
+      已經整理好的 <code>.json</code> 匯進來會直接取代整份；匯出的 <code>.json</code> 可以傳給同校的人。
       <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
-        <button class="btn-ghost" type="button" id="scExport">⤓ 匯出校曆檔</button>
-        <label class="btn-ghost" for="scImport" style="cursor:pointer;">↥ 匯入校曆檔</label>
-        <input type="file" id="scImport" accept=".json,application/json" hidden>
-        <button class="btn-ghost" type="button" id="scReset">還原成內建校曆</button>
+        <label class="btn-secondary" for="scImport" style="cursor:pointer;">↥ 匯入（圖片 / PDF / JSON）</label>
+        <input type="file" id="scImport" accept=".json,application/json,image/*,.pdf,application/pdf" hidden>
+        <button class="btn-ghost" type="button" id="scExport">⤓ 匯出 JSON</button>
+        <button class="btn-ghost" type="button" id="scWipe">清空整份校曆</button>
+      </div>
+      <div class="ocrbox" id="scImportStage" hidden style="margin:12px 0 0;">
+        <span id="scImportMsg"></span>
+        <div class="ocrbar" id="scImportBar" hidden><i id="scImportFill"></i></div>
+      </div>
+    </div>
+
+    <div class="psection" id="scReview" hidden style="margin-top:18px;">
+      <h3>讀到的行程 <span id="scReviewCount"></span>
+        <button class="btn-ghost" type="button" id="scRevAll">全選</button>
+        <button class="btn-ghost" type="button" id="scRevNone">全不選</button>
+        <button class="btn-ghost" type="button" id="scRevRaw">原始文字</button>
+      </h3>
+      <p class="stepdesc" style="margin:0 0 10px; font-size:12px; color:var(--muted); line-height:1.7;">
+        機器讀出來的，一定會有錯字和讀漏的。日期、名稱、類別都可以在這裡直接改，
+        不要的取消勾選。按「加入勾選的行程」才會進到上面的表，再按「儲存校曆」才真的存下來。
+      </p>
+      <div class="rawtext" id="scRawText" hidden></div>
+      <div id="sc-review-rows"></div>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+        <button class="btn-primary" type="button" id="scRevAdd">加入勾選的行程</button>
+        <button class="btn-ghost" type="button" id="scRevCancel">放棄這次匯入</button>
       </div>
     </div>
 
@@ -1959,11 +2017,11 @@
     <h2 id="projModalTitle">新增計畫</h2>
     <div class="field"><label for="pj-name">計畫名稱</label><input id="pj-name" placeholder="例如：高強度間歇訓練對中高齡者心肺適能之影響"></div>
     <div class="field2">
-      <div class="field"><label for="pj-code">計畫編號</label><input id="pj-code" placeholder="例如：NSTC 115-2410-H-276-001"></div>
+      <div class="field"><label for="pj-code">計畫編號</label><input id="pj-code" placeholder="例如：NSTC 115-2410-H-000-001"></div>
       <div class="field"><label for="pj-funder">委託／補助單位</label><input id="pj-funder" placeholder="例如：國科會、教育部、○○公司"></div>
     </div>
     <div class="field2">
-      <div class="field"><label for="pj-org">執行單位</label><input id="pj-org" placeholder="例如：美和科技大學 運動與休閒系"></div>
+      <div class="field"><label for="pj-org">執行單位</label><input id="pj-org" placeholder="例如：○○大學 運動與休閒系"></div>
       <div class="field"><label for="pj-status">計畫狀態</label>
         <select id="pj-status">
           <option value="draft">撰寫中</option>
@@ -2115,12 +2173,15 @@
       <p class="stepdesc" style="margin:8px 0 0;">還原會<b>覆蓋</b>目前所有資料，請先確認已備份現況。</p>
     </div>
     <div class="settgroup">
-      <h3>從頭開始</h3>
+      <h3>示範資料</h3>
       <p class="stepdesc" style="margin:0 0 10px;">
-        第一次拿到這個網頁時，裡面有幾筆示範資料（課表、重要事項、投稿紀錄），方便先看看長什麼樣子。
-        要當成自己的系統用，按這個把示範資料清掉。
+        這個網頁預設是<b>空的</b>——不論誰打開、分享給誰，都不會看到別人的東西。
+        想先看看填滿之後長什麼樣子，可以載入一組示範資料，看完再清掉。
       </p>
-      <button class="btn-secondary" id="clearDemo" style="width:100%;">✕ 清除示範資料，從空白開始</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn-secondary" id="loadDemo" style="flex:1;">↧ 載入示範資料</button>
+        <button class="btn-ghost" id="clearDemo" style="flex:1;">✕ 清除示範資料</button>
+      </div>
       <p class="modal-hint" id="clearDemoHint" hidden></p>
     </div>
     <div class="modal-actions">
@@ -2877,7 +2938,11 @@ var monthAnchor = new Date(today.getFullYear(), today.getMonth(), 1);
 var calView = 'week';
 try{ calView = localStorage.getItem('calView') || 'week'; }catch(e){}
 
-var DEFAULT_CLASSES = [
+/* These are sample rows, not anybody's data. They used to load automatically,
+   which meant every person the page was shared with opened it already full of
+   somebody else's課表 and 投稿紀錄. Now nothing loads until the reader asks for
+   it from 資料備份 → 載入示範資料. */
+var SAMPLE_CLASSES = [
   {id:'c1', dow:0, start:"10:00", end:"12:00", title:"運動生理學專題", room:"綜合館 302"},
   {id:'c2', dow:1, start:"13:00", end:"15:00", title:"研究方法與統計", room:"體育館 105"},
   {id:'c3', dow:2, start:"09:00", end:"11:00", title:"運動科學實驗課", room:"實驗室 B"},
@@ -2887,8 +2952,8 @@ var DEFAULT_CLASSES = [
 var CLASS_SCHEDULE = [];
 try{
   var rawC = localStorage.getItem('classSchedule');
-  CLASS_SCHEDULE = rawC ? JSON.parse(rawC) : DEFAULT_CLASSES.slice();
-}catch(e){ CLASS_SCHEDULE = DEFAULT_CLASSES.slice(); }
+  CLASS_SCHEDULE = rawC ? JSON.parse(rawC) : [];
+}catch(e){ CLASS_SCHEDULE = []; }
 CLASS_SCHEDULE.forEach(function(c,i){
   if(!c.id) c.id = 'c'+i+'_'+Date.now();
   /* Classes written before terms existed have no range; leaving them open-ended
@@ -2924,7 +2989,7 @@ function saveClasses(){ try{ localStorage.setItem('classSchedule', JSON.stringif
 var HOURS = [];
 for(var h=8; h<=20; h++) HOURS.push(h);
 
-var DEFAULT_ITEMS = [
+var SAMPLE_ITEMS = [
   {id:"d1", title:"《Journal of Sports Sciences》修改稿截止", date:ymd(new Date(today.getFullYear(),today.getMonth(),today.getDate()+2)), time:"18:00", cat:"deadline", remind:["line","email"], done:false, notes:"R1 回覆，需附 point-by-point 回覆信", repeat:"none", repeatEnd:""},
   {id:"d2", title:"跟指導教授討論投稿期刊選擇", date:ymd(new Date(today.getFullYear(),today.getMonth(),today.getDate()+1)), time:"14:00", cat:"meeting", remind:["line"], done:false, notes:"", repeat:"weekly", repeatEnd:""},
   {id:"d3", title:"IRB 倫理審查效期到期提醒", date:ymd(new Date(today.getFullYear(),today.getMonth(),today.getDate()+5)), time:"", cat:"deadline", remind:["email"], done:false, notes:"需提前申請展延", repeat:"none", repeatEnd:""},
@@ -2934,8 +2999,8 @@ var DEFAULT_ITEMS = [
 var items = [];
 try{
   var rawI = localStorage.getItem('calendarItems');
-  items = rawI ? JSON.parse(rawI) : DEFAULT_ITEMS.slice();
-}catch(e){ items = DEFAULT_ITEMS.slice(); }
+  items = rawI ? JSON.parse(rawI) : [];
+}catch(e){ items = []; }
 items.forEach(function(it){ if(it.repeat==null) it.repeat='none'; if(it.repeatEnd==null) it.repeatEnd=''; });
 function saveItems(){ try{ localStorage.setItem('calendarItems', JSON.stringify(items)); }catch(e){} }
 
@@ -2969,51 +3034,27 @@ var REPEAT_LABEL = {weekly:'每週', biweekly:'每兩週', monthly:'每月'};
 var CAT_LABEL = {deadline:'截止期限', meeting:'會議/約定', personal:'個人事項'};
 var REMIND_LABEL = {line:'LINE', email:'Email', push:'瀏覽器'};
 
-/* ---- 美和科技大學 115 學年度校內行事曆 ----
-   來源：使用者提供的學校行事曆（第 1、第 2 學期）。只收錄學術行程（註冊、加退選、
-   期中期末考、棄選、畢典…）與 11/28 地方公職人員選舉投票日；校曆上的國定假日
-   已逐日比對過，與下面的官方假日表完全一致，因此不重複收錄。*/
-var DEFAULT_SCHOOL_NAME = '美和科技大學 115 學年度';
-var DEFAULT_SCHOOL_TERMS = [
-  {name:'第 1 學期', start:'2026-09-14', end:'2027-01-17'},
-  {name:'第 2 學期', start:'2027-02-22', end:'2027-06-27'}
-];
-var DEFAULT_SCHOOL_EVENTS = [
-  {d:'2026-08-31', to:'2026-09-27', t:'學分抵免申請', k:'admin'},
-  {d:'2026-09-14', t:'開學註冊日', k:'term'},
-  {d:'2026-09-14', to:'2026-09-27', t:'加退選課', k:'admin'},
-  {d:'2026-09-27', t:'學分抵免／選課申請截止', k:'deadline'},
-  {d:'2026-11-07', t:'六十週年校慶', k:'event'},
-  {d:'2026-11-09', to:'2026-11-15', t:'期中考週', k:'exam'},
-  {d:'2026-11-16', to:'2026-12-27', t:'棄選課程作業', k:'admin'},
-  {d:'2026-11-28', t:'地方公職人員選舉投票', k:'holiday'},
-  {d:'2026-12-27', t:'棄選課程截止', k:'deadline'},
-  {d:'2027-01-11', to:'2027-01-17', t:'期末考週', k:'exam'},
-  {d:'2027-01-17', t:'課程結束', k:'term'},
-  {d:'2027-01-18', t:'寒假開始', k:'term'},
-  {d:'2027-02-15', to:'2027-03-07', t:'學分抵免申請', k:'admin'},
-  {d:'2027-02-22', t:'開學註冊日', k:'term'},
-  {d:'2027-02-22', to:'2027-03-07', t:'加退選課', k:'admin'},
-  {d:'2027-03-07', t:'學分抵免／選課申請截止', k:'deadline'},
-  {d:'2027-04-19', to:'2027-04-25', t:'期中考週', k:'exam'},
-  {d:'2027-04-26', to:'2027-05-16', t:'應屆畢業生棄選作業', k:'admin'},
-  {d:'2027-04-26', to:'2027-06-06', t:'在校生棄選作業', k:'admin'},
-  {d:'2027-05-16', t:'應屆畢業生棄選截止', k:'deadline'},
-  {d:'2027-05-31', to:'2027-06-06', t:'應屆畢業班畢業考週', k:'exam'},
-  {d:'2027-06-06', t:'在校生棄選截止', k:'deadline'},
-  {d:'2027-06-19', t:'畢業典禮（暫定）', k:'event'},
-  {d:'2027-06-21', to:'2027-06-27', t:'期末考週', k:'exam'},
-  {d:'2027-06-27', t:'課程結束', k:'term'},
-  {d:'2027-06-28', t:'暑假開始', k:'term'}
-];
+/* ---- 校內行事曆 ----
+   這裡刻意留白。校曆是每間學校自己的東西，寫死一間學校的日期會讓每個拿到這個
+   網頁的人都看到別人學校的行程。使用者從「⚙ 編輯校曆」自己建，或把學校發的
+   圖片／PDF／JSON 匯進來，存在自己瀏覽器裡。 */
+var DEFAULT_SCHOOL_NAME = '';
+var DEFAULT_SCHOOL_TERMS = [];
+var DEFAULT_SCHOOL_EVENTS = [];
 var SCHOOL_KIND_LABEL = {exam:'考試', deadline:'截止', admin:'選課', event:'活動', term:'學期', holiday:'放假'};
 
-/* The dates above are one school's. Anyone else's calendar replaces them
-   wholesale: whatever is in localStorage wins, and the built-in tables are only
-   the starting point you get before you edit anything. */
+/* Whatever is in localStorage wins; with nothing saved the calendar is empty
+   and the 🎓 校曆 toggle stays hidden until there is something to toggle. */
 var SCHOOL_NAME = DEFAULT_SCHOOL_NAME;
 var SCHOOL_TERMS = DEFAULT_SCHOOL_TERMS.slice();
 var SCHOOL_EVENTS = DEFAULT_SCHOOL_EVENTS.slice();
+/* 民國學年度。只填「9/14」這種月日的來源要靠它換算成西元。
+   8 月（含）之後算學年度當年，7 月（含）之前算隔年——台灣的學年度就是這樣切的。 */
+var SCHOOL_YEAR = guessAcadYear(new Date());
+function guessAcadYear(d){
+  var y = d.getFullYear() - 1911;
+  return d.getMonth() + 1 >= 8 ? y : y - 1;
+}
 function loadSchoolCalendar(){
   try{
     var raw = localStorage.getItem('schoolCalendar');
@@ -3022,13 +3063,14 @@ function loadSchoolCalendar(){
     if(v && typeof v.name === 'string') SCHOOL_NAME = v.name;
     if(v && Array.isArray(v.terms)) SCHOOL_TERMS = v.terms;
     if(v && Array.isArray(v.events)) SCHOOL_EVENTS = v.events;
+    if(v && v.acadYear) SCHOOL_YEAR = parseInt(v.acadYear, 10) || SCHOOL_YEAR;
   }catch(e){}
 }
 loadSchoolCalendar();
 function saveSchoolCalendar(){
   try{
     localStorage.setItem('schoolCalendar',
-      JSON.stringify({name:SCHOOL_NAME, terms:SCHOOL_TERMS, events:SCHOOL_EVENTS}));
+      JSON.stringify({name:SCHOOL_NAME, acadYear:SCHOOL_YEAR, terms:SCHOOL_TERMS, events:SCHOOL_EVENTS}));
   }catch(e){}
 }
 var showSchool = true;
@@ -3501,6 +3543,13 @@ document.getElementById('gotoToday').addEventListener('click', function(){
   monthAnchor = new Date(today.getFullYear(), today.getMonth(), 1);
   renderCalendarAll();
 });
+/* 一份空校曆沒有東西可以開關，按鈕留著只會讓人以為壞了。 */
+function schoolHasContent(){ return SCHOOL_EVENTS.length > 0 || SCHOOL_TERMS.length > 0; }
+function applySchoolVisibility(){
+  var b = document.getElementById('toggleSchool');
+  if(b) b.hidden = !schoolHasContent();
+}
+applySchoolVisibility();
 document.getElementById('toggleSchool').addEventListener('click', function(){
   showSchool = !showSchool;
   this.classList.toggle('on', showSchool);
@@ -3531,18 +3580,28 @@ var draftSchool = null;
 function schoolDraftFromCurrent(){
   return {
     name: SCHOOL_NAME,
+    acadYear: SCHOOL_YEAR,
     terms: SCHOOL_TERMS.map(function(t){ return {name:t.name, start:t.start, end:t.end}; }),
     events: SCHOOL_EVENTS.map(function(e){ return {d:e.d, to:e.to||'', t:e.t, k:e.k||'event'}; })
   };
 }
+/* 校曆名稱裡通常就寫著學年度，能讀到就用它，使用者不用再填一次。 */
+function schoolYearFromName(name){
+  var m = String(name||'').match(/(\d{2,3})\s*學年/);
+  if(m) return parseInt(m[1], 10);
+  m = String(name||'').match(/(20\d{2})/);
+  if(m) return parseInt(m[1], 10) - 1911;
+  return null;
+}
 function renderSchoolEditor(){
   document.getElementById('sc-name').value = draftSchool.name || '';
+  document.getElementById('sc-year').value = draftSchool.acadYear || '';
 
   document.getElementById('sc-terms').innerHTML = draftSchool.terms.map(function(t, i){
-    return '<div class="memberrow">'+
-      '<div class="field"><label>學期名稱</label><input aria-label="學期名稱" data-tf="name" data-ti="'+i+'" value="'+esc(t.name||'')+'"></div>'+
-      '<div class="field"><label>開始（第一週的星期一）</label><input aria-label="開始（第一週的星期一）" type="date" data-tf="start" data-ti="'+i+'" value="'+esc(t.start||'')+'"></div>'+
-      '<div class="field"><label>結束</label><input aria-label="結束" type="date" data-tf="end" data-ti="'+i+'" value="'+esc(t.end||'')+'"></div>'+
+    return '<div class="termrow">'+
+      '<div class="field"><label>名稱</label><input aria-label="學期名稱" data-tf="name" data-ti="'+i+'" placeholder="例如：第 1 學期" value="'+esc(t.name||'')+'"></div>'+
+      '<div class="field"><label>開始（第一週的星期一）</label><input aria-label="學期開始" type="date" data-tf="start" data-ti="'+i+'" value="'+esc(t.start||'')+'"></div>'+
+      '<div class="field"><label>結束</label><input aria-label="學期結束" type="date" data-tf="end" data-ti="'+i+'" value="'+esc(t.end||'')+'"></div>'+
       '<button class="btn-ghost" type="button" data-rmterm="'+i+'">移除</button>'+
     '</div>';
   }).join('') || '<div class="pempty">還沒有學期。沒有學期就不會顯示「第 N 週」。</div>';
@@ -3561,8 +3620,11 @@ function renderSchoolEditor(){
     '</tr>';
   }).join('');
   document.getElementById('sc-events').innerHTML = draftSchool.events.length
-    ? '<div class="ptablewrap"><table class="ptable"><thead><tr><th>日期</th><th>結束日（跨多天才填）</th><th>名稱</th><th>類別</th><th class="rowact"></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
-    : '<div class="pempty">還沒有任何行程。</div>';
+    ? '<div class="ptablewrap"><table class="ptable wide" style="min-width:700px;">'
+      + '<colgroup><col style="width:165px;"><col style="width:165px;"><col><col style="width:110px;"><col style="width:44px;"></colgroup>'
+      + '<thead><tr><th>開始</th><th>結束（跨多天才填）</th><th>名稱</th><th>類別</th><th class="rowact"></th></tr></thead><tbody>'
+      + rows + '</tbody></table></div>'
+    : '<div class="pempty">還沒有任何行程。用上面的「＋ 加一筆」自己輸入，或用下面的匯入把學校發的圖片／PDF 讀進來。</div>';
 
   document.querySelectorAll('#sc-terms [data-tf]').forEach(function(el){
     el.addEventListener('input', syncSchoolDraft);
@@ -3589,6 +3651,11 @@ function renderSchoolEditor(){
 }
 function syncSchoolDraft(){
   draftSchool.name = document.getElementById('sc-name').value;
+  /* 空白就真的當空白——留著上一次的值，使用者會以為自己清掉了，結果匯入時
+     又拿舊的年份去換算。 */
+  var yv = parseInt(document.getElementById('sc-year').value, 10);
+  if(yv > 1911) yv -= 1911;
+  draftSchool.acadYear = (yv >= 90 && yv <= 200) ? yv : null;
   document.querySelectorAll('#sc-terms [data-tf]').forEach(function(el){
     var i = parseInt(el.getAttribute('data-ti'), 10);
     if(draftSchool.terms[i]) draftSchool.terms[i][el.getAttribute('data-tf')] = el.value;
@@ -3601,9 +3668,16 @@ function syncSchoolDraft(){
 function openSchoolEditor(){
   draftSchool = schoolDraftFromCurrent();
   document.getElementById('schoolHint').hidden = true;
+  calCancelReview();
+  setSchoolStage('', 0, false);
   renderSchoolEditor();
   schoolBackdrop.classList.add('open');
 }
+document.getElementById('sc-name').addEventListener('input', function(){
+  var y = schoolYearFromName(this.value);
+  var box = document.getElementById('sc-year');
+  if(y && !box.value) box.value = y;
+});
 document.getElementById('editSchoolBtn').addEventListener('click', openSchoolEditor);
 document.getElementById('cancelSchool').addEventListener('click', function(){ schoolBackdrop.classList.remove('open'); });
 schoolBackdrop.addEventListener('click', function(e){ if(e.target===schoolBackdrop) schoolBackdrop.classList.remove('open'); });
@@ -3627,13 +3701,13 @@ document.getElementById('scClear').addEventListener('click', function(){
     renderSchoolEditor();
   });
 });
-document.getElementById('scReset').addEventListener('click', function(){
-  askConfirm({title:'還原內建校曆', ok:'還原',
-    body:'確定要還原成內建的 '+DEFAULT_SCHOOL_NAME+' 校曆嗎？你自己的修改會被覆蓋。'}, function(){
-    draftSchool = {name: DEFAULT_SCHOOL_NAME,
-                   terms: DEFAULT_SCHOOL_TERMS.map(function(t){ return {name:t.name,start:t.start,end:t.end}; }),
-                   events: DEFAULT_SCHOOL_EVENTS.map(function(e){ return {d:e.d,to:e.to||'',t:e.t,k:e.k}; })};
+document.getElementById('scWipe').addEventListener('click', function(){
+  askConfirm({title:'清空整份校曆', danger:true, ok:'清空',
+    body:'名稱、學期、所有校內行程都會清掉。\n按「儲存校曆」之後才會真的生效。'}, function(){
+    draftSchool = {name:'', acadYear: draftSchool.acadYear, terms: [], events: []};
+    calCancelReview();
     renderSchoolEditor();
+    showSchoolHint('已清空。按「儲存校曆」生效，或直接關掉這個視窗放棄。', false);
   });
 });
 function showSchoolHint(msg, isErr){
@@ -3646,31 +3720,213 @@ document.getElementById('scExport').addEventListener('click', function(){
   syncSchoolDraft();
   saveFile('校曆_'+(draftSchool.name||'未命名').replace(/[\/\\:*?"<>|]/g,'_')+'.json',
     JSON.stringify({format:'wu-di-school-calendar', version:1, name:draftSchool.name,
+                    acadYear:draftSchool.acadYear,
                     terms:draftSchool.terms, events:draftSchool.events}, null, 2),
     function(){ showSchoolHint('已匯出校曆檔，可以傳給同校的人直接匯入。', false); },
     function(msg){ showSchoolHint(msg, true); });
 });
+/* ---- 匯入 ----
+   .json 是自己人寫的格式，直接整份換掉。圖片和 PDF 是機器讀的，一定會有錯，
+   所以絕不直接寫進校曆，而是先攤成一張可勾可改的清單讓人看過。 */
+function setSchoolStage(msg, prog, show){
+  var box = document.getElementById('scImportStage');
+  var bar = document.getElementById('scImportBar');
+  box.hidden = !show;
+  box.className = 'ocrbox';
+  document.getElementById('scImportMsg').textContent = msg || '';
+  if(typeof prog === 'number' && prog > 0){
+    bar.hidden = false;
+    document.getElementById('scImportFill').style.width = Math.round(Math.min(1, prog) * 100) + '%';
+  } else {
+    bar.hidden = true;
+  }
+}
+function setSchoolStageErr(msg){
+  setSchoolStage(msg, 0, true);
+  document.getElementById('scImportStage').className = 'ocrbox err';
+}
+
+var calReview = [];
+function calCancelReview(){
+  calReview = [];
+  document.getElementById('scReview').hidden = true;
+  document.getElementById('scRawText').hidden = true;
+}
+function renderCalReview(){
+  var wrap = document.getElementById('sc-review-rows');
+  var on = calReview.filter(function(r){ return r.use; }).length;
+  document.getElementById('scReviewCount').textContent =
+    '（' + calReview.length + ' 筆，勾了 ' + on + ' 筆）';
+  if(!calReview.length){
+    wrap.innerHTML = '<div class="pempty">這份檔案裡沒有讀到看得懂的日期。'
+      + '如果是拍照的，換一張正面、對焦清楚、光線平均的再試一次；'
+      + '也可以直接用上面的「＋ 加一筆」自己輸入。</div>';
+    return;
+  }
+  wrap.innerHTML = calReview.map(function(r, i){
+    return '<div class="screvrow' + (r.use ? '' : ' off') + '" data-ri="' + i + '">'
+      + '<span class="rc"><input type="checkbox" data-rf="use" data-ri="' + i + '"'
+        + (r.use ? ' checked' : '') + ' aria-label="加入這筆"></span>'
+      + '<span class="rd"><input type="date" data-rf="d" data-ri="' + i + '" value="' + esc(r.d || '') + '" aria-label="開始"></span>'
+      + '<span class="re"><input type="date" data-rf="to" data-ri="' + i + '" value="' + esc(r.to || '') + '" aria-label="結束"></span>'
+      + '<span class="rt"><input type="text" data-rf="t" data-ri="' + i + '" value="' + esc(r.t || '') + '" aria-label="名稱"></span>'
+      + '<span class="rk"><select data-rf="k" data-ri="' + i + '" aria-label="類別">'
+        + Object.keys(SCHOOL_KIND_LABEL).map(function(k){
+            return '<option value="' + k + '"' + (r.k === k ? ' selected' : '') + '>' + esc(SCHOOL_KIND_LABEL[k]) + '</option>';
+          }).join('')
+      + '</select></span>'
+      + '<span class="rx"><button class="iconbtn" data-rmrev="' + i + '" title="移除這筆">✕</button></span>'
+      + '</div>';
+  }).join('');
+  wrap.querySelectorAll('[data-rf]').forEach(function(el){
+    var ev = el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input';
+    el.addEventListener(ev, function(){
+      var i = parseInt(el.getAttribute('data-ri'), 10);
+      var f = el.getAttribute('data-rf');
+      if(!calReview[i]) return;
+      calReview[i][f] = (f === 'use') ? el.checked : el.value;
+      if(f === 'use') renderCalReview();
+    });
+  });
+  wrap.querySelectorAll('[data-rmrev]').forEach(function(el){
+    el.addEventListener('click', function(){
+      calReview.splice(parseInt(el.getAttribute('data-rmrev'), 10), 1);
+      renderCalReview();
+    });
+  });
+}
+function startCalReview(rows, rawText, note){
+  calReview = rows.map(function(r){
+    return {use:true, d:r.d, to:r.to || '', t:r.t, k:r.k || 'event'};
+  });
+  document.getElementById('scRawText').textContent = rawText || '';
+  document.getElementById('scRawText').hidden = true;
+  document.getElementById('scReview').hidden = false;
+  renderCalReview();
+  setSchoolStage(note, 0, true);
+  document.getElementById('scImportStage').className = 'ocrbox' + (rows.length ? ' ok' : ' err');
+  document.getElementById('scReview').scrollIntoView({block:'nearest'});
+}
+
+document.getElementById('scRevAll').addEventListener('click', function(){
+  calReview.forEach(function(r){ r.use = true; }); renderCalReview();
+});
+document.getElementById('scRevNone').addEventListener('click', function(){
+  calReview.forEach(function(r){ r.use = false; }); renderCalReview();
+});
+document.getElementById('scRevRaw').addEventListener('click', function(){
+  var el = document.getElementById('scRawText');
+  el.hidden = !el.hidden;
+  this.textContent = el.hidden ? '原始文字' : '收起原始文字';
+});
+document.getElementById('scRevCancel').addEventListener('click', function(){
+  calCancelReview();
+  setSchoolStage('', 0, false);
+});
+document.getElementById('scRevAdd').addEventListener('click', function(){
+  syncSchoolDraft();
+  var picked = calReview.filter(function(r){ return r.use && r.d && String(r.t||'').trim(); });
+  if(!picked.length){ showSchoolHint('沒有勾選任何一筆，或勾到的缺日期／名稱。', true); return; }
+  var have = {};
+  draftSchool.events.forEach(function(e){ have[e.d + '|' + (e.to||'') + '|' + e.t] = 1; });
+  var added = 0, dup = 0;
+  picked.forEach(function(r){
+    var key = r.d + '|' + (r.to||'') + '|' + String(r.t).trim();
+    if(have[key]){ dup++; return; }
+    have[key] = 1; added++;
+    draftSchool.events.push({d:r.d, to:(r.to && r.to > r.d) ? r.to : '', t:String(r.t).trim(), k:r.k || 'event'});
+  });
+  draftSchool.events.sort(function(a,b){ return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
+  calCancelReview();
+  setSchoolStage('', 0, false);
+  renderSchoolEditor();
+  showSchoolHint('加了 ' + added + ' 筆' + (dup ? '（' + dup + ' 筆重複，跳過）' : '')
+    + '。確認上面的表沒問題後，按「儲存校曆」才會存下來。', false);
+});
+
 document.getElementById('scImport').addEventListener('change', function(){
   var f = this.files && this.files[0];
   this.value = '';
   if(!f) return;
+  syncSchoolDraft();
+  calCancelReview();
+  var name = (f.name || '').toLowerCase();
+  var isPdf = f.type === 'application/pdf' || /\.pdf$/.test(name);
+  var isImg = (f.type && f.type.indexOf('image/') === 0) || /\.(png|jpe?g|webp|gif|bmp|heic|heif)$/.test(name);
+  if(isPdf) return importSchoolPdf(f);
+  if(isImg) return importSchoolImage(f);
+  return importSchoolJson(f);
+});
+
+function importSchoolJson(f){
   var reader = new FileReader();
   reader.onload = function(){
     try{
       var v = JSON.parse(reader.result);
       if(!v || v.format !== 'wu-di-school-calendar') throw new Error('format');
       draftSchool = {name: v.name || '',
+                     acadYear: v.acadYear || schoolYearFromName(v.name) || draftSchool.acadYear,
                      terms: Array.isArray(v.terms) ? v.terms : [],
                      events: Array.isArray(v.events) ? v.events : []};
       renderSchoolEditor();
+      setSchoolStage('', 0, false);
       showSchoolHint('已載入 '+draftSchool.events.length+' 筆行程，按「儲存校曆」才會生效。', false);
     }catch(e){
-      showSchoolHint('這不是校曆檔，或檔案已損壞。', true);
+      showSchoolHint('這不是校曆檔，或檔案已損壞。如果要匯入的是圖片或 PDF，副檔名要對得上。', true);
     }
   };
   reader.onerror = function(){ showSchoolHint('讀取檔案失敗。', true); };
   reader.readAsText(f);
-});
+}
+
+/* 沒有學年度就沒辦法把「9/14」換算成哪一年，先擋下來問清楚，比亂猜一年好。 */
+function calNeedYear(){
+  if(draftSchool.acadYear) return draftSchool.acadYear;
+  var y = schoolYearFromName(draftSchool.name);
+  if(y){ draftSchool.acadYear = y; document.getElementById('sc-year').value = y; return y; }
+  return null;
+}
+function importSchoolImage(f){
+  var y = calNeedYear();
+  if(!y){ setSchoolStageErr('先填「學年度（民國）」再匯入。表格上常常只寫 9/14，沒有學年度就不知道是哪一年。'); return; }
+  setSchoolStage('準備辨識…（第一次會下載中文語言檔，可能要等一下）', 0.02, true);
+  calImageToText(f, function(msg, p){ setSchoolStage(msg, p, true); })
+    .then(function(text){
+      var rows = calParseCalendarText(text, y);
+      startCalReview(rows, text,
+        rows.length ? '從圖片讀到 ' + rows.length + ' 筆。下面逐筆確認。'
+                    : '圖片讀完了，但沒有找到看得懂的日期。');
+    })
+    .catch(function(e){
+      setSchoolStageErr(calErrMsg(e, '圖片'));
+    });
+}
+function importSchoolPdf(f){
+  var y = calNeedYear();
+  if(!y){ setSchoolStageErr('先填「學年度（民國）」再匯入。表格上常常只寫 9/14，沒有學年度就不知道是哪一年。'); return; }
+  setSchoolStage('開啟 PDF…', 0.02, true);
+  pdfExtractText(f, function(msg, p){ setSchoolStage(msg, p, true); })
+    .then(function(res){
+      var rows = calParseCalendarText(res.text, y);
+      var how = res.ocr ? '（這份 PDF 是掃描檔，用辨識讀的，錯字會比較多）' : '';
+      startCalReview(rows, res.text,
+        rows.length ? '從 PDF 讀到 ' + rows.length + ' 筆' + how + '。下面逐筆確認。'
+                    : 'PDF 讀完了，但沒有找到看得懂的日期。' + how);
+    })
+    .catch(function(e){
+      setSchoolStageErr(calErrMsg(e, 'PDF'));
+    });
+}
+function calErrMsg(e, what){
+  var m = (e && e.message) || '';
+  if(m === 'blocked' || m === 'timeout' || m === 'loaded-but-empty'){
+    return '讀' + what + '要用到的元件下載不下來——可能是網路擋住了外部程式庫，或現在沒有連線。'
+         + '可以改成自己用「＋ 加一筆」輸入，或匯入 .json。';
+  }
+  if(m === 'image' || m === 'prep') return '這張圖片打不開，換一張試試。';
+  if(m === 'read') return '讀取檔案失敗。';
+  return '讀' + what + '的時候出錯了（' + (m || '未知') + '）。可以改成自己輸入，或匯入 .json。';
+}
 document.getElementById('saveSchool').addEventListener('click', function(){
   syncSchoolDraft();
   var bad = draftSchool.events.filter(function(e){ return !e.d || !String(e.t||'').trim(); });
@@ -3678,6 +3934,7 @@ document.getElementById('saveSchool').addEventListener('click', function(){
   var badTerm = draftSchool.terms.filter(function(t){ return !t.start || !t.end || t.end < t.start; });
   if(badTerm.length){ showSchoolHint('有學期的起訖日沒填好（結束不能早於開始）。', true); return; }
   SCHOOL_NAME = draftSchool.name.trim();
+  SCHOOL_YEAR = draftSchool.acadYear || SCHOOL_YEAR;
   SCHOOL_TERMS = draftSchool.terms.map(function(t){ return {name:t.name||'學期', start:t.start, end:t.end}; });
   SCHOOL_EVENTS = draftSchool.events.map(function(e){
     var o = {d:e.d, t:String(e.t).trim(), k:e.k||'event'};
@@ -3685,7 +3942,10 @@ document.getElementById('saveSchool').addEventListener('click', function(){
     return o;
   });
   saveSchoolCalendar();
+  calCancelReview();
+  setSchoolStage('', 0, false);
   schoolBackdrop.classList.remove('open');
+  applySchoolVisibility();
   renderCalendarAll();
 });
 
@@ -3855,6 +4115,9 @@ function fillTermSelect(c){
   opts.push('<option value="custom">自訂起訖日期</option>');
   opts.push('<option value="none">不限日期（每週一直重複）</option>');
   sel.innerHTML = opts.join('');
+  /* 沒有校曆就沒有學期可選，這時候要講清楚學期是從哪裡來的，不然只會覺得少了東西。 */
+  var note = document.getElementById('c-termNote');
+  if(note) note.hidden = SCHOOL_TERMS.length > 0;
 
   var val = 'none';
   if(c && (c.termStart || c.termEnd)){
@@ -4242,7 +4505,7 @@ function copyToClipboard(text, html){
   });
 }
 
-var DEFAULT_RECORDS = [
+var SAMPLE_RECORDS = [
   {
     id:'s1', journalTitle:'British Journal of Sports Medicine', journalId:'bjsm',
     titleEN:'Effects of Eccentric Training on Hamstring Injury Prevention in Collegiate Athletes',
@@ -4290,8 +4553,8 @@ var DEFAULT_RECORDS = [
 var records = [];
 try{
   var rawR = localStorage.getItem('submissionRecords');
-  records = rawR ? JSON.parse(rawR) : DEFAULT_RECORDS.slice();
-}catch(e){ records = DEFAULT_RECORDS.slice(); }
+  records = rawR ? JSON.parse(rawR) : [];
+}catch(e){ records = []; }
 /* paperId groups the submissions of ONE manuscript across journals. Records made
    before this existed get their own id as the paperId, so each stays a chain of one. */
 function migrateRecords(){
@@ -5302,7 +5565,7 @@ function collectBackup(){
     authorBook: authorBook,
     businessCards: cards,
     researchProjects: projects,
-    schoolCalendar: {name:SCHOOL_NAME, terms:SCHOOL_TERMS, events:SCHOOL_EVENTS}
+    schoolCalendar: {name:SCHOOL_NAME, acadYear:SCHOOL_YEAR, terms:SCHOOL_TERMS, events:SCHOOL_EVENTS}
   };
 }
 function describeBackup(b){
@@ -5329,36 +5592,52 @@ function openBackupModal(){
 }
 document.getElementById('backupBtn').addEventListener('click', openBackupModal);
 
-/* The demo rows exist so a first-time visitor sees a populated interface rather
-   than five empty panels. They are somebody else's data, so anyone adopting the
-   page needs one button that removes exactly those and nothing they typed. */
-function isDemoItem(it){ return DEFAULT_ITEMS.some(function(d){ return d.id === it.id; }); }
+/* Samples are matched by their fixed ids, so loading and removing them never
+   touches a row the reader typed themselves. */
+function isSampleItem(it){ return SAMPLE_ITEMS.some(function(d){ return d.id === it.id; }); }
+function isSampleClass(c){ return SAMPLE_CLASSES.some(function(d){ return d.id === c.id; }); }
+function isSampleRecord(r){ return SAMPLE_RECORDS.some(function(d){ return d.id === r.id; }); }
+function sampleCount(){
+  return items.filter(isSampleItem).length
+       + CLASS_SCHEDULE.filter(isSampleClass).length
+       + records.filter(isSampleRecord).length;
+}
+function refreshBackupCounts(){
+  document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
+}
+
+document.getElementById('loadDemo').addEventListener('click', function(){
+  if(sampleCount()){
+    showBackupHint('clearDemoHint', '示範資料已經在裡面了。', false);
+    return;
+  }
+  SAMPLE_CLASSES.forEach(function(c){ CLASS_SCHEDULE.push(JSON.parse(JSON.stringify(c))); });
+  SAMPLE_ITEMS.forEach(function(it){ items.push(JSON.parse(JSON.stringify(it))); });
+  SAMPLE_RECORDS.forEach(function(r){ records.push(JSON.parse(JSON.stringify(r))); });
+  migrateRecords();
+  saveItems(); saveClasses(); saveRecords();
+  showBackupHint('clearDemoHint',
+    '已載入示範資料（'+SAMPLE_CLASSES.length+' 堂課、'+SAMPLE_ITEMS.length+' 筆事項、'+
+    SAMPLE_RECORDS.length+' 筆投稿）。看完按上面那顆就能清掉。', false);
+  refreshBackupCounts();
+  applyNav();
+});
+
 document.getElementById('clearDemo').addEventListener('click', function(){
-  var demoItems = items.filter(isDemoItem).length;
-  var demoClasses = CLASS_SCHEDULE.filter(function(c){
-    return DEFAULT_CLASSES.some(function(d){ return d.id === c.id; });
-  }).length;
-  var demoRecs = records.filter(function(r){
-    return DEFAULT_RECORDS.some(function(d){ return d.id === r.id; });
-  }).length;
-  if(!demoItems && !demoClasses && !demoRecs){
-    showBackupHint('clearDemoHint', '目前已經沒有示範資料了，你的資料都是自己建立的。', false);
+  var n = sampleCount();
+  if(!n){
+    showBackupHint('clearDemoHint', '目前沒有示範資料，畫面上的都是你自己建立的。', false);
     return;
   }
   askConfirm({title:'清除示範資料', danger:true, ok:'清除',
-    body:'會清除 '+demoClasses+' 堂示範課程、'+demoItems+' 筆示範事項、'+demoRecs+
-         ' 筆示範投稿紀錄。\n你自己新增的資料完全不受影響。'}, function(){
-    items = items.filter(function(it){ return !isDemoItem(it); });
-    CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(c){
-      return !DEFAULT_CLASSES.some(function(d){ return d.id === c.id; });
-    });
-    records = records.filter(function(r){
-      return !DEFAULT_RECORDS.some(function(d){ return d.id === r.id; });
-    });
+    body:'會清除 '+n+' 筆示範資料。\n你自己新增的資料完全不受影響。'}, function(){
+    items = items.filter(function(it){ return !isSampleItem(it); });
+    CLASS_SCHEDULE = CLASS_SCHEDULE.filter(function(c){ return !isSampleClass(c); });
+    records = records.filter(function(r){ return !isSampleRecord(r); });
     saveItems(); saveClasses(); saveRecords();
     hstate.open = {};
-    showBackupHint('clearDemoHint', '示範資料已清除，可以開始建立你自己的資料了。', false);
-    document.getElementById('backupCounts').textContent = '目前資料：'+describeBackup(collectBackup())+'。';
+    showBackupHint('clearDemoHint', '示範資料已清除。', false);
+    refreshBackupCounts();
     applyNav();
   });
 });
@@ -5444,7 +5723,9 @@ function doRestoreBackup(){
     if(typeof sc.name === 'string') SCHOOL_NAME = sc.name;
     if(Array.isArray(sc.terms)) SCHOOL_TERMS = sc.terms;
     if(Array.isArray(sc.events)) SCHOOL_EVENTS = sc.events;
+    if(sc.acadYear) SCHOOL_YEAR = parseInt(sc.acadYear, 10) || SCHOOL_YEAR;
     saveSchoolCalendar();
+    applySchoolVisibility();
   }
   if(Array.isArray(pendingImport.researchProjects)){
     /* Project files live in IndexedDB and are not in the JSON, so a restore onto
@@ -8068,8 +8349,8 @@ function cardDrawScaled(img, maxSide){
 /* Tesseract reads dark-on-light text best. Greyscale, then stretch the
    histogram between the 5th and 95th percentile so a dim phone photo of a
    glossy card gets real black and real white instead of a grey smear. */
-function cardPrepForOcr(img){
-  var c = cardDrawScaled(img, 1700);
+function cardPrepForOcr(img, maxSide){
+  var c = cardDrawScaled(img, maxSide || 1700);
   var ctx = c.getContext('2d');
   var d = ctx.getImageData(0, 0, c.width, c.height);
   var px = d.data, hist = new Array(256).fill(0), i;
@@ -8109,7 +8390,7 @@ var TESS_BUILDS = [
 ];
 var tessWorker = null, tessBuild = null;
 
-function loadScriptOnce(src){
+function loadScriptOnce(src, globalName){
   return new Promise(function(res, rej){
     var done = false;
     var el = document.createElement('script');
@@ -8117,7 +8398,7 @@ function loadScriptOnce(src){
     el.async = true;
     el.onload = function(){
       done = true;
-      window.Tesseract ? res(window.Tesseract) : rej(new Error('loaded-but-empty'));
+      window[globalName] ? res(window[globalName]) : rej(new Error('loaded-but-empty'));
     };
     el.onerror = function(){ done = true; el.parentNode && el.parentNode.removeChild(el); rej(new Error('blocked')); };
     document.head.appendChild(el);
@@ -8133,7 +8414,7 @@ function makeWorker(build, onProgress){
     if(!m || typeof m.progress !== 'number') return;
     onProgress(m.status, m.progress);
   };
-  return loadScriptOnce(build.js).then(function(T){
+  return loadScriptOnce(build.js, 'Tesseract').then(function(T){
     return T.createWorker(['chi_tra','eng'], 1, {workerPath: build.worker, logger: logger})
       .catch(function(){ return T.createWorker(['chi_tra','eng'], 1, {logger: logger}); });
   });
@@ -8171,6 +8452,276 @@ var OCR_STAGE_ZH = {
   'initialized api':'準備辨識',
   'recognizing text':'辨識文字中'
 };
+
+
+/* ========================================================================
+   校曆匯入 — 從圖片／PDF 讀出行程
+   ======================================================================== */
+/* pdf.js 跟 tesseract 一樣是用到才下載。這裡只釘 UMD 版：v4 以後 pdf.js 只出
+   ESM（.mjs），普通的 <script> 標籤載不起來，所以停在 3.x，後面再墊一個 2.x。
+   一樣只用 cdnjs——發布出去的 artifact 只允許這一個腳本來源。 */
+var PDF_BUILDS = [
+  {js:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+   worker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'},
+  {js:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js',
+   worker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'}
+];
+var pdfLib = null;
+function getPdfLib(){
+  if(pdfLib) return Promise.resolve(pdfLib);
+  function attempt(i){
+    if(i >= PDF_BUILDS.length) return Promise.reject(new Error('blocked'));
+    return loadScriptOnce(PDF_BUILDS[i].js, 'pdfjsLib').then(function(L){
+      try{ L.GlobalWorkerOptions.workerSrc = PDF_BUILDS[i].worker; }catch(e){}
+      pdfLib = L;
+      return L;
+    }).catch(function(){
+      try{ delete window.pdfjsLib; }catch(e){ window.pdfjsLib = undefined; }
+      return attempt(i+1);
+    });
+  }
+  return attempt(0);
+}
+
+/* PDF 的文字層是一堆有座標的碎片，不是一行一行的。同一個 y 座標的併成一行、
+   照 x 排好，表格才不會被拆成沒有意義的單字。 */
+function pdfLinesFromItems(items){
+  var rows = [];
+  (items || []).forEach(function(it){
+    var str = it && it.str;
+    if(!str || !str.trim()) return;
+    var tr = it.transform || [1,0,0,1,0,0];
+    var y = Math.round(tr[5]), x = tr[4];
+    var row = null;
+    for(var i = 0; i < rows.length; i++){
+      if(Math.abs(rows[i].y - y) <= 3){ row = rows[i]; break; }
+    }
+    if(!row){ row = {y:y, cells:[]}; rows.push(row); }
+    row.cells.push({x:x, s:str});
+  });
+  rows.sort(function(a,b){ return b.y - a.y; });
+  return rows.map(function(r){
+    r.cells.sort(function(a,b){ return a.x - b.x; });
+    return r.cells.map(function(c){ return c.s; }).join('  ').replace(/\s{3,}/g, '  ').trim();
+  }).filter(Boolean).join('\n');
+}
+
+/* 掃描出來的 PDF 沒有文字層，抽出來會是空的或只有頁碼。有中文英文數字才算數。 */
+function calTextScore(t){
+  var m = String(t || '').match(/[一-鿿A-Za-z0-9]/g);
+  return m ? m.length : 0;
+}
+
+var CAL_MAX_PAGES = 12;
+var CAL_MAX_OCR_PAGES = 6;
+
+function pdfExtractText(file, onStage){
+  return Promise.resolve().then(function(){
+    return file.arrayBuffer ? file.arrayBuffer() : new Promise(function(res, rej){
+      var r = new FileReader();
+      r.onload = function(){ res(r.result); };
+      r.onerror = function(){ rej(new Error('read')); };
+      r.readAsArrayBuffer(file);
+    });
+  }).then(function(buf){
+    return getPdfLib().then(function(L){
+      return L.getDocument({data: new Uint8Array(buf)}).promise;
+    });
+  }).then(function(doc){
+    var n = Math.min(doc.numPages, CAL_MAX_PAGES), texts = [];
+    function page(i){
+      if(i > n) return Promise.resolve();
+      onStage('讀取第 ' + i + ' / ' + n + ' 頁的文字', i / n);
+      return doc.getPage(i).then(function(pg){
+        return pg.getTextContent();
+      }).then(function(tc){
+        texts.push(pdfLinesFromItems(tc.items));
+        return page(i + 1);
+      });
+    }
+    return page(1).then(function(){
+      var joined = texts.join('\n');
+      if(calTextScore(joined) >= 40) return {text: joined, ocr: false, pages: n};
+      return pdfOcrPages(doc, Math.min(n, CAL_MAX_OCR_PAGES), onStage).then(function(t){
+        return {text: t, ocr: true, pages: Math.min(n, CAL_MAX_OCR_PAGES)};
+      });
+    });
+  });
+}
+
+/* 掃描檔就只能一頁一頁轉成圖再辨識，很慢，所以設了頁數上限。 */
+function pdfOcrPages(doc, n, onStage){
+  var out = [];
+  function page(i){
+    if(i > n) return Promise.resolve(out.join('\n'));
+    onStage('第 ' + i + ' / ' + n + ' 頁沒有文字層，改用辨識', (i - 1) / n);
+    return doc.getPage(i).then(function(pg){
+      var vp = pg.getViewport({scale: 2});
+      var c = document.createElement('canvas');
+      c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+      return pg.render({canvasContext: c.getContext('2d'), viewport: vp}).promise.then(function(){
+        return runOcr(c.toDataURL('image/png'), function(stage, p){
+          onStage('第 ' + i + ' / ' + n + ' 頁 ' + (OCR_STAGE_ZH[stage] || stage), ((i - 1) + p) / n);
+        });
+      });
+    }).then(function(t){
+      out.push(t || '');
+      return page(i + 1);
+    });
+  }
+  return page(1);
+}
+
+/* CAL-PARSER-START */
+/* 台灣校曆的日期寫法很雜，這裡把常見的都收進來：
+     115.9.14 / 115年9月14日 / 115/9/14 / 2026-09-14 / 9/14 / 9月14日
+     9/14(一) / 9/14~9/27 / 9月14日至9月27日
+   只寫月日的沒有年份，用學年度換算：8 月（含）以後是學年度當年，7 月以前是隔年。 */
+function calYearOf(month, acadYear){
+  var base = acadYear + 1911;
+  return month >= 8 ? base : base + 1;
+}
+function calPad(n){ return (n < 10 ? '0' : '') + n; }
+function calMakeDate(y, m, d){
+  if(!(y >= 1990 && y <= 2100)) return null;
+  if(!(m >= 1 && m <= 12) || !(d >= 1 && d <= 31)) return null;
+  return y + '-' + calPad(m) + '-' + calPad(d);
+}
+/* 全形數字、全形斜線、各種破折號和波浪號先統一，後面的規則才不用寫十遍。 */
+function calNormalizeText(t){
+  return String(t == null ? '' : t)
+    .replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 65248); })
+    .replace(/[／∕]/g, '/')
+    .replace(/[－‐‑‒–—―ー]/g, '-')
+    .replace(/[～〜]/g, '~')
+    .replace(/（/g, '(').replace(/）/g, ')')
+    .replace(/[ \t]+/g, ' ');
+}
+/* 「(一)」「（星期三）」「(Mon.)」這些星期標記對解析沒有幫助，只會擋在日期中間。 */
+function calStripWeekday(t){
+  return t.replace(/\((?:星期|週|周)?[一二三四五六日天]\)/g, ' ')
+          .replace(/\((?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\.?\)/gi, ' ');
+}
+function calScanDates(line, acadYear){
+  var out = [];
+  /* 年份限定 3～4 碼（民國 115、西元 2026）。放寬到 2 碼的話，
+     「11/9-11/15」會被讀成「11 年 9 月 11 日」——這是踩過的坑。 */
+  var re = /(\d{3,4})\s*[.\-\/年]\s*(\d{1,2})\s*[.\-\/月]\s*(\d{1,2})\s*日?|(\d{1,2})\s*[.\/月]\s*(\d{1,2})\s*日?/g;
+  var m;
+  while((m = re.exec(line))){
+    var y, mo, da;
+    if(m[1] !== undefined){
+      y = parseInt(m[1], 10); mo = parseInt(m[2], 10); da = parseInt(m[3], 10);
+      if(y < 1911) y += 1911;
+    } else {
+      mo = parseInt(m[4], 10); da = parseInt(m[5], 10);
+      y = calYearOf(mo, acadYear);
+    }
+    var k = calMakeDate(y, mo, da);
+    if(k) out.push({k:k, s:m.index, e:m.index + m[0].length});
+  }
+  return out;
+}
+/* 兩個日期中間只剩連接符號，才算是一段區間；中間夾了字就是兩件不同的事。 */
+var CAL_RANGE_SEP = /^[\s~\-至到起迄、,，]*$/;
+/* 頁碼和表頭常常剛好落在日期的下一行，會被當成行程名稱。 */
+var CAL_JUNK = /^(第?\s*\d+\s*[頁页章]|p(age)?\.?\s*\d+|\d+\s*[\/-]\s*\d+\s*[頁页]|附註|備註|說明|合計|小計|星期|日期|活動|項目|週次|月份|備考)$/i;
+var CAL_KIND_RULES = [
+  {k:'exam',     re:/考試|期中考|期末考|畢業考|補考|考週|考試週/},
+  {k:'deadline', re:/截止|最後一?[日天]|期限|繳交|截止日/},
+  {k:'holiday',  re:/放假|休假|補假|連假|不上課|不上班|國定假日|投票|春節|端午|中秋|清明|元旦|除夕/},
+  {k:'term',     re:/開學|註冊|上課日|課程結束|開始上課|寒假|暑假|學期開始|學期結束|返校/},
+  {k:'admin',    re:/選課|加退選|棄選|抵免|退費|停修修|停修|預選|初選|加簽|退選|成績/},
+  {k:'event',    re:/校慶|典禮|運動會|說明會|講座|活動|週會|研討會/}
+];
+function calGuessKind(title){
+  for(var i = 0; i < CAL_KIND_RULES.length; i++){
+    if(CAL_KIND_RULES[i].re.test(title)) return CAL_KIND_RULES[i].k;
+  }
+  return 'event';
+}
+function calTrimTitle(t){
+  return t.replace(/^[\s\-~:：.、,，|‧・]+/, '')
+          .replace(/[\s\-~:：.、,，|‧・]+$/, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+}
+/* OCR 出來的表格常常一整列擠成一行：「9/14(一) 開學 11/9~11/15 期中考」。
+   先把日期切成一組一組（相鄰又只隔著連接符號的算同一段區間），每組取它後面
+   到下一組之間的字當名稱；後面沒字才回頭拿前面的，這樣「名稱在前、日期在後」
+   的排版也讀得到。 */
+function calParseLine(line, acadYear){
+  var t = calStripWeekday(calNormalizeText(line));
+  var ds = calScanDates(t, acadYear);
+  if(!ds.length) return [];
+  var groups = [], i = 0;
+  while(i < ds.length){
+    var g = {s: ds[i].s, e: ds[i].e, d: ds[i].k, to: ''};
+    if(i + 1 < ds.length && ds[i+1].k >= ds[i].k && CAL_RANGE_SEP.test(t.slice(ds[i].e, ds[i+1].s))){
+      g.to = ds[i+1].k; g.e = ds[i+1].e; i += 2;
+    } else {
+      i += 1;
+    }
+    groups.push(g);
+  }
+  return groups.map(function(g, gi){
+    var after = t.slice(g.e, gi + 1 < groups.length ? groups[gi+1].s : t.length);
+    var before = t.slice(gi === 0 ? 0 : groups[gi-1].e, g.s);
+    var title = calTrimTitle(after) || calTrimTitle(before);
+    return {d: g.d, to: g.to, t: title, k: calGuessKind(title)};
+  });
+}
+/* 日期一行、名稱在下一行的排版也不少，所以有日期沒名稱時先擱著，等下一行來補。 */
+function calParseCalendarText(text, acadYear){
+  var lines = calNormalizeText(text).split(/\r?\n/);
+  var out = [], pending = null, i;
+  for(i = 0; i < lines.length; i++){
+    var raw = lines[i].trim();
+    if(!raw) continue;
+    var rs = calParseLine(raw, acadYear);
+    if(rs.length){
+      var last = rs[rs.length - 1];
+      rs.forEach(function(r){ if(r.t) out.push(r); });
+      /* 只有整行都沒讀到名稱時才等下一行來補，免得半途接錯。 */
+      pending = (rs.length === 1 && !last.t) ? last : null;
+    } else if(pending){
+      pending.t = calTrimTitle(raw);
+      pending.k = calGuessKind(pending.t);
+      out.push(pending); pending = null;
+    }
+  }
+  var seen = {}, uniq = [];
+  out.forEach(function(e){
+    if(!e.t || e.t.length < 2) return;
+    if(!/[一-鿿A-Za-z]/.test(e.t)) return;
+    if(CAL_JUNK.test(e.t)) return;
+    var key = e.d + '|' + (e.to || '') + '|' + e.t;
+    if(seen[key]) return;
+    seen[key] = 1;
+    uniq.push(e);
+  });
+  uniq.sort(function(a, b){ return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
+  return uniq;
+}
+/* CAL-PARSER-END */
+
+/* 校曆是整張表格，比名片密得多，1700px 會把字壓成糊的。 */
+function calImageToText(file, onStage){
+  return new Promise(function(res, rej){
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var prepped;
+      try{ prepped = cardPrepForOcr(img, 2600); }
+      catch(e){ rej(new Error('prep')); return; }
+      runOcr(prepped, function(stage, p){ onStage(OCR_STAGE_ZH[stage] || stage, p); })
+        .then(res, rej);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('image')); };
+    img.src = url;
+  });
+}
 
 /* ========================================================================
    名片簿 — 資料與畫面
