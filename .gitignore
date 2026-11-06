@@ -1,0 +1,7 @@
+node_modules/
+cloud03/dist/
+.firebase/
+*-debug.log
+.env
+.env.*
+!.env.example
